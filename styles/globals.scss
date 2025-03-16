@@ -1,0 +1,32 @@
+@charset "UTF-8";
+
+@use "colors";
+@use "easing";
+@use "variables";
+@use "reset";
+@use "mixins" as *;
+
+html {
+  background-color: var(--background-medium);
+  color: var(--text-primary);
+  font-size: calc(14px + 1 * ((100vw - 320px) / 680));
+  font-weight: 500;
+  font-feature-settings: "salt" on;
+  line-height: 1.15;
+  @include no-scrollbar;
+  @include selection(var(--color-blue-100), var(--color-blue-600));
+}
+
+body {
+  font-family: var(--font-main);
+  padding: var(--main-padding);
+
+  &.overflow {
+    overflow: hidden;
+  }
+}
+
+svg {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
