@@ -17,8 +17,8 @@ if (!projectId) {
 const metadata = {
   name: "Helios Portal",
   description: "Helios Portal",
-  url: "https://reown.com/appkit", // origin must match your domain & subdomain
-  icons: ["https://assets.reown.com/reown-profile-pic.png"]
+  url: "https://portal.helioschain.network/", // origin must match your domain & subdomain
+  icons: ["https://portal.helioschain.network/img/logo.png"]
 }
 
 // Create a function to handle session storage

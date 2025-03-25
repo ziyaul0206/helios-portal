@@ -18,7 +18,7 @@ interface LineProps {
 
 const Line = ({ name, symbol, symbolIcon, price, amount }: LineProps) => {
   // const percent = (price / totalPriceUsd) * 100
-  const amountFixed = amount ? parseFloat(amount).toFixed(5) : 0
+  const amountFixed = amount ? parseFloat(amount).toFixed(4) : 0
 
   return (
     <li>

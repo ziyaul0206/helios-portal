@@ -1,6 +1,6 @@
 import { env } from "@/env"
 
-export const APP_NAME = "Helios Gate"
+export const APP_NAME = "Helios Portal"
 
 export const APP_COLOR_PRIMARY = "#002dcb"
 export const APP_COLOR_SECONDARY = "rgba(255, 113, 11, 1)"

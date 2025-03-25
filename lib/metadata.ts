@@ -10,7 +10,7 @@ export const MetadataSeo = ({
   title,
   description
 }: MetadataSeoProps): Metadata => {
-  const headTitle = `${APP_NAME}: ${title}`
+  const headTitle = `${APP_NAME} | ${title}`
 
   return {
     metadataBase: APP_BASE_URL,

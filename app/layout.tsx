@@ -5,10 +5,12 @@ import { Wrapper } from "./(components)/wrapper"
 import { fonts } from "./fonts"
 import ContextProvider from "@/context"
 import { headers } from "next/headers"
+import { NewsBanner } from "./(components)/news-banner"
 
 export const metadata = MetadataSeo({
-  title: "Dashboard",
-  description: "Helios Dashboard"
+  title: "Your Gateway to Staking, Delegation & Cross-Chain Governance",
+  description:
+    "Enter the Helios Portal — your unified access point for staking, delegation, cross-chain governance, and token bridging. Power the next era of decentralized coordination."
 })
 
 export const viewport = {
@@ -24,7 +26,8 @@ export default async function RootLayout({
 
   return (
     <html lang="en" dir="ltr">
-      <body className={fonts}>
+      <body className={fonts} style={{ paddingTop: 60 }}>
+        <NewsBanner />
         <ContextProvider cookies={cookies}>
           <Wrapper>{children}</Wrapper>
         </ContextProvider>
