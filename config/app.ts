@@ -11,4 +11,4 @@ export const APP_BASE_URL =
     ? new URL(env.NEXT_PUBLIC_BASE_URL)
     : new URL("http://localhost:3000")
 
-export const EXPLORER_URL = "https://helioschain.network/"
+export const EXPLORER_URL = "https://explorer.helioschainlabs.org/"

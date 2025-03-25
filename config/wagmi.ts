@@ -25,7 +25,10 @@ export const heliosChain = defineChain({
     public: { http: [RPC_URL] }
   },
   blockExplorers: {
-    default: { name: "Helios Explorer", url: "https://explorer.helios.network" }
+    default: {
+      name: "Helios Explorer",
+      url: "https://explorer.helioschainlabs.org/"
+    }
   }
 })
 

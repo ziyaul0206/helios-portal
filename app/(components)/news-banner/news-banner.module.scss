@@ -2,7 +2,6 @@
 
 .banner {
   --radius-2: calc(24px + 4 * (100vw - 320px) / 1080);
-  --primary-rgb: 0, 45, 203;
 
   position: fixed;
   top: 0;
@@ -12,16 +11,12 @@
   display: flex;
   justify-content: center;
   gap: 0.5em;
-  color: var(--primary-medium);
+  color: #f1a10d;
 
   width: 100%;
   border-radius: 0 0 var(--radius-2) var(--radius-2);
   text-align: center;
-  background: linear-gradient(
-    to top,
-    rgba(var(--primary-rgb), 0.075),
-    transparent
-  );
+  background: linear-gradient(to top, rgba(#f1a10d, 0.075), rgba(#f1a10d, 0.1));
   align-items: center;
   justify-content: center;
   font-size: calc(12px + 2 * (100vw - 320px) / 1080);
@@ -42,6 +37,7 @@
   font-size: 0.8em;
   font-weight: 800;
   border-radius: 50px;
-  background-color: rgba(var(--primary-rgb), 0.1);
+  background-color: rgba(#f1a10d, 0.1);
+  color: #f1a10d;
   padding: 0.3em 0.75em;
 }
