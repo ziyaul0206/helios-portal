@@ -6,7 +6,7 @@ export const NewsBanner = () => {
       <div className={s.tag}>Announcement</div>
       <div>
         Currently powered by Helios Testnet (RPC:{" "}
-        <a href="https://testnet1.helioschainlabs.org/" target="_blank">
+        <a href="https://testnet1.helioschainlabs.org/docs" target="_blank">
           testnet1.helioschainlabs.org
         </a>
         )
