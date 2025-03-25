@@ -1,9 +1,12 @@
 import { Card } from "@/components/card"
 import s from "./validators.module.scss"
+import { useValidatorInfos } from "@/hooks/useValidatorInfo"
+import { useProposalInfo } from "@/hooks/useProposalInfo"
+import { formatDate } from "@/lib/utils/date"
 
 export const Validators = () => {
-  const maxValidators = 100
-  const activeValidators = 80
+  const { activeValidators, maxValidators } = useValidatorInfos()
+  const { lastProposal } = useProposalInfo()
 
   return (
     <Card className={s.validators}>
@@ -19,18 +22,31 @@ export const Validators = () => {
           style={{ width: `${(activeValidators / maxValidators) * 100}%` }}
         />
       </div>
-      <div className={s.latest}>
-        <div className={s.latestTop}>
-          <div className={s.left}>Latest Governance Proposal</div>
-          <div className={s.right}>
-            <div className={s.badge}>Active</div>
+      {lastProposal ? (
+        <div className={s.latest}>
+          <div className={s.latestTop}>
+            <div className={s.left}>Latest Governance Proposal</div>
+            <div className={s.right}>
+              <div className={s.badge}>{lastProposal.status}</div>
+            </div>
+          </div>
+          <div className={s.latestBottom}>
+            <div className={s.left}>{lastProposal.title}</div>
+            <div className={s.right}>
+              Voting ends at {formatDate(lastProposal.votingEndTime.toString())}
+            </div>
           </div>
         </div>
-        <div className={s.latestBottom}>
-          <div className={s.left}>HIP-23: Increase validator set to 150</div>
-          <div className={s.right}>Voting ends in 2 days</div>
+      ) : (
+        <div className={s.latest}>
+          <div className={s.latestTop}>
+            <div className={s.left}>Latest Governance Proposal</div>
+          </div>
+          <div className={s.latestBottom}>
+            <div className={s.left}>No active proposal.</div>
+          </div>
         </div>
-      </div>
+      )}
     </Card>
   )
 }

@@ -1,11 +1,12 @@
 import { Card } from "@/components/card"
 import { Heading } from "@/components/heading"
 import s from "./stat.module.scss"
+import { JSX } from "react"
 
 interface StatProps {
   icon: string
   label: string
-  value: number | string
+  value: number | string | JSX.Element
   left?: string
   right?: string
 }

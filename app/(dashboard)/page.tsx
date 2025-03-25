@@ -1,3 +1,5 @@
+"use client"
+
 import { Area, Grid } from "@/components/grid"
 import routes from "@/config/routes"
 import { formatNumber } from "@/lib/utils/number"
@@ -9,8 +11,11 @@ import { Stat } from "./(components)/stat"
 import { TVL } from "./(components)/tvl"
 import { Validators } from "./(components)/validators"
 import s from "./page.module.scss"
+import { useBlockInfo } from "@/hooks/useBlockInfo"
 
 export default function Page() {
+  const { lastBlockNumber, blockTime, gasPriceUSD } = useBlockInfo()
+
   return (
     <>
       <Grid className={s.top}>
@@ -21,7 +26,7 @@ export default function Page() {
           <Stat
             icon="hugeicons:blockchain-02"
             label="Block Height"
-            value={formatNumber(15432876)}
+            value={formatNumber(lastBlockNumber)}
             left="#"
           />
         </Area>
@@ -29,7 +34,7 @@ export default function Page() {
           <Stat
             icon="hugeicons:time-management"
             label="Block Time"
-            value="2.1"
+            value={blockTime}
             right="s"
           />
         </Area>
@@ -37,7 +42,7 @@ export default function Page() {
           <Stat
             icon="hugeicons:coins-02"
             label="Average Cost"
-            value="$0.005"
+            value={gasPriceUSD}
             left="<"
           />
         </Area>

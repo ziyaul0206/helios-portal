@@ -2,10 +2,10 @@
 
 import { APP_COLOR_SECONDARY } from "@/config/app"
 import { formatCurrency } from "@/lib/utils/number"
-import { useUserStore } from "@/stores/user"
 import clsx from "clsx"
 import { useMemo } from "react"
 import s from "./portfolio.module.scss"
+import { usePortfolioInfo } from "@/hooks/usePortfolioInfo"
 
 interface PieProps {
   maxDegrees?: number
@@ -16,7 +16,7 @@ export const PortfolioPie = ({
   maxDegrees = 285,
   startDegrees = 130
 }: PieProps) => {
-  const { tokens, totalPriceUsd } = useUserStore()
+  const { totalUSD, portfolio: tokens } = usePortfolioInfo()
 
   const conicGradient = useMemo(() => {
     if (tokens.length === 0) return ""
@@ -24,7 +24,7 @@ export const PortfolioPie = ({
     const topTokens = tokens.slice(0, 3)
     const otherTokens = tokens.slice(3)
     const totalOtherTokens = otherTokens.reduce(
-      (total, token) => total + (token.priceUsd || 0),
+      (total, token) => total + (token.priceUSD || 0),
       0
     )
 
@@ -32,7 +32,7 @@ export const PortfolioPie = ({
     const segments = []
 
     for (const token of topTokens) {
-      const percent = (token.priceUsd || 0) / totalPriceUsd
+      const percent = (token.priceUSD || 0) / totalUSD
       const degrees = percent * maxDegrees
 
       segments.push({
@@ -44,7 +44,7 @@ export const PortfolioPie = ({
       currentDegree += degrees
     }
     if (totalOtherTokens > 0) {
-      const percent = totalOtherTokens / totalPriceUsd
+      const percent = totalOtherTokens / totalUSD
       const degrees = percent * maxDegrees
 
       segments.push({
@@ -76,13 +76,13 @@ export const PortfolioPie = ({
     gradientString += ")"
 
     return gradientString
-  }, [tokens, totalPriceUsd, maxDegrees, startDegrees])
+  }, [tokens, totalUSD, maxDegrees, startDegrees])
 
   return (
     <>
       <div className={s.topTotal}>
         <small>Total Amount</small>
-        <strong>{formatCurrency(totalPriceUsd)}</strong>
+        <strong>{formatCurrency(totalUSD)}</strong>
       </div>
       <div className={clsx(s.pie, tokens.length === 0 && s.empty)}>
         <svg viewBox="0 0 325 242" fill="none">
@@ -112,7 +112,11 @@ export const PortfolioPie = ({
             className={s.totalAmount}
             fontWeight="bold"
           >
-            {formatCurrency(totalPriceUsd, { small: false, tspan: true })}
+            {formatCurrency(totalUSD, {
+              currency: "USD",
+              small: false,
+              tspan: true
+            })}
           </text>
           <text
             x="162.5"

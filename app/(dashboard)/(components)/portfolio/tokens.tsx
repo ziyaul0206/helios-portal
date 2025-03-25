@@ -7,6 +7,7 @@ import { APP_COLOR_SECONDARY } from "@/config/app"
 import { formatCurrency } from "@/lib/utils/number"
 import { useUserStore } from "@/stores/user"
 import s from "./portfolio.module.scss"
+import { usePortfolioInfo } from "@/hooks/usePortfolioInfo"
 
 interface LineProps {
   name?: string
@@ -35,10 +36,10 @@ const Line = ({ name, symbol, symbolIcon, price }: LineProps) => {
 }
 
 export const PortfolioTokens = () => {
-  const { tokens } = useUserStore()
+  const { portfolio: tokens } = usePortfolioInfo()
   const totalOtherTokens = tokens
     .slice(3)
-    .reduce((total, token) => total + (token.priceUsd || 0), 0)
+    .reduce((total, token) => total + (token.priceUSD || 0), 0)
 
   if (tokens.length === 0) {
     return (
@@ -54,11 +55,11 @@ export const PortfolioTokens = () => {
     <ul className={s.tokens}>
       {tokens.slice(0, 3).map((token) => (
         <Line
-          key={token.id}
+          key={token.symbol}
           symbolIcon={<Symbol icon={token.symbolIcon} color={token.color} />}
           symbol={token.symbol}
           name={token.name}
-          price={token.priceUsd || 0}
+          price={token.priceUSD || 0}
         />
       ))}
       {tokens.length > 3 && (

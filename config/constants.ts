@@ -12,6 +12,7 @@ export const CHAIN_COLORS = {
 } as const
 
 export const TOKEN_COLORS = {
+  ahelios: "#002dcb",
   hls: "#002dcb",
   eth: "#627EEA",
   usdt: "#26A17B",

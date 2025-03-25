@@ -8,12 +8,14 @@ import {
   formatNumber
 } from "@/lib/utils/number"
 import s from "./tvl.module.scss"
+import { useAssetsInfo } from "@/hooks/useAssetsInfo"
 
 export const TVL = () => {
+  const { assets, holders, totalTVL } = useAssetsInfo()
+  console.log(assets)
+
   const tvl = generateRandomTvl()
-  const total = tvl.reduce((acc, item) => acc + item.amountLocked, 0)
   const sortedTvl = [...tvl].sort((a, b) => b.amountLocked - a.amountLocked)
-  const maxAmount = Math.max(...sortedTvl.map((item) => item.amountLocked), 0)
 
   return (
     <Card className={s.tvl}>
@@ -24,35 +26,35 @@ export const TVL = () => {
         rightClassName={s.headingRight}
       >
         <div className={s.right}>
-          <div className={s.total}>{formatCurrency(total)}</div>
-          <div className={s.holder}>{formatNumber(15800)} Holders</div>
+          <div className={s.total}>{formatCurrency(totalTVL)}</div>
+          <div className={s.holder}>{formatNumber(holders)} Holders</div>
         </div>
       </Heading>
       <div className={s.list}>
-        {sortedTvl.map((item) => (
-          <div className={s.item} key={item.token.id}>
+        {assets.map((token) => (
+          <div className={s.item} key={token.id}>
             <div className={s.bar}>
               <div
                 style={
                   {
-                    "--color": item.token.color,
-                    height: `${(item.amountLocked / maxAmount) * 100}%`
+                    "--color": token.color,
+                    height: `${(token.tvlUSD / totalTVL) * 100}%`
                   } as React.CSSProperties
                 }
               >
                 <div className={s.hover}>
-                  <strong>{item.token.name}</strong>
-                  <span>{formatCurrency(item.amountLocked)}</span>
+                  <strong>{token.name}</strong>
+                  <span>{formatCurrency(token.tvlUSD)}</span>
                 </div>
               </div>
             </div>
             <Symbol
-              icon={item.token.symbolIcon}
-              color={item.token.color}
+              icon={token.symbolIcon}
+              color={token.color}
               className={s.symbol}
             />
-            <div className={s.name}>{item.token.symbol}</div>
-            <div className={s.price}>${formatBigNumber(item.amountLocked)}</div>
+            <div className={s.name}>{token.symbol}</div>
+            <div className={s.price}>${formatBigNumber(token.tvlUSD)}</div>
           </div>
         ))}
       </div>
