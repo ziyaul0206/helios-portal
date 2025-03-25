@@ -3,21 +3,22 @@
 import { Button } from "@/components/button"
 import { Modal } from "@/components/modal"
 import { Symbol } from "@/components/symbol"
-import { getAllChains, getChain } from "@/config/chains"
+import { CHAINS, getChain } from "@/config/chains"
 import { Chain } from "@/types/Chains"
 import clsx from "clsx"
 import { useState } from "react"
 import { toast } from "sonner"
 import s from "./chains.module.scss"
+import { useChainId, useSwitchChain } from "wagmi"
 
 export const Chains = () => {
-  const [chainSelected, setChainSelected] = useState<string>("ethereum")
+  const chainId = useChainId()
+  const { switchChain } = useSwitchChain()
   const [open, setOpen] = useState(false)
-  const info = getChain(chainSelected)
-  const chains = getAllChains()
+  const info = getChain(chainId)
 
   const handleChange = (chain: Chain) => {
-    setChainSelected(chain.id)
+    switchChain({ chainId: chain.chainId })
     setOpen(false)
     toast.success(`Switched to ${chain.name}`)
   }
@@ -46,14 +47,14 @@ export const Chains = () => {
         responsiveBottom
       >
         <ul className={s.list}>
-          {chains.map((chain) => (
+          {CHAINS.map((chain) => (
             <li key={chain.id}>
               <Button
                 variant="secondary"
                 iconRight="hugeicons:arrow-right-01"
                 border
                 onClick={() => handleChange(chain)}
-                hovering={chain.id === chainSelected}
+                hovering={chain.chainId === chainId}
                 className={clsx(s.button)}
               >
                 <Symbol
