@@ -1,12 +1,12 @@
 import type { Chain } from "@/types/Chains"
-import { CHAIN_COLORS } from "./constants"
+import { CHAIN_COLORS, ChainId } from "./constants"
 import { mainnet } from "@reown/appkit/networks"
 import { heliosChain } from "./wagmi"
 
 export const CHAINS: Chain[] = [
   {
     id: "ethereum",
-    chainId: mainnet.id,
+    chainNb: mainnet.id,
     name: "Ethereum",
     color: CHAIN_COLORS.ethereum,
     iconName: "token:ethereum"
@@ -20,7 +20,7 @@ export const CHAINS: Chain[] = [
   {
     id: "helios",
     name: "Helios",
-    chainId: heliosChain.id,
+    chainNb: heliosChain.id,
     color: CHAIN_COLORS.helios,
     iconName: "helios"
   }
@@ -50,6 +50,9 @@ export const CHAINS: Chain[] = [
   //   }
 ]
 
-export function getChain(chainId: number): Chain | undefined {
-  return CHAINS.find((chain) => chain.chainId === chainId)
+export function getChain(chainId: ChainId): Chain | undefined {
+  return CHAINS.find((chain) => chain.id === chainId)
+}
+export function getChainByNumber(chainNb: number): Chain | undefined {
+  return CHAINS.find((chain) => chain.chainNb === chainNb)
 }

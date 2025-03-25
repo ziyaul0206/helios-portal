@@ -34,15 +34,16 @@ export const useAssetsInfo = () => {
       }
       const tvlUSD = parseFloat(tokenAmountFormatted) * tokenData.price
 
+      const isHelios = asset.denom === "ahelios"
+
       return {
         ...asset,
         color: TOKEN_COLORS[symbol] || APP_COLOR_SECONDARY,
         tokenAmount: tokenAmountFormatted,
         tvlUSD,
-        name: asset.denom === "ahelios" ? "HELIOS" : asset.denom.toUpperCase(),
-        symbol: asset.denom === "ahelios" ? "HELIOS" : symbol.toUpperCase(),
-        symbolIcon:
-          asset.denom === "ahelios" ? "helios" : "token:" + asset.denom
+        name: isHelios ? "HELIOS" : asset.denom.toUpperCase(),
+        symbol: isHelios ? "HELIOS" : symbol.toUpperCase(),
+        symbolIcon: isHelios ? "helios" : "token:" + asset.denom
       }
     })
 

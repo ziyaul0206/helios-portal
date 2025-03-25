@@ -3,7 +3,7 @@ import type { Token } from "./Tokens"
 
 export interface Chain {
   id: ChainId
-  chainId: number
+  chainNb: number
   name: string
   color: string
   iconName: string

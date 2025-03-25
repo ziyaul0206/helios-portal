@@ -1,7 +1,6 @@
 import { Card } from "@/components/card"
 import { Heading } from "@/components/heading"
 import { Symbol } from "@/components/symbol"
-import { generateRandomTvl } from "@/lib/faker"
 import {
   formatBigNumber,
   formatCurrency,
@@ -12,10 +11,6 @@ import { useAssetsInfo } from "@/hooks/useAssetsInfo"
 
 export const TVL = () => {
   const { assets, holders, totalTVL } = useAssetsInfo()
-  console.log(assets)
-
-  const tvl = generateRandomTvl()
-  const sortedTvl = [...tvl].sort((a, b) => b.amountLocked - a.amountLocked)
 
   return (
     <Card className={s.tvl}>
@@ -54,7 +49,9 @@ export const TVL = () => {
               className={s.symbol}
             />
             <div className={s.name}>{token.symbol}</div>
-            <div className={s.price}>${formatBigNumber(token.tvlUSD)}</div>
+            <div className={s.price}>
+              {token.tokenAmount} (${formatBigNumber(token.tvlUSD)})
+            </div>
           </div>
         ))}
       </div>

@@ -3,7 +3,7 @@
 import { Button } from "@/components/button"
 import { Modal } from "@/components/modal"
 import { Symbol } from "@/components/symbol"
-import { CHAINS, getChain } from "@/config/chains"
+import { CHAINS, getChainByNumber } from "@/config/chains"
 import { Chain } from "@/types/Chains"
 import clsx from "clsx"
 import { useState } from "react"
@@ -15,10 +15,10 @@ export const Chains = () => {
   const chainId = useChainId()
   const { switchChain } = useSwitchChain()
   const [open, setOpen] = useState(false)
-  const info = getChain(chainId)
+  const info = getChainByNumber(chainId)
 
   const handleChange = (chain: Chain) => {
-    switchChain({ chainId: chain.chainId })
+    switchChain({ chainId: chain.chainNb })
     setOpen(false)
     toast.success(`Switched to ${chain.name}`)
   }
@@ -54,7 +54,7 @@ export const Chains = () => {
                 iconRight="hugeicons:arrow-right-01"
                 border
                 onClick={() => handleChange(chain)}
-                hovering={chain.chainId === chainId}
+                hovering={chain.chainNb === chainId}
                 className={clsx(s.button)}
               >
                 <Symbol

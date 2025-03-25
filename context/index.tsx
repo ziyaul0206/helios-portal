@@ -50,12 +50,6 @@ const modal = createAppKit({
   },
   siwx: {
     createMessage: async (input): Promise<SIWXMessage> => {
-      const session = getSession()
-      if (session) {
-        console.log("Session already valid.")
-        return null
-      }
-
       const message: SIWXMessage = {
         accountAddress: input.accountAddress,
         chainId: input.chainId,

@@ -5,7 +5,6 @@ import { Icon } from "@/components/icon"
 import { Symbol } from "@/components/symbol"
 import { APP_COLOR_SECONDARY } from "@/config/app"
 import { formatCurrency } from "@/lib/utils/number"
-import { useUserStore } from "@/stores/user"
 import s from "./portfolio.module.scss"
 import { usePortfolioInfo } from "@/hooks/usePortfolioInfo"
 
@@ -14,11 +13,12 @@ interface LineProps {
   symbol?: string
   symbolIcon: React.ReactNode
   price: number
+  amount?: string
 }
 
-const Line = ({ name, symbol, symbolIcon, price }: LineProps) => {
-  const { totalPriceUsd } = useUserStore()
-  const percent = (price / totalPriceUsd) * 100
+const Line = ({ name, symbol, symbolIcon, price, amount }: LineProps) => {
+  // const percent = (price / totalPriceUsd) * 100
+  const amountFixed = amount ? parseFloat(amount).toFixed(5) : 0
 
   return (
     <li>
@@ -28,8 +28,9 @@ const Line = ({ name, symbol, symbolIcon, price }: LineProps) => {
         <div className={s.bottom}>{name}</div>
       </div>
       <div className={s.right}>
-        <div className={s.top}>{formatCurrency(price)}</div>
-        <div className={s.bottom}>{percent.toFixed(2)}%</div>
+        {amountFixed && <div className={s.top}>{amountFixed}</div>}
+        <div className={s.bottom}>{formatCurrency(price)}</div>
+        {/* <div className={s.bottom}>{percent.toFixed(2)}%</div> */}
       </div>
     </li>
   )
@@ -58,6 +59,7 @@ export const PortfolioTokens = () => {
           key={token.symbol}
           symbolIcon={<Symbol icon={token.symbolIcon} color={token.color} />}
           symbol={token.symbol}
+          amount={token.amount}
           name={token.name}
           price={token.priceUSD || 0}
         />
