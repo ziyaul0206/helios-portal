@@ -9,9 +9,10 @@ export interface NavItemProps {
   icon: string
   label: string
   href: string
+  disabled?: boolean
 }
 
-const NavItem = ({ icon, label, href }: NavItemProps) => {
+const NavItem = ({ icon, label, href, disabled }: NavItemProps) => {
   const active = useActive(href)
   const { setNav } = useAppStore()
 
@@ -24,6 +25,7 @@ const NavItem = ({ icon, label, href }: NavItemProps) => {
         isActive={active}
         isNav={true}
         onClick={() => setNav(false)}
+        disabled={disabled}
       >
         {label}
       </Button>

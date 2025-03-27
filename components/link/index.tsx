@@ -13,6 +13,7 @@ interface LinkProps extends Omit<NextLinkProps, "href"> {
   onClick?: (event: MouseEvent<HTMLAnchorElement | HTMLDivElement>) => void
   isActive?: boolean
   activeClassName?: string
+  disabled?: boolean
 }
 
 export const Link = forwardRef<HTMLAnchorElement | HTMLDivElement, LinkProps>(
@@ -25,6 +26,7 @@ export const Link = forwardRef<HTMLAnchorElement | HTMLDivElement, LinkProps>(
       children,
       isActive,
       activeClassName,
+      disabled = false,
       ...props
     },
     ref
@@ -40,6 +42,11 @@ export const Link = forwardRef<HTMLAnchorElement | HTMLDivElement, LinkProps>(
       : {}
 
     const handleClick = (e: MouseEvent<HTMLAnchorElement | HTMLDivElement>) => {
+      if (disabled) {
+        e.preventDefault()
+        return
+      }
+
       if (isAnchor) {
         e.preventDefault()
         const targetId = href.includes("#") ? href.split("#")[1] : ""
@@ -57,7 +64,13 @@ export const Link = forwardRef<HTMLAnchorElement | HTMLDivElement, LinkProps>(
         onClick={handleClick}
         href={href}
         title={title}
-        className={clsx(className, isCurrentActive && activeClassName)}
+        className={clsx(
+          className,
+          isCurrentActive && activeClassName,
+          disabled && "disabled"
+        )}
+        tabIndex={disabled ? -1 : undefined}
+        aria-disabled={disabled}
         {...props}
         {...attr}
       >

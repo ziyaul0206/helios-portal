@@ -95,7 +95,7 @@ export const Button = ({
       <Link
         {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
         {...attrs}
-        href={href}
+        href={!disabled ? href : ""}
       >
         {Content}
       </Link>
