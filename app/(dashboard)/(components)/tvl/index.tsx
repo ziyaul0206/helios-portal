@@ -27,7 +27,7 @@ export const TVL = () => {
       </Heading>
       <div className={s.list}>
         {assets.map((token) => (
-          <div className={s.item} key={token.id}>
+          <div className={s.item} key={`token-${token.id}`}>
             <div className={s.bar}>
               <div
                 style={
