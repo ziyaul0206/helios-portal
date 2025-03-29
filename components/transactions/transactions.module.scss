@@ -79,6 +79,12 @@ $responsive: 700px;
 }
 
 .cell {
+  &From,
+  &To {
+    @include max($responsive) {
+      display: none;
+    }
+  }
   &Amount {
     @include min($responsive) {
       .small {
