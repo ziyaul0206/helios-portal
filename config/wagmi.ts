@@ -2,7 +2,7 @@ import { WagmiAdapter } from "@reown/appkit-adapter-wagmi"
 import { mainnet } from "@reown/appkit/networks"
 import { cookieStorage, createStorage } from "@wagmi/core"
 import { defineChain } from "viem"
-import { RPC_URL } from "../constant/urls"
+import { HELIOS_NETWORK_ID, RPC_URL } from "./app"
 
 export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID
 
@@ -12,7 +12,7 @@ if (!projectId) {
 
 // Define the custom Helios chain
 export const heliosChain = defineChain({
-  id: 4242,
+  id: HELIOS_NETWORK_ID,
   name: "Helios",
   network: "helios",
   nativeCurrency: {

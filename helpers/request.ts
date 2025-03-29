@@ -1,4 +1,4 @@
-import { RPC_URL } from "@/constant/urls";
+import { RPC_URL } from "@/config/app"
 
 async function request<T>(method: string, params: any[]): Promise<T | null> {
   const response = await fetch(RPC_URL, {
@@ -12,19 +12,19 @@ async function request<T>(method: string, params: any[]): Promise<T | null> {
       params,
       id: 1
     })
-  });
+  })
 
   if (!response.ok) {
-    throw new Error(`${method} call failed.`);
+    throw new Error(`${method} call failed.`)
   }
 
-  const data = await response.json();
+  const data = await response.json()
 
   if (data.error) {
-    throw new Error(data.error.message);
+    throw new Error(data.error.message)
   }
 
-  return data.result ?? null;
+  return data.result ?? null
 }
 
-export { request };
+export { request }

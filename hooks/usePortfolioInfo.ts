@@ -33,7 +33,7 @@ export const usePortfolioInfo = () => {
 
   if (qTokenBalances.data && qTokenData.data) {
     portfolio = qTokenBalances.data.map((token) => {
-      const symbol = token.symbol.toLowerCase() as keyof typeof TOKEN_COLORS
+      const symbol = token.denom.toLowerCase() as keyof typeof TOKEN_COLORS
       const amount = fromWeiToEther(token.balance)
       const priceUSD = qTokenData.data[symbol]?.price || 0
       const valueUSD = parseFloat(amount) * priceUSD
@@ -52,9 +52,9 @@ export const usePortfolioInfo = () => {
       }
 
       return {
-        name: token.name,
+        name: token.denom,
         symbol: symbol.toUpperCase(),
-        symbolIcon: "token:" + token.id,
+        symbolIcon: "token:" + token.denom,
         amount,
         valueUSD,
         priceUSD,

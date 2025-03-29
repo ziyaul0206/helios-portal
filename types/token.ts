@@ -1,9 +1,11 @@
 export interface TokenBalance {
-  id: string
-  name: string
   address: string
-  symbol: string
   balance: string
+  balanceUI: string
+  decimals: number
+  denom: string
+  description: string
+  symbol: string
 }
 
 export interface Token {
