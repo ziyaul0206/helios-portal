@@ -1,0 +1,53 @@
+@use "styles/variables" as *;
+
+.search {
+  --padding: var(--size-3);
+  background-color: var(--background-medium);
+  border-radius: var(--radius-m);
+  display: flex;
+  align-items: center;
+  padding: var(--padding);
+  gap: var(--size-4);
+  cursor: text;
+
+  &Icon {
+    width: 1.5em;
+    margin-left: var(--padding);
+  }
+
+  &Input {
+    flex: 1;
+
+    &:focus {
+      color: var(--primary-medium);
+    }
+
+    &::placeholder {
+      color: var(--text-tertiary);
+    }
+  }
+
+  &Actions {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--padding) / 2);
+
+    strong {
+      margin-left: -0.5em;
+      display: inline-block;
+      color: var(--primary-medium);
+    }
+
+    button:hover strong {
+      color: inherit;
+    }
+  }
+}
+
+.information {
+  line-height: 1.5;
+
+  strong {
+    color: var(--success-medium);
+  }
+}
