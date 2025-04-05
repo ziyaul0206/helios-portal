@@ -2,4 +2,8 @@
 
 .card {
   @include card;
+
+  &.auto {
+    min-height: 0;
+  }
 }

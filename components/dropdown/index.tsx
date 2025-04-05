@@ -3,7 +3,7 @@
 import type { Positions } from "@/types/Positions"
 import clsx from "clsx"
 import { cloneElement, useRef, useState } from "react"
-import { useOnClickOutside } from "usehooks-ts"
+import { useEventListener, useOnClickOutside } from "usehooks-ts"
 import s from "./dropdown.module.scss"
 
 interface DropdownProps {
@@ -49,6 +49,28 @@ export const Dropdown = ({
       callbackOpen?.()
     }
   }
+
+  const handleClose = () => {
+    if (isOpenControlled === undefined) {
+      setIsOpenInternal(false)
+      callbackClose?.()
+    }
+  }
+
+  useEventListener<"click", HTMLDivElement>(
+    "click",
+    (event) => {
+      const target = event.target as HTMLElement
+      const closeElement = target.closest("[data-dropdown-close]")
+
+      if (dropdownRef.current?.contains(target) && closeElement) {
+        requestAnimationFrame(() => {
+          handleClose()
+        })
+      }
+    },
+    dropdownRef as React.RefObject<HTMLDivElement>
+  )
 
   // @ts-expect-error - useOnClickOutside not updated ts
   useOnClickOutside(dropdownRef, () => {

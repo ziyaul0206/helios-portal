@@ -1,4 +1,5 @@
 import { getAllTokens, getToken } from "@/config/tokens"
+import { ValidatorProps } from "@/types/faker"
 import { Token } from "@/types/Tokens"
 import {
   Transaction,
@@ -73,4 +74,24 @@ export const generateRandomTvl = (): TvlData[] => {
   })
 
   return tvlData
+}
+
+export const generateRandomValidators = (count: number): ValidatorProps[] => {
+  const validators: ValidatorProps[] = []
+
+  for (let i = 0; i < count; i++) {
+    const validator: ValidatorProps = {
+      name: faker.company.name(),
+      description: faker.lorem.sentence(),
+      image: faker.image.url(),
+      apyBoost: faker.number.int({ min: 1, max: 2 }),
+      reputation: faker.number.int({ min: 90, max: 100 }),
+      uptime: faker.number.int({ min: 1, max: 100 }),
+      commission: faker.number.int({ min: 1, max: 100 })
+    }
+
+    validators.push(validator)
+  }
+
+  return validators
 }

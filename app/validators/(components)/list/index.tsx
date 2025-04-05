@@ -5,8 +5,10 @@ import { Card } from "@/components/card"
 import { Dropdown } from "@/components/dropdown"
 import { Heading } from "@/components/heading"
 import { Icon } from "@/components/icon"
-import { Modal } from "@/components/modal"
+import { generateRandomValidators } from "@/lib/faker"
 import { useRef, useState } from "react"
+import { Item } from "../item"
+import { Informations } from "./informations"
 import s from "./list.module.scss"
 
 export const List = () => {
@@ -14,7 +16,7 @@ export const List = () => {
   const [arrange, setArrange] = useState<string>("asc")
   const searchInputRef = useRef<HTMLInputElement>(null)
   const [selectedSort, setSelectedSort] = useState("apyBoost")
-  const [information, setInformation] = useState(false)
+  const validators = generateRandomValidators(20)
 
   const sorts = [
     {
@@ -37,18 +39,13 @@ export const List = () => {
 
   return (
     <>
-      <Card>
+      <Card auto>
         <Heading
           icon="hugeicons:flowchart-01"
           title="Validators"
           description="Stake your assets with trusted validators to earn rewards and secure the Helios network."
         >
-          <Button
-            icon="hugeicons:information-circle"
-            variant="secondary"
-            border
-            onClick={() => setInformation(true)}
-          />
+          <Informations />
         </Heading>
         <div className={s.search} onClick={handleFocus}>
           <Icon className={s.searchIcon} icon="hugeicons:search-01" />
@@ -64,7 +61,7 @@ export const List = () => {
               variant="secondary"
               onClick={() => setAll(!all)}
             >
-              {all ? "All Validators" : "Featured Only"}
+              <span>{all ? "All Validators" : "Featured Only"}</span>
             </Button>
             <Button
               iconLeft={
@@ -75,16 +72,22 @@ export const List = () => {
               variant="secondary"
               onClick={() => setArrange(arrange === "desc" ? "asc" : "desc")}
             >
-              {arrange === "desc" ? "Descending" : "Ascending"}
+              <span>{arrange === "desc" ? "Descending" : "Ascending"}</span>
             </Button>
             <Dropdown
               position="bottom-right"
               opener={
-                <Button icon="hugeicons:arrow-down-01" variant="secondary">
-                  Sort by:
-                  <strong>
-                    {sorts.find((s) => s.value === selectedSort)?.label}
-                  </strong>
+                <Button
+                  iconLeft="hugeicons:filter"
+                  icon="hugeicons:arrow-down-01"
+                  variant="secondary"
+                >
+                  <span>
+                    Sort by:
+                    <strong>
+                      {sorts.find((s) => s.value === selectedSort)?.label}
+                    </strong>
+                  </span>
                 </Button>
               }
             >
@@ -98,6 +101,7 @@ export const List = () => {
                         selectedSort === sort.value ? "primary" : "secondary"
                       }
                       isActive={selectedSort === sort.value}
+                      data-dropdown-close
                     >
                       {sort.label}
                     </Button>
@@ -108,22 +112,11 @@ export const List = () => {
           </div>
         </div>
       </Card>
-      <Modal
-        title="Helios APY Boost System"
-        onClose={() => setInformation(false)}
-        open={information}
-        className={s.info}
-      >
-        <p>
-          Validators must maintain a balance of HELIOS tokens relative to other
-          staked assets to maximize APY. Insufficient HELIOS collateral results
-          in reduced rewards for delegators. Look for validators with{" "}
-          <strong>Optimal Boost</strong> status for maximum returns.
-        </p>
-        <Button border onClick={() => setInformation(false)}>
-          I understand
-        </Button>
-      </Modal>
+      <div className={s.list}>
+        {validators.map((validator) => (
+          <Item key={validator.name} {...validator} />
+        ))}
+      </div>
     </>
   )
 }

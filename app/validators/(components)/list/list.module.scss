@@ -1,4 +1,4 @@
-@use "styles/variables" as *;
+@use "styles/mixins" as *;
 
 .search {
   --padding: var(--size-3);
@@ -33,7 +33,7 @@
     gap: calc(var(--padding) / 2);
 
     strong {
-      margin-left: -0.5em;
+      margin-left: 0.5em;
       display: inline-block;
       color: var(--primary-medium);
     }
@@ -41,13 +41,40 @@
     button:hover strong {
       color: inherit;
     }
+
+    @include max(1250px) {
+      button {
+        span {
+          display: none;
+        }
+
+        [data-icon-left] {
+          transform: scale(1.5);
+        }
+      }
+    }
   }
 }
 
 .information {
+  --modal-width: calc(300px + 100 * (100vw - 320px) / 1080);
   line-height: 1.5;
+
+  p {
+    color: var(--text-secondary);
+  }
 
   strong {
     color: var(--success-medium);
   }
+}
+
+.list {
+  margin-top: var(--grid-gap);
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, calc(250px + 80 * (100vw - 320px) / 1080)), 1fr)
+  );
+  gap: var(--grid-gap);
 }
