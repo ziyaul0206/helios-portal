@@ -4,7 +4,7 @@ import { Button } from "@/components/button"
 import { Card } from "@/components/card"
 import { Heading } from "@/components/heading"
 import { Symbol } from "@/components/symbol"
-import { getAllChains } from "@/config/chains"
+import { CHAINS } from "@/config/chains"
 import { useCallback, useRef } from "react"
 import "swiper/css"
 import "swiper/css/navigation"
@@ -12,7 +12,6 @@ import { Swiper, SwiperRef, SwiperSlide } from "swiper/react"
 import s from "./supported.module.scss"
 
 export const Supported = () => {
-  const chains = getAllChains()
   const sliderRef = useRef<SwiperRef>(null)
 
   const handlePrev = useCallback(() => {
@@ -49,7 +48,7 @@ export const Supported = () => {
           spaceBetween={12}
           slidesPerView="auto"
         >
-          {chains.map((chain) => (
+          {CHAINS.map((chain) => (
             <SwiperSlide key={chain.id} className={s.item}>
               <Symbol icon={chain.iconName} color={chain.color} />
               <span className={s.name}>{chain.name}</span>

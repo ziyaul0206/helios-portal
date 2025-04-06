@@ -6,7 +6,7 @@ import { Heading } from "@/components/heading"
 import { Icon } from "@/components/icon"
 import { Modal } from "@/components/modal"
 import { Symbol } from "@/components/symbol"
-import { getAllChains } from "@/config/chains"
+import { CHAINS } from "@/config/chains"
 import { getAllTokens } from "@/config/tokens"
 import { formatNumber } from "@/lib/utils/number"
 import { useUserStore } from "@/stores/user"
@@ -28,7 +28,6 @@ type BridgeForm = {
 
 export const Interface = () => {
   const tokens = getAllTokens()
-  const chains = getAllChains()
   const { address } = useUserStore()
   const [openToken, setOpenToken] = useState(false)
   const [openChain, setOpenChain] = useState(false)
@@ -36,8 +35,8 @@ export const Interface = () => {
   const [chainType, setChainType] = useState<"from" | "to">("from")
   const [form, setForm] = useState<BridgeForm>({
     asset: tokens[0],
-    from: chains[0],
-    to: chains[1],
+    from: CHAINS[0],
+    to: CHAINS[1],
     amount: 0,
     address: address || ""
   })
@@ -267,7 +266,7 @@ export const Interface = () => {
         responsiveBottom
       >
         <ul className={s.list}>
-          {chains.map((chain) => {
+          {CHAINS.map((chain) => {
             return (
               <li key={chain.id}>
                 <Button
