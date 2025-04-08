@@ -1,10 +1,7 @@
 import { Badge } from "@/components/badge"
 import { Button } from "@/components/button"
 import { Icon } from "@/components/icon"
-import { ValidatorProps } from "@/types/faker"
 import clsx from "clsx"
-import { useState } from "react"
-import { toast } from "sonner"
 import s from "./item.module.scss"
 import { Validator } from "@/types/validator"
 
@@ -69,7 +66,7 @@ export const Item = ({
         <div className={s.heading}>
           {isActive && <Badge status="success">Active</Badge>}
           <h3>{moniker}</h3>
-          {/* {description.details && <h4>{description.details}</h4>} */}
+          {description.details && <h4>{description.details}</h4>}
         </div>
       </div>
       <div className={s.stats}>
