@@ -22,10 +22,25 @@
 }
 
 .image {
+  font-size: var(--heading-icon, var(--size-13));
+  color: var(--primary-medium);
+  background-color: var(--background-high);
+  width: 1em;
+  min-width: 1em;
+  height: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: var(--item-image);
   height: var(--item-image);
   border-radius: var(--radius-m);
   background-color: var(--background-medium);
+  padding: 0.275em;
+
+  svg {
+    height: 100%;
+    width: 100%;
+  }
 }
 
 .heading {

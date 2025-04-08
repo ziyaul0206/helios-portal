@@ -1,46 +1,40 @@
+"use client"
+
 import { Card } from "@/components/card"
-import { Icon } from "@/components/icon"
 import { Stat } from "./stat"
 import s from "./stats.module.scss"
+import { useValidatorInfo } from "@/hooks/useValidatorInfo"
+import { useAssetsInfo } from "@/hooks/useAssetsInfo"
 
 export const Stats = () => {
+  const { activeValidators, maxValidators, avgApr, networkSecurity } =
+    useValidatorInfo()
+  const { totalTVL } = useAssetsInfo()
+
   return (
     <Card className={s.stats} auto>
       <Stat
         title="Active Validators"
         icon="hugeicons:checkmark-square-01"
-        bottom={<div>test</div>}
+        bottom={<></>}
       >
-        <strong>80</strong>
-        <span>/100</span>
+        <strong>{activeValidators}</strong>
+        <span>/{maxValidators}</span>
       </Stat>
-      <Stat
-        title="Average APY"
-        icon="hugeicons:percent-square"
-        bottom={<p data-color="success">+0.3% from last epoch</p>}
-      >
-        <strong>12.4</strong>
+      <Stat title="Average APY" icon="hugeicons:percent-square" bottom={<></>}>
+        <strong>{avgApr.toFixed(2)}</strong>
         <span>%</span>
       </Stat>
-      <Stat
-        title="Total Staked Value"
-        icon="hugeicons:stake"
-        bottom={<p data-color="primary">23% of circulating supply</p>}
-      >
+      <Stat title="Total Staked Value" icon="hugeicons:stake" bottom={<></>}>
         <span>$</span>
-        <strong>120.5M</strong>
+        <strong>{totalTVL}</strong>
       </Stat>
       <Stat
         title="Network Security"
         icon="hugeicons:security-lock"
-        bottom={
-          <p data-color="success">
-            <Icon icon="hugeicons:security-check" />
-            Optimally distributed
-          </p>
-        }
+        bottom={<></>}
       >
-        <strong>Very High</strong>
+        <strong>{networkSecurity}</strong>
       </Stat>
     </Card>
   )

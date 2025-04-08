@@ -1,11 +1,11 @@
 import { Card } from "@/components/card"
 import s from "./validators.module.scss"
-import { useValidatorInfos } from "@/hooks/useValidatorInfo"
+import { useValidatorInfo } from "@/hooks/useValidatorInfo"
 import { useProposalInfo } from "@/hooks/useProposalInfo"
 import { formatDate } from "@/lib/utils/date"
 
 export const Validators = () => {
-  const { activeValidators, maxValidators } = useValidatorInfos()
+  const { activeValidators, maxValidators } = useValidatorInfo()
   const { lastProposal } = useProposalInfo()
 
   return (

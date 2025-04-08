@@ -6,6 +6,7 @@ import clsx from "clsx"
 import { useState } from "react"
 import { toast } from "sonner"
 import s from "./item.module.scss"
+import { Validator } from "@/types/validator"
 
 interface StatProps {
   label: string
@@ -25,28 +26,31 @@ const Stat = ({ label, value, className, icon }: StatProps) => {
 }
 
 export const Item = ({
-  name,
+  moniker,
   description,
-  image,
-  apyBoost,
-  reputation,
-  uptime,
+  apr,
+  status,
   commission
-}: ValidatorProps) => {
-  const [favorite, setFavorite] = useState(false)
+}: Validator) => {
+  // const [favorite, setFavorite] = useState(false)
 
-  const handleFavorite = () => {
-    setFavorite(!favorite)
-    if (favorite) {
-      toast.success(`Validator "${name}" added to favorites.`)
-    } else {
-      toast.success(`Validator "${name}" removed from favorites.`)
-    }
-  }
+  // const handleFavorite = () => {
+  //   setFavorite(!favorite)
+  //   if (favorite) {
+  //     toast.success(`Validator "${name}" added to favorites.`)
+  //   } else {
+  //     toast.success(`Validator "${name}" removed from favorites.`)
+  //   }
+  // }
+
+  const isActive = status === 3
+  const formattedApr = parseFloat(apr).toFixed(2) + "%"
+  const formattedCommission =
+    parseFloat(commission.commission_rates.rate) * 100 + "%"
 
   return (
     <div className={s.item}>
-      <Button
+      {/* <Button
         variant="secondary"
         border
         icon={
@@ -57,22 +61,25 @@ export const Item = ({
         onClick={handleFavorite}
         className={s.favorite}
         size="xsmall"
-      />
+      /> */}
       <div className={s.top}>
-        <div className={s.image}></div>
+        <div className={s.image}>
+          <Icon icon="hugeicons:flowchart-01" />
+        </div>
         <div className={s.heading}>
-          <Badge status="success">Active</Badge>
-          <h3>{name}</h3>
+          {isActive && <Badge status="success">Active</Badge>}
+          <h3>{moniker}</h3>
+          {/* {description.details && <h4>{description.details}</h4>} */}
         </div>
       </div>
       <div className={s.stats}>
         <Stat
           label="APY"
-          value={`${apyBoost}x`}
+          value={formattedApr}
           className={s.apy}
           icon="hugeicons:shield-energy"
         />
-        <Stat
+        {/* <Stat
           label="Reputation"
           value={`${reputation}/100`}
           className={s.reputation}
@@ -83,10 +90,10 @@ export const Item = ({
           value={`${uptime}%`}
           className={s.uptime}
           icon="hugeicons:award-04"
-        />
+        /> */}
         <Stat
           label="Commission"
-          value={`${commission}%`}
+          value={formattedCommission}
           className={s.commission}
           icon="hugeicons:clock-01"
         />
