@@ -1,7 +1,12 @@
 "use client"
 
-import { heliosChain, projectId, wagmiAdapter } from "@/config/wagmi"
-import { mainnet } from "@reown/appkit/networks"
+import {
+  heliosChain,
+  projectId,
+  toAppKitNetwork,
+  wagmiAdapter
+} from "@/config/wagmi"
+import { mainnet, polygonAmoy, sepolia } from "@reown/appkit/networks"
 import { createAppKit, SIWXMessage, SIWXSession } from "@reown/appkit/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { useEffect, type ReactNode } from "react"
@@ -42,8 +47,13 @@ const clearSession = (): void => {
 const modal = createAppKit({
   adapters: [wagmiAdapter],
   projectId,
-  networks: [heliosChain, mainnet],
-  defaultNetwork: heliosChain,
+  networks: [
+    toAppKitNetwork(heliosChain),
+    toAppKitNetwork(mainnet),
+    toAppKitNetwork(sepolia),
+    toAppKitNetwork(polygonAmoy)
+  ],
+  defaultNetwork: toAppKitNetwork(heliosChain),
   metadata: metadata,
   features: {
     analytics: false // Optional - defaults to your Cloud configuration
