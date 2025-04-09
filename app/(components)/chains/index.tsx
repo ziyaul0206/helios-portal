@@ -2,8 +2,6 @@
 
 import { Button } from "@/components/button"
 import { Modal } from "@/components/modal"
-import { Symbol } from "@/components/symbol"
-import { getChainByNumber } from "@/config/chains"
 import clsx from "clsx"
 import { useState } from "react"
 import { toast } from "sonner"
