@@ -6,6 +6,7 @@ import { Proposal } from "@/types/proposal"
 import { Transaction } from "@/types/transaction"
 import { Validator } from "@/types/validator"
 import { WhitelistedAsset } from "@/types/whitelistedAsset"
+import { HyperionChain } from "@/types/hyperion"
 
 export const getTokenBalance = (
   address: string,
@@ -80,3 +81,6 @@ export const getBlockByNumber = (blockNumber: string) =>
   request<Block>("eth_getBlockByNumber", [blockNumber, false])
 
 export const getGasPrice = () => request<string>("eth_gasPrice", [])
+
+export const getHyperionChains = () =>
+  request<HyperionChain[]>("eth_getHyperionChains", [])

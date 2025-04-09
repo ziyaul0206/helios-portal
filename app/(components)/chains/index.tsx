@@ -3,22 +3,26 @@
 import { Button } from "@/components/button"
 import { Modal } from "@/components/modal"
 import { Symbol } from "@/components/symbol"
-import { CHAINS, getChainByNumber } from "@/config/chains"
-import { Chain } from "@/types/Chains"
+import { getChainByNumber } from "@/config/chains"
 import clsx from "clsx"
 import { useState } from "react"
 import { toast } from "sonner"
 import s from "./chains.module.scss"
 import { useChainId, useSwitchChain } from "wagmi"
+import { useBridge } from "@/hooks/useBridge"
+import { HyperionChain } from "@/types/hyperion"
+import { getLogoByHash } from "@/utils/url"
+import Image from "next/image"
 
 export const Chains = () => {
+  const { chains } = useBridge()
   const chainId = useChainId()
   const { switchChain } = useSwitchChain()
   const [open, setOpen] = useState(false)
-  const info = getChainByNumber(chainId)
+  const info = chains.find((chain) => chain.chainId === chainId)
 
-  const handleChange = (chain: Chain) => {
-    switchChain({ chainId: chain.chainNb })
+  const handleChange = (chain: HyperionChain) => {
+    switchChain({ chainId: chain.chainId })
     setOpen(false)
     toast.success(`Switched to ${chain.name}`)
   }
@@ -34,7 +38,16 @@ export const Chains = () => {
       >
         {info && (
           <>
-            <Symbol icon={info.iconName} color={info.color} />
+            <div className={s.symbol}>
+              {info.logo !== "" && (
+                <Image
+                  src={getLogoByHash(info.logo)}
+                  alt=""
+                  width={28}
+                  height={28}
+                />
+              )}
+            </div>
             <span>{info.name}</span>
           </>
         )}
@@ -47,21 +60,31 @@ export const Chains = () => {
         responsiveBottom
       >
         <ul className={s.list}>
-          {CHAINS.map((chain) => (
-            <li key={chain.id}>
+          {chains.map((chain) => (
+            <li key={chain.chainId}>
               <Button
                 variant="secondary"
                 iconRight="hugeicons:arrow-right-01"
                 border
                 onClick={() => handleChange(chain)}
-                hovering={chain.chainNb === chainId}
+                hovering={chain.chainId === chainId}
                 className={clsx(s.button)}
               >
-                <Symbol
+                {/* <Symbol
                   icon={chain.iconName}
                   color={chain.color}
                   className={s.icon}
-                />
+                /> */}
+                <div className={s.symbol}>
+                  {chain.logo !== "" && (
+                    <Image
+                      src={getLogoByHash(chain.logo)}
+                      alt=""
+                      width={28}
+                      height={28}
+                    />
+                  )}
+                </div>
                 <span>{chain.name}</span>
               </Button>
             </li>

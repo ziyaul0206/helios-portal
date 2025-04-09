@@ -6,40 +6,48 @@ import { Heading } from "@/components/heading"
 import { Icon } from "@/components/icon"
 import { Modal } from "@/components/modal"
 import { Symbol } from "@/components/symbol"
-import { CHAINS } from "@/config/chains"
 import { getAllTokens } from "@/config/tokens"
 import { formatNumber } from "@/lib/utils/number"
-import { useUserStore } from "@/stores/user"
-import { type Chain } from "@/types/Chains"
 import { type Token } from "@/types/Tokens"
 import clsx from "clsx"
 import Image from "next/image"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import s from "./interface.module.scss"
+import { useBridge } from "@/hooks/useBridge"
+import { HyperionChain } from "@/types/hyperion"
+import { getLogoByHash } from "@/utils/url"
+import { useAccount, useChainId, useSwitchChain } from "wagmi"
 
 type BridgeForm = {
   asset: Token
-  from: Chain
-  to: Chain
+  from: HyperionChain | null
+  to: HyperionChain | null
   amount: number
   address: string
 }
 
 export const Interface = () => {
+  const chainId = useChainId()
+  const { chains, heliosChainIndex } = useBridge()
+  const { switchChain } = useSwitchChain()
+
   const tokens = getAllTokens()
-  const { address } = useUserStore()
+  const { address } = useAccount()
   const [openToken, setOpenToken] = useState(false)
   const [openChain, setOpenChain] = useState(false)
-  const [openQr, setOpenQr] = useState(false)
   const [chainType, setChainType] = useState<"from" | "to">("from")
   const [form, setForm] = useState<BridgeForm>({
     asset: tokens[0],
-    from: CHAINS[0],
-    to: CHAINS[1],
+    from: null,
+    to: null,
     amount: 0,
     address: address || ""
   })
+  const estimatedFees = form.amount / 100
+  const isDeposit = heliosChainIndex
+    ? form.from?.chainId === chains[heliosChainIndex].chainId
+    : false
 
   const handleChangeToken = (token: Token) => {
     setForm({ ...form, asset: token })
@@ -51,10 +59,10 @@ export const Interface = () => {
     setOpenChain(true)
   }
 
-  const handleChangeChain = (chain: Chain) => {
-    if (chainType === "from" && chain.id === form.to.id) {
+  const handleChangeChain = (chain: HyperionChain) => {
+    if (chainType === "from" && chain.chainId === form.to?.chainId) {
       setForm({ ...form, from: chain, to: form.from })
-    } else if (chainType === "to" && chain.id === form.from.id) {
+    } else if (chainType === "to" && chain.chainId === form.from?.chainId) {
       setForm({ ...form, to: chain, from: form.to })
     } else {
       setForm({ ...form, [chainType]: chain })
@@ -77,6 +85,35 @@ export const Interface = () => {
     toast.success("Address copied to clipboard")
   }
 
+  useEffect(() => {
+    if (chains.length < 2) return
+
+    const currentChainIndex = chains.findIndex(
+      (chain) => chain.chainId === chainId
+    )
+    const heliosIndex = heliosChainIndex ?? 0
+
+    const from = chains[currentChainIndex]
+    let to = chains[heliosIndex]
+
+    if (heliosIndex === currentChainIndex) {
+      to = chains.find((_, i) => i !== currentChainIndex) || chains[0]
+    }
+
+    setForm((prevForm) => ({
+      ...prevForm,
+      from,
+      to
+    }))
+  }, [chains, heliosChainIndex, chainId])
+
+  useEffect(() => {
+    console.log(form.from)
+    if (form.from && form.from?.chainId !== chainId) {
+      switchChain({ chainId: form.from.chainId })
+    }
+  }, [form.from])
+
   return (
     <>
       <Card className={s.interface}>
@@ -84,10 +121,7 @@ export const Interface = () => {
           icon="hugeicons:exchange-02"
           title="Cross-Chain Bridge"
           description="Exchange your assets between chains."
-        >
-          <Button icon="hugeicons:download-03" />
-          <Button icon="hugeicons:upload-03" variant="secondary" border />
-        </Heading>
+        />
         <div className={s.content}>
           <div className={s.form}>
             <div
@@ -105,45 +139,67 @@ export const Interface = () => {
               </label>
               <Icon icon="hugeicons:arrow-right-01" className={s.arrow} />
             </div>
-            <div className={s.swap}>
-              <div
-                className={clsx(s.swapInput, s.from)}
-                onClick={() => handleOpenChain("from")}
-              >
-                <label htmlFor="from" className={s.swapLabel}>
-                  From
-                </label>
-                <Symbol
-                  icon={form.from.iconName}
-                  color={form.from.color}
-                  className={s.swapIcon}
-                />
-                <input
-                  className={s.swapValue}
-                  value={form.from.name}
-                  readOnly
-                />
-                <Icon icon="hugeicons:arrow-down-01" className={s.swapArrow} />
+            {form.from && form.to && (
+              <div className={s.swap}>
+                <div
+                  className={clsx(s.swapInput, s.from)}
+                  onClick={() => handleOpenChain("from")}
+                >
+                  <label htmlFor="from" className={s.swapLabel}>
+                    From
+                  </label>
+                  <div className={s.symbol}>
+                    {form.from.logo !== "" && (
+                      <Image
+                        src={getLogoByHash(form.from.logo)}
+                        alt=""
+                        width={28}
+                        height={28}
+                      />
+                    )}
+                  </div>
+                  <input
+                    className={s.swapValue}
+                    value={form.from.name}
+                    readOnly
+                  />
+                  <Icon
+                    icon="hugeicons:arrow-down-01"
+                    className={s.swapArrow}
+                  />
+                </div>
+                <button onClick={handleSwap} className={s.swapButton}>
+                  <Icon icon="hugeicons:arrow-right-02" />
+                </button>
+                <div
+                  className={clsx(s.swapInput, s.to)}
+                  onClick={() => handleOpenChain("to")}
+                >
+                  <label htmlFor="to" className={s.swapLabel}>
+                    To
+                  </label>
+                  <div className={s.symbol}>
+                    {form.to.logo !== "" && (
+                      <Image
+                        src={getLogoByHash(form.to.logo)}
+                        alt=""
+                        width={28}
+                        height={28}
+                      />
+                    )}
+                  </div>
+                  <input
+                    className={s.swapValue}
+                    value={form.to.name}
+                    readOnly
+                  />
+                  <Icon
+                    icon="hugeicons:arrow-down-01"
+                    className={s.swapArrow}
+                  />
+                </div>
               </div>
-              <button onClick={handleSwap} className={s.swapButton}>
-                <Icon icon="hugeicons:arrow-right-02" />
-              </button>
-              <div
-                className={clsx(s.swapInput, s.to)}
-                onClick={() => handleOpenChain("to")}
-              >
-                <label htmlFor="to" className={s.swapLabel}>
-                  To
-                </label>
-                <Symbol
-                  icon={form.to.iconName}
-                  color={form.to.color}
-                  className={s.swapIcon}
-                />
-                <input className={s.swapValue} value={form.to.name} readOnly />
-                <Icon icon="hugeicons:arrow-down-01" className={s.swapArrow} />
-              </div>
-            </div>
+            )}
             <div
               className={clsx(s.input, s.inputAmount)}
               onClick={handleFocusInput}
@@ -201,31 +257,24 @@ export const Interface = () => {
                 icon="hugeicons:copy-01"
                 onClick={handleCopyAddress}
               />
-              <Button
-                variant="secondary"
-                className={s.btn}
-                size="xsmall"
-                icon="hugeicons:qr-code"
-                onClick={() => setOpenQr(true)}
-              />
             </div>
           </div>
           <div className={s.recap}>
             <div className={s.recapItem}>
               <span>Estimated Fees:</span>
-              <strong>0.005 ETH</strong>
+              <strong>{estimatedFees} ETH</strong>
             </div>
             <div className={s.recapItem}>
               <span>You will receive:</span>
-              <strong>0.000 ETH</strong>
+              <strong>{form.amount} ETH</strong>
             </div>
           </div>
           <Button
             className={s.deposit}
-            icon="hugeicons:download-03"
+            icon={isDeposit ? "hugeicons:download-03" : "hugeicons:upload-03"}
             size="large"
           >
-            Deposit now
+            {isDeposit ? "Deposit now" : "Withdraw now"}
           </Button>
         </div>
       </Card>
@@ -266,43 +315,33 @@ export const Interface = () => {
         responsiveBottom
       >
         <ul className={s.list}>
-          {CHAINS.map((chain) => {
+          {chains.map((chain) => {
             return (
-              <li key={chain.id}>
+              <li key={chain.chainId}>
                 <Button
                   variant="secondary"
                   iconRight="hugeicons:arrow-right-01"
                   border
                   onClick={() => handleChangeChain(chain)}
-                  hovering={chain.id === form[chainType].id}
+                  hovering={chain.chainId === form[chainType]?.chainId}
                   className={s.button}
                 >
-                  <Symbol icon={chain.iconName} color={chain.color} />
+                  <div className={s.symbol}>
+                    {chain.logo !== "" && (
+                      <Image
+                        src={getLogoByHash(chain.logo)}
+                        alt=""
+                        width={28}
+                        height={28}
+                      />
+                    )}
+                  </div>
                   <span>{chain.name}</span>
                 </Button>
               </li>
             )
           })}
         </ul>
-      </Modal>
-      <Modal
-        open={openQr}
-        onClose={() => setOpenQr(false)}
-        className={s.modalQrcode}
-        closeButton={false}
-      >
-        <div className={s.qrcode}>
-          <Image src="/img/qrcode.svg" alt="QR Code" width={200} height={200} />
-        </div>
-        <Button onClick={handleCopyAddress}>Copy this address</Button>
-        <Button
-          variant="secondary"
-          onClick={() => setOpenQr(false)}
-          size="small"
-          className={s.close}
-        >
-          Close
-        </Button>
       </Modal>
     </>
   )

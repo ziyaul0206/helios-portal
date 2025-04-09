@@ -1,15 +1,21 @@
 import { useState } from "react"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { ethers } from "ethers"
 import { Feedback } from "@/types/feedback"
 import { useAccount } from "wagmi"
 import { BRIDGE_CONTRACT_ADDRESS, bridgeAbi } from "@/constant/helios-contracts"
 import { getErrorMessage } from "@/utils/string"
 import { useWeb3Provider } from "./useWeb3Provider"
+import { getHyperionChains } from "@/helpers/rpc-calls"
 
 export const useBridge = () => {
   const { address } = useAccount()
   const web3Provider = useWeb3Provider()
+
+  const qHyperionChains = useQuery({
+    queryKey: ["hyperionChains"],
+    queryFn: getHyperionChains
+  })
 
   const [feedback, setFeedback] = useState<Feedback>({
     status: "idle",
@@ -96,6 +102,10 @@ export const useBridge = () => {
   }
 
   return {
+    chains: qHyperionChains.data || [],
+    heliosChainIndex: qHyperionChains.data?.findIndex(
+      (chain) => chain.hyperionId === 0
+    ),
     sendToChain,
     feedback,
     isLoading: sendToChainMutation.isPending

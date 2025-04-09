@@ -6,6 +6,7 @@ import { fonts } from "./fonts"
 import ContextProvider from "@/context"
 import { headers } from "next/headers"
 import { NewsBanner } from "./(components)/news-banner"
+import { DebugNetwork } from "@/components/Debug"
 
 export const metadata = MetadataSeo({
   title: "Your Gateway to Staking, Delegation & Cross-Chain Governance",
@@ -55,6 +56,8 @@ export default async function RootLayout({
       <body className={fonts} style={{ paddingTop: 60 }}>
         <NewsBanner />
         <ContextProvider cookies={cookies}>
+          <DebugNetwork />
+
           <Wrapper>{children}</Wrapper>
         </ContextProvider>
       </body>

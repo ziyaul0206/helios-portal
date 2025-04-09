@@ -293,6 +293,18 @@ $responsiveSwap: 800px;
   }
 }
 
+.symbol {
+  color: var(--white);
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background-color: var(--white);
+}
+
 .recap {
   display: flex;
   flex-wrap: wrap;
