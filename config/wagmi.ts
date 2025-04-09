@@ -51,7 +51,7 @@ export const heliosChain = defineChain({
 // Use only the Helios chain in the networks array
 // export const networks = [heliosChain, mainnet, sepolia, polygonAmoy]
 
-const toAppKitNetwork = (chain: any): AppKitNetwork => ({
+export const toAppKitNetwork = (chain: any): AppKitNetwork => ({
   id: chain.id,
   name: chain.name,
   chainNamespace: "eip155",
