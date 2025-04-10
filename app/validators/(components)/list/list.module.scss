@@ -9,6 +9,7 @@
   padding: var(--padding);
   gap: var(--size-4);
   cursor: text;
+  min-height: var(--button-large-height);
 
   &Icon {
     width: 1.5em;
@@ -70,13 +71,18 @@
 }
 
 .list {
+  --list-gap: var(--grid-gap);
   margin-top: var(--grid-gap);
-  display: grid;
-  grid-template-columns: repeat(
-    auto-fit,
-    minmax(min(100%, calc(250px + 80 * (100vw - 320px) / 1080)), 1fr)
-  );
-  gap: var(--grid-gap);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: var(--list-gap);
+
+  & > * {
+    width: calc(
+      (100% - (var(--list-columns) - 1) * var(--list-gap)) / var(--list-columns)
+    );
+  }
 }
 
 .empty {
@@ -87,9 +93,10 @@
   justify-content: center;
   gap: calc(var(--card-padding) / 2);
   flex: 1;
+  text-align: center;
 }
 
 .sad {
-  font-size: 2em;
+  font-size: var(--size-8);
   color: var(--primary-medium);
 }

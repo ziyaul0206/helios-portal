@@ -1,0 +1,6 @@
+@use "styles/mixins" as *;
+
+.top {
+  grid-template-columns: 3fr 2fr;
+  grid-template-areas: "a b";
+}
