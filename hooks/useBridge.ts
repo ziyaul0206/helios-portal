@@ -2,19 +2,31 @@ import { useState } from "react"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { ethers } from "ethers"
 import { Feedback } from "@/types/feedback"
-import { useAccount } from "wagmi"
+import { useAccount, useChainId } from "wagmi"
 import { BRIDGE_CONTRACT_ADDRESS, bridgeAbi } from "@/constant/helios-contracts"
 import { getErrorMessage } from "@/utils/string"
 import { useWeb3Provider } from "./useWeb3Provider"
-import { getHyperionChains } from "@/helpers/rpc-calls"
+import {
+  getHyperionChains,
+  getTokensByChainIdAndPageAndSize
+} from "@/helpers/rpc-calls"
+import { toHex } from "@/utils/number"
 
 export const useBridge = () => {
   const { address } = useAccount()
+  const chainId = useChainId()
   const web3Provider = useWeb3Provider()
 
   const qHyperionChains = useQuery({
     queryKey: ["hyperionChains"],
     queryFn: getHyperionChains
+  })
+
+  const qTokensByChain = useQuery({
+    queryKey: ["tokens", chainId],
+    queryFn: () =>
+      getTokensByChainIdAndPageAndSize(chainId, toHex(1), toHex(10)),
+    enabled: !!chainId
   })
 
   const [feedback, setFeedback] = useState<Feedback>({
@@ -103,6 +115,7 @@ export const useBridge = () => {
 
   return {
     chains: qHyperionChains.data || [],
+    tokens: qTokensByChain.data || [],
     heliosChainIndex: qHyperionChains.data?.findIndex(
       (chain) => chain.hyperionId === 0
     ),

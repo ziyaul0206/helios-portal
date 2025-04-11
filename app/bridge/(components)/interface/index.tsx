@@ -5,10 +5,7 @@ import { Card } from "@/components/card"
 import { Heading } from "@/components/heading"
 import { Icon } from "@/components/icon"
 import { Modal } from "@/components/modal"
-import { Symbol } from "@/components/symbol"
-import { getAllTokens } from "@/config/tokens"
 import { formatNumber } from "@/lib/utils/number"
-import { type Token } from "@/types/Tokens"
 import clsx from "clsx"
 import Image from "next/image"
 import { useEffect, useState } from "react"
@@ -18,9 +15,10 @@ import { useBridge } from "@/hooks/useBridge"
 import { HyperionChain } from "@/types/hyperion"
 import { getLogoByHash } from "@/utils/url"
 import { useAccount, useChainId, useSwitchChain } from "wagmi"
+import { TokenDenom } from "@/types/denom"
 
 type BridgeForm = {
-  asset: Token
+  asset: TokenDenom | null
   from: HyperionChain | null
   to: HyperionChain | null
   amount: number
@@ -29,27 +27,27 @@ type BridgeForm = {
 
 export const Interface = () => {
   const chainId = useChainId()
-  const { chains, heliosChainIndex } = useBridge()
+  const { chains, tokens, heliosChainIndex } = useBridge()
   const { switchChain } = useSwitchChain()
 
-  const tokens = getAllTokens()
   const { address } = useAccount()
   const [openToken, setOpenToken] = useState(false)
   const [openChain, setOpenChain] = useState(false)
   const [chainType, setChainType] = useState<"from" | "to">("from")
   const [form, setForm] = useState<BridgeForm>({
-    asset: tokens[0],
+    asset: null,
     from: null,
     to: null,
     amount: 0,
     address: address || ""
   })
+
   const estimatedFees = form.amount / 100
   const isDeposit = heliosChainIndex
     ? form.from?.chainId === chains[heliosChainIndex].chainId
     : false
 
-  const handleChangeToken = (token: Token) => {
+  const handleChangeToken = (token: TokenDenom) => {
     setForm({ ...form, asset: token })
     setOpenToken(false)
   }
@@ -103,16 +101,18 @@ export const Interface = () => {
     setForm((prevForm) => ({
       ...prevForm,
       from,
-      to
+      to,
+      asset: null
     }))
   }, [chains, heliosChainIndex, chainId])
 
   useEffect(() => {
-    console.log(form.from)
     if (form.from && form.from?.chainId !== chainId) {
       switchChain({ chainId: form.from.chainId })
     }
   }, [form.from])
+
+  const isDisabled = !form.asset
 
   return (
     <>
@@ -128,12 +128,17 @@ export const Interface = () => {
               className={clsx(s.input, s.inputToken)}
               onClick={() => setOpenToken(true)}
             >
-              <Symbol
-                icon={form.asset.symbolIcon}
-                color={form.asset.color}
-                className={s.icon}
-              />
-              <input className={s.value} value={form.asset.name} readOnly />
+              <div className={s.symbol}>
+                {form.asset && form.asset.metadata.logo !== "" && (
+                  <Image
+                    src={getLogoByHash(form.asset.metadata.logo)}
+                    alt=""
+                    width={28}
+                    height={28}
+                  />
+                )}
+              </div>
+              <p className={s.value}>{form.asset?.metadata.name}</p>
               <label htmlFor="amount" className={s.label}>
                 Choose the cross-chain bridge asset
               </label>
@@ -262,14 +267,19 @@ export const Interface = () => {
           <div className={s.recap}>
             <div className={s.recapItem}>
               <span>Estimated Fees:</span>
-              <strong>{estimatedFees} ETH</strong>
+              <strong>
+                {estimatedFees} {form.asset?.metadata.symbol}
+              </strong>
             </div>
             <div className={s.recapItem}>
               <span>You will receive:</span>
-              <strong>{form.amount} ETH</strong>
+              <strong>
+                {form.amount} {form.asset?.metadata.symbol}
+              </strong>
             </div>
           </div>
           <Button
+            disabled={isDisabled}
             className={s.deposit}
             icon={isDeposit ? "hugeicons:download-03" : "hugeicons:upload-03"}
             size="large"
@@ -287,21 +297,26 @@ export const Interface = () => {
       >
         <ul className={s.list}>
           {tokens.map((token) => (
-            <li key={token.id}>
+            <li key={token.metadata.base}>
               <Button
                 variant="secondary"
                 iconRight="hugeicons:arrow-right-01"
                 border
                 onClick={() => handleChangeToken(token)}
-                hovering={token.id === form.asset.id}
+                hovering={token.metadata.symbol === form.asset?.metadata.symbol}
                 className={clsx(s.button)}
               >
-                <Symbol
-                  icon={token.symbolIcon}
-                  color={token.color}
-                  className={s.icon}
-                />
-                <span>{token.name}</span>
+                <div className={s.symbol}>
+                  {token.metadata.logo !== "" && (
+                    <Image
+                      src={getLogoByHash(token.metadata.logo)}
+                      alt=""
+                      width={28}
+                      height={28}
+                    />
+                  )}
+                </div>
+                <span>{token.metadata.name}</span>
               </Button>
             </li>
           ))}
