@@ -4,25 +4,8 @@ import { Icon } from "@/components/icon"
 import { getToken } from "@/config/tokens"
 import { formatBigNumber } from "@/lib/utils/number"
 import { Validator } from "@/types/validator"
-import clsx from "clsx"
 import s from "./item.module.scss"
-
-interface StatProps {
-  label: string
-  value: string
-  className: string
-  icon: string
-}
-
-const Stat = ({ label, value, className, icon }: StatProps) => {
-  return (
-    <div className={clsx(s.stat, className)}>
-      <Icon icon={icon} className={s.icon} />
-      <span>{label}</span>
-      <strong>{value}</strong>
-    </div>
-  )
-}
+import { StatItem } from "./stat"
 
 export const Item = ({
   moniker,
@@ -93,28 +76,28 @@ export const Item = ({
         </div>
       </div>
       <div className={s.stats}>
-        <Stat
+        <StatItem
           label="APY"
           value={formattedApr}
-          className={s.apy}
+          color="apy"
           icon="hugeicons:shield-energy"
         />
-        {/* <Stat
+        {/* <StatItem
           label="Reputation"
           value={`${reputation}/100`}
-          className={s.reputation}
+          color="reputation"
           icon="hugeicons:percent-circle"
         />
-        <Stat
+        <StatItem
           label="Uptime"
           value={`${uptime}%`}
-          className={s.uptime}
+          color="uptime"
           icon="hugeicons:award-04"
         /> */}
-        <Stat
+        <StatItem
           label="Commission"
           value={formattedCommission}
-          className={s.commission}
+          color="commission"
           icon="hugeicons:clock-01"
         />
       </div>

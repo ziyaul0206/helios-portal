@@ -1,0 +1,40 @@
+@use "styles/mixins" as *;
+
+.blocks {
+  display: flex;
+  gap: calc(var(--card-padding) / 2);
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.block {
+  --block-padding: var(--size-6);
+  padding: var(--block-padding);
+  background-color: var(--background-lower);
+  border-radius: var(--radius-m);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: 100%;
+  gap: calc(var(--block-padding) / 3);
+
+  & > * {
+    flex: 1;
+    display: block;
+    color: var(--text-primary);
+    white-space: nowrap;
+    @include ellipsis;
+  }
+
+  strong {
+    color: var(--color-primary, currentColor);
+    font-size: var(--size-6);
+  }
+
+  small {
+    font-size: var(--size-3-5);
+    color: var(--text-tertiary);
+  }
+}

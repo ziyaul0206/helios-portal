@@ -28,6 +28,14 @@
   letter-spacing: -0.015em;
   line-height: 1.2;
   @include ellipsis;
+
+  svg {
+    display: inline-block;
+    color: var(--primary-medium);
+    margin-left: 0.25em;
+    font-size: 0.85em;
+    vertical-align: middle;
+  }
 }
 
 .description {

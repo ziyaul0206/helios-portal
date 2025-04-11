@@ -70,15 +70,15 @@
 }
 
 .stat {
-  font-size: var(--size-3);
   width: calc(50% - var(--gap));
   background-color: var(--background-lower);
   border-radius: var(--radius-m);
-  padding: 1.5em;
+  padding: var(--padding, 1.5em);
   color: var(--color, var(--primary-medium));
   position: relative;
 
   span {
+    font-size: var(--size-3-5);
     display: block;
     color: var(--text-tertiary);
     margin-bottom: 0.5em;
@@ -87,9 +87,16 @@
   strong {
     display: block;
     color: var(--color);
-    font-size: 1.35em;
     line-height: 1;
     margin-bottom: -0.05em;
+  }
+
+  small {
+    font-size: var(--size-3);
+    display: block;
+    color: var(--text-tertiary);
+    margin-top: 0.5em;
+    @include ellipsis;
   }
 
   .icon {
@@ -99,19 +106,19 @@
     font-size: 1.25em;
   }
 
-  &.apy {
+  &[data-color="apy"] {
     --color: var(--other-apy);
   }
 
-  &.reputation {
+  &[data-color="reputation"] {
     --color: var(--other-reputation);
   }
 
-  &.uptime {
+  &[data-color="uptime"] {
     --color: var(--other-uptime);
   }
 
-  &.commission {
+  &[data-color="commission"] {
     --color: var(--other-commission);
   }
 }

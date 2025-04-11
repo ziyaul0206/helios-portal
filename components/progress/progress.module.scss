@@ -5,7 +5,7 @@
   width: 100%;
   border-radius: var(--radius-rounded);
   overflow: hidden;
-  height: var(--size-1);
+  min-height: var(--size-1);
   margin-top: var(--size-1-5);
 
   &Bar {
@@ -13,7 +13,7 @@
     background: linear-gradient(
       to right,
       var(--background-higher),
-      var(--success-low)
+      var(--progress-color, var(--success-low))
     );
     border-radius: inherit;
   }

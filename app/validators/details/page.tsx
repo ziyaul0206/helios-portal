@@ -1,15 +1,26 @@
 import { Area, Grid } from "@/components/grid"
+import { Apy } from "./(components)/apy"
+import { Delegator } from "./(components)/delegator"
+import { Governance } from "./(components)/governance"
+import { Performance } from "./(components)/performance"
+import { Staking } from "./(components)/staking"
+import { Top } from "./(components)/top"
 import s from "./page.module.scss"
-import { Top } from "./top"
 
 export default function Page() {
   return (
     <>
-      <Grid className={s.top}>
+      <Top />
+      <Grid className={s.content}>
         <Area area="a">
-          <Top />
+          <Apy />
+          <Governance />
         </Area>
-        <Area area="b">-</Area>
+        <Area area="b">
+          <Performance />
+          <Delegator />
+          <Staking />
+        </Area>
       </Grid>
     </>
   )

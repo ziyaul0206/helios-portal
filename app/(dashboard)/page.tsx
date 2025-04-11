@@ -2,6 +2,7 @@
 
 import { Area, Grid } from "@/components/grid"
 import routes from "@/config/routes"
+import { useBlockInfo } from "@/hooks/useBlockInfo"
 import { formatNumber } from "@/lib/utils/number"
 import { Discover } from "./(components)/discover"
 import { Linker } from "./(components)/linker"
@@ -11,7 +12,6 @@ import { Stat } from "./(components)/stat"
 import { TVL } from "./(components)/tvl"
 import { Validators } from "./(components)/validators"
 import s from "./page.module.scss"
-import { useBlockInfo } from "@/hooks/useBlockInfo"
 
 export default function Page() {
   const { lastBlockNumber, blockTime, gasPriceUSD } = useBlockInfo()

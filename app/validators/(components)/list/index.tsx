@@ -1,6 +1,7 @@
 "use client"
 
 import { Card } from "@/components/card"
+import { SkeletonCard } from "@/components/card/skeleton"
 import { Heading } from "@/components/heading"
 import { Icon } from "@/components/icon"
 import { useValidators } from "@/hooks/useValidators"
@@ -51,7 +52,16 @@ export const List = () => {
           <Empty icon="hugeicons:sad-02" title="No validators found" />
         )}
         {validatorsIsLoading && (
-          <Empty icon="svg-spinners:3-dots-scale" title="Loading validators" />
+          <>
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+          </>
         )}
       </div>
     </>

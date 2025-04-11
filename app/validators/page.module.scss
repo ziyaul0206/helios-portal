@@ -2,8 +2,7 @@
 
 .validators {
   --list-columns: 4;
-
-  grid-template-columns: 3fr 1fr;
+  --grid-template-columns: 3fr 1fr;
   grid-template-areas: "a b";
 
   @include max(2000px) {
@@ -16,7 +15,7 @@
 
   @include max(1320px) {
     --list-columns: 3;
-    grid-template-columns: 1fr;
+    --grid-template-columns: 1fr;
     grid-template-areas: "a" "b";
 
     @include min(820px) {
