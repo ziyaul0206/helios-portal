@@ -187,3 +187,24 @@ $responsiveMobile: 700px;
     gap: calc(var(--size-8) / 1.5);
   }
 }
+
+@mixin block(
+  $padding: var(--size-8),
+  $gap: calc(var(--padding) / 2),
+  $direction: column
+) {
+  --padding: #{$padding};
+  display: flex;
+  flex-direction: $direction;
+  background-color: var(--background-lower);
+  border-radius: var(--radius-m);
+  padding: var(--padding);
+  gap: #{$gap};
+  flex-wrap: wrap;
+
+  h3 {
+    font-size: var(--size-5);
+    font-weight: bold;
+    min-width: 100%;
+  }
+}

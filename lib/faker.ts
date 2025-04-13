@@ -95,3 +95,48 @@ export const generateRandomValidators = (count: number): ValidatorProps[] => {
 
   return validators
 }
+
+export const generateGovernanceData = () => {
+  const proposals = [
+    "Increase validator set",
+    "Reduce transaction fees",
+    "Add new bridge assets",
+    "Modify staking rewards",
+    "Update governance parameters",
+    "Implement new consensus mechanism",
+    "Adjust block rewards",
+    "Enhance network security",
+    "Optimize gas fees",
+    "Upgrade smart contracts"
+  ]
+
+  return Array.from({ length: 5 }, (_, i) => {
+    const proposal = faker.helpers.arrayElement(proposals)
+    const result = faker.helpers.arrayElement(["Passed", "Failed"])
+    const vote = result === "Passed" ? "For" : "Against"
+    const hipNumber = 23 - i
+
+    return {
+      id: `HIP-${hipNumber}`,
+      title: proposal,
+      result,
+      vote,
+      date: faker.date.recent({ days: 30 }).toISOString().split("T")[0],
+      votesFor: faker.number.int({ min: 1000000, max: 5000000 }),
+      votesAgainst: faker.number.int({ min: 100000, max: 1000000 }),
+      quorum: faker.number.int({ min: 40, max: 60 }),
+      turnout: faker.number.int({ min: 30, max: 80 })
+    }
+  })
+}
+
+export const generatePerformanceData = (days: number) => {
+  return Array.from({ length: days }, (_, i) => {
+    const date = new Date()
+    date.setDate(date.getDate() - (days - i))
+    return {
+      date: date.toISOString().split("T")[0],
+      value: faker.number.float({ min: 99.5, max: 100 })
+    }
+  })
+}

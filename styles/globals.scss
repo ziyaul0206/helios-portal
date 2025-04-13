@@ -109,3 +109,14 @@ svg {
     background-position: 0 50%;
   }
 }
+
+/* Recharts */
+
+.recharts-sector {
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.5;
+  }
+}

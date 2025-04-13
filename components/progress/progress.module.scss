@@ -13,7 +13,7 @@
     background: linear-gradient(
       to right,
       var(--background-higher),
-      var(--progress-color, var(--success-low))
+      var(--progress-color, var(--color-medium, var(--success-low)))
     );
     border-radius: inherit;
   }

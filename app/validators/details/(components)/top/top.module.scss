@@ -68,6 +68,7 @@
   margin-bottom: calc(var(--item-gap) * -0.33);
   display: flex;
   align-items: center;
+  @include ellipsis;
 
   svg {
     display: inline-block;
@@ -102,5 +103,12 @@
   span {
     font-size: var(--size-3);
     color: var(--text-tertiary);
+  }
+}
+
+@include max(500px) {
+  .message,
+  .total {
+    min-width: 100%;
   }
 }
