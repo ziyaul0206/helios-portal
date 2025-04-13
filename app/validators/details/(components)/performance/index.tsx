@@ -1,5 +1,6 @@
 "use client"
 
+import { Blocks } from "@/components/blocks"
 import { Button } from "@/components/button"
 import { Card } from "@/components/card"
 import { Heading } from "@/components/heading"
@@ -8,7 +9,6 @@ import { RechartsLine } from "@/components/recharts/line"
 import { generatePerformanceData } from "@/lib/faker"
 import clsx from "clsx"
 import { useState } from "react"
-import { Blocks } from "../blocks"
 import s from "./performance.module.scss"
 
 export const Performance = () => {

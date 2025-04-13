@@ -1,9 +1,9 @@
 import { Badge } from "@/components/badge"
+import { Blocks } from "@/components/blocks"
 import { Card } from "@/components/card"
 import { Heading } from "@/components/heading"
 import { generateGovernanceData } from "@/lib/faker"
 import clsx from "clsx"
-import { Blocks } from "../blocks"
 import s from "./governance.module.scss"
 
 const Proposal = ({ item }: { item: any }) => {
