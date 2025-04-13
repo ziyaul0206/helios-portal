@@ -19,7 +19,7 @@ interface RechartsLineProps extends React.HTMLAttributes<HTMLDivElement> {
     value: number
   }[]
   filters?: {
-    period?: "7d" | "30d" | "90d" | "1y"
+    period?: "7d" | "30d" | "90d" | "1y" | "daily" | "weekly" | "monthly"
   }
 }
 

@@ -1,11 +1,13 @@
 @use "styles/mixins" as *;
 
 .blocks {
+  --block-gap: calc(var(--card-padding) / 2);
   display: flex;
-  gap: calc(var(--card-padding) / 2);
+  gap: var(--block-gap);
   align-items: stretch;
   justify-content: space-between;
   width: 100%;
+  flex-wrap: wrap;
 
   @include max(1200px) {
     flex-wrap: wrap;

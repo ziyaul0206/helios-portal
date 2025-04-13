@@ -1,0 +1,17 @@
+@use "styles/mixins" as *;
+
+.projections {
+  --card-padding: var(--size-7);
+
+  .blocks {
+    --n: 4;
+
+    @include max(1000px) {
+      --n: 2;
+    }
+
+    & > * {
+      flex-basis: calc(100% / var(--n) - var(--block-gap));
+    }
+  }
+}

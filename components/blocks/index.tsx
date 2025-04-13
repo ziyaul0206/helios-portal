@@ -1,7 +1,9 @@
 import { type Variants } from "@/types/Variants"
+import clsx from "clsx"
 import s from "./blocks.module.scss"
 
 interface BlocksProps {
+  className?: string
   items: {
     title: string
     value?: string
@@ -11,9 +13,9 @@ interface BlocksProps {
   }[]
 }
 
-export const Blocks = ({ items }: BlocksProps) => {
+export const Blocks = ({ items, className }: BlocksProps) => {
   return (
-    <div className={s.blocks}>
+    <div className={clsx(s.blocks, className)}>
       {items.map(({ title, value, bottom, color, content }, index) => (
         <div className={s.block} data-color={color} key={index}>
           <span>{title}</span>
