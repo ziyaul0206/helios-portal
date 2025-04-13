@@ -1,5 +1,6 @@
 import { History } from "./(components)/history"
 import { Projections } from "./(components)/projections"
+import { Unbonding } from "./(components)/unbonding"
 import s from "./page.module.scss"
 
 export default function Page() {
@@ -8,6 +9,7 @@ export default function Page() {
       <div className={s.delegations}>
         <Projections />
         <History />
+        <Unbonding />
       </div>
     </>
   )
