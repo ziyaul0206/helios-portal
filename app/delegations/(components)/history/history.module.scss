@@ -19,6 +19,7 @@
 .chart {
   @include block;
   font-size: var(--size-3);
+  flex: 1;
 
   .title {
     display: flex;

@@ -4,6 +4,7 @@ import { Blocks } from "@/components/blocks"
 import { Button } from "@/components/button"
 import { Card } from "@/components/card"
 import { Heading } from "@/components/heading"
+import { Icon } from "@/components/icon"
 import { RechartsLine } from "@/components/recharts/line"
 import { generatePerformanceData } from "@/lib/faker"
 import clsx from "clsx"
@@ -14,17 +15,29 @@ export const History = () => {
   const blocks = [
     {
       title: "Daily Average",
-      value: "2.99 HLS",
+      value: (
+        <>
+          2.99 <Icon icon="helios" />
+        </>
+      ),
       color: "success"
     },
     {
       title: "Weekly Average",
-      value: "20.93 HLS",
+      value: (
+        <>
+          20.93 <Icon icon="helios" />
+        </>
+      ),
       color: "success"
     },
     {
       title: "Monthly Average",
-      value: "89.69 HLS",
+      value: (
+        <>
+          89.69 <Icon icon="helios" />
+        </>
+      ),
       color: "success"
     }
   ]

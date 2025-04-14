@@ -1,0 +1,21 @@
+@use "styles/mixins" as *;
+
+.chart {
+  @include block;
+  flex: 1;
+
+  h3 {
+    margin-bottom: auto;
+  }
+}
+
+.pie {
+  width: calc(100px + 150 * (100vw - 320px) / 1080);
+  margin: auto;
+}
+
+.legend {
+  width: 100%;
+  margin-top: auto;
+  flex: none;
+}

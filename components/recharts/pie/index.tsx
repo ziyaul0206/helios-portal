@@ -1,7 +1,9 @@
 "use client"
 
+import clsx from "clsx"
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts"
 import { RechartsTooltip } from "../tooltip"
+import s from "./pie.module.scss"
 
 interface RechartsPieProps {
   data: {
@@ -48,6 +50,34 @@ export const RechartsPie = ({ data, className }: RechartsPieProps) => {
           <Tooltip content={<CustomTooltip />} />
         </PieChart>
       </ResponsiveContainer>
+    </div>
+  )
+}
+
+interface RechartsPieLegendProps {
+  data: {
+    name: string
+    value: number
+    color: string
+    percentage: number
+  }[]
+  className?: string
+}
+
+export const RechartsPieLegend = ({
+  data,
+  className
+}: RechartsPieLegendProps) => {
+  return (
+    <div className={clsx(s.legend, className)}>
+      {data.map((item, index) => (
+        <div key={index} className={s.item}>
+          <div className={s.dot} style={{ backgroundColor: item.color }} />
+          <span className={s.name}>{item.name}</span>
+          <span className={s.value}>${item.value.toLocaleString()}</span>
+          <span className={s.percentage}>{item.percentage}%</span>
+        </div>
+      ))}
     </div>
   )
 }

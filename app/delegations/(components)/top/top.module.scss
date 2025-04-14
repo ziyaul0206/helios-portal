@@ -1,0 +1,39 @@
+@use "styles/mixins" as *;
+
+.right {
+  @include block(var(--size-8));
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  @include min(750px) {
+    padding: var(--padding) calc(var(--padding) * 2);
+  }
+
+  .available {
+    font-size: var(--size-12);
+    font-weight: bold;
+    color: var(--primary-medium);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      transform: scale(0.9);
+      margin-left: 0.2em;
+    }
+  }
+}
+
+.content {
+  display: flex;
+  gap: calc(var(--card-padding) * 0.5);
+
+  @include max(750px) {
+    flex-direction: column;
+  }
+
+  .blocks {
+    flex: 1;
+  }
+}

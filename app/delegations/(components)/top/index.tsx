@@ -1,5 +1,44 @@
+import { Blocks } from "@/components/blocks"
+import { Button } from "@/components/button"
+import { Card } from "@/components/card"
+import { Heading } from "@/components/heading"
+import { Icon } from "@/components/icon"
 import s from "./top.module.scss"
 
 export const Top = () => {
-  return <div className={s.main}>Hello</div>
+  const blocks = [
+    {
+      title: "Total Staked Value",
+      value: "$9,000",
+      bottom: "Across 2 validators"
+    },
+    {
+      title: "Average APY",
+      value: "12.13%",
+      bottom: "Weighted average",
+      color: "success"
+    },
+    {
+      title: "Unbonding Value",
+      value: "$2,500",
+      bottom: "Across 2 validators",
+      color: "warning"
+    }
+  ]
+
+  return (
+    <Card className={s.main} auto>
+      <Heading icon="hugeicons:laurel-wreath-01" title="My Delegations" />
+      <div className={s.content}>
+        <Blocks items={blocks} className={s.blocks} vertical />
+        <div className={s.right}>
+          <h3>Rewards Available</h3>
+          <div className={s.available}>
+            71.5 <Icon icon="helios" />
+          </div>
+          <Button iconRight="helios">Claim All Rewards</Button>
+        </div>
+      </div>
+    </Card>
+  )
 }

@@ -12,3 +12,17 @@
     margin-top: 0;
   }
 }
+
+.middle {
+  display: flex;
+  gap: var(--grid-gap);
+
+  @include max(1200px) {
+    flex-direction: column;
+  }
+
+  & > * {
+    flex: 1;
+    width: 100%;
+  }
+}

@@ -1,0 +1,130 @@
+@use "styles/mixins" as *;
+
+.unbonding {
+  --card-padding: var(--size-7);
+}
+
+.list {
+  --n: 3;
+  --gap: calc(var(--card-padding) * 0.5);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+
+  @include max(1900px) {
+    --n: 2;
+  }
+
+  @include max(1200px) {
+    --n: 1;
+  }
+}
+
+.item {
+  @include block(var(--size-7));
+  width: calc((100% - (var(--n) - 1) * var(--gap)) / var(--n));
+  transition: background-color var(--transition-link),
+    outline var(--transition-link);
+  outline: 2px solid transparent;
+
+  &:hover {
+    outline: 2px solid var(--primary-medium);
+    background-color: var(--background-lowest);
+  }
+}
+
+.top {
+  --icon-size: var(--size-14);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: calc(var(--padding) / 1.5);
+
+  @include max(600px) {
+    flex-wrap: wrap;
+  }
+}
+
+.icon {
+  background-color: var(--background-medium);
+  border-radius: var(--radius-s);
+  width: var(--icon-size);
+  min-width: var(--icon-size);
+  height: var(--icon-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & > * {
+    max-width: 80%;
+    max-height: 80%;
+  }
+}
+
+.left {
+  margin-right: auto;
+  align-self: center;
+
+  h3 {
+    line-height: 1.1;
+  }
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.25em;
+  white-space: nowrap;
+
+  @include max(600px) {
+    min-width: 100%;
+    align-items: flex-start;
+  }
+
+  span {
+    color: var(--text-tertiary);
+    font-size: var(--size-3);
+  }
+
+  strong {
+    color: var(--primary-medium);
+    font-size: var(--size-3-5);
+  }
+}
+
+.amount {
+  display: flex;
+  align-items: center;
+  color: var(--primary-medium);
+  font-weight: bold;
+  font-size: var(--size-5);
+  margin-top: 0.25em;
+
+  svg {
+    margin-right: 0.25em;
+  }
+
+  small {
+    font-weight: 500;
+    margin-left: 0.35em;
+    color: var(--text-tertiary);
+    font-size: 0.75em;
+  }
+}
+
+.bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--size-3-5);
+
+  span {
+    color: var(--text-tertiary);
+  }
+
+  strong {
+    color: var(--primary-medium);
+  }
+}

@@ -1,6 +1,7 @@
 import { getAllTokens, getToken } from "@/config/tokens"
 import { ValidatorProps } from "@/types/faker"
 import { Token } from "@/types/Tokens"
+import { TransactionDelegation } from "@/types/TransactionDelegation"
 import {
   Transaction,
   TransactionStatus,
@@ -139,4 +140,30 @@ export const generatePerformanceData = (days: number) => {
       value: faker.number.float({ min: 99.5, max: 100 })
     }
   })
+}
+
+export const generateTransactionsDelegations = (
+  number: number = 10
+): TransactionDelegation[] => {
+  const types = [1, 2, 3]
+  const status = [1, 2, 3]
+
+  return Array.from({ length: number }, () => ({
+    type: faker.helpers.arrayElement(types),
+    validator: faker.helpers.arrayElement([
+      "Helios Guardian",
+      "Cosmic Validator",
+      "Quantum Nodes",
+      "Stellar Validator",
+      "Nova Network"
+    ]),
+    amount: faker.number.int({ min: 50, max: 1000 }),
+    status: faker.helpers.arrayElement(status),
+    date: faker.date.recent({ days: 30 }).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric"
+    }),
+    explorer: `https://explorer.helios.network/tx/${faker.string.uuid()}`
+  }))
 }

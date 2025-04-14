@@ -18,6 +18,7 @@ interface RechartsLineProps extends React.HTMLAttributes<HTMLDivElement> {
     date: string
     value: number
   }[]
+  height?: number
   filters?: {
     period?: "7d" | "30d" | "90d" | "1y" | "daily" | "weekly" | "monthly"
   }
@@ -26,6 +27,7 @@ interface RechartsLineProps extends React.HTMLAttributes<HTMLDivElement> {
 export const RechartsLine = ({
   data,
   filters,
+  height = 300,
   ...props
 }: RechartsLineProps) => {
   const CustomTooltip = ({ active, payload }: any) => {
@@ -74,7 +76,7 @@ export const RechartsLine = ({
 
   return (
     <div {...props} className={clsx(s.chart, props.className)}>
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={height}>
         <AreaChart data={data}>
           <defs>
             <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
