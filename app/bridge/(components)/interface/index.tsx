@@ -44,7 +44,7 @@ export const Interface = () => {
 
   const estimatedFees = form.amount / 100
   const isDeposit = heliosChainIndex
-    ? form.from?.chainId === chains[heliosChainIndex].chainId
+    ? form.to?.chainId === chains[heliosChainIndex].chainId
     : false
 
   const handleChangeToken = (token: TokenDenom) => {
@@ -102,7 +102,8 @@ export const Interface = () => {
       ...prevForm,
       from,
       to,
-      asset: null
+      asset: null,
+      amount: 0
     }))
   }, [chains, heliosChainIndex, chainId])
 
