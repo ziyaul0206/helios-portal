@@ -1,7 +1,7 @@
 import { Blocks } from "@/components/blocks"
 import { Card } from "@/components/card"
 import { Heading } from "@/components/heading"
-import { Claim } from "./claim"
+import { Claim } from "../claim"
 import s from "./top.module.scss"
 
 export const Top = () => {
@@ -26,7 +26,7 @@ export const Top = () => {
   ]
 
   return (
-    <Card className={s.main} auto>
+    <Card auto>
       <Heading icon="hugeicons:laurel-wreath-01" title="My Delegations" />
       <div className={s.content}>
         <Blocks items={blocks} className={s.blocks} vertical />

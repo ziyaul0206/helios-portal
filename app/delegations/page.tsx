@@ -1,3 +1,4 @@
+import { Active } from "./(components)/active"
 import { Distribution } from "./(components)/distribution"
 import { History } from "./(components)/history"
 import { Projections } from "./(components)/projections"
@@ -15,6 +16,7 @@ export default function Page() {
           <Distribution />
           <History />
         </div>
+        <Active />
         <Unbonding />
         <Projections />
         <Transactions />
