@@ -15,6 +15,15 @@
   font-family: var(--font-main) !important;
   padding: var(--size-6) !important;
 
+  a {
+    font-weight: bold;
+    color: var(--primary-medium) !important;
+
+    &:hover {
+      color: var(--primary-low) !important;
+    }
+  }
+
   [data-title] {
     font-size: var(--size-4);
     padding-left: 0.25em;

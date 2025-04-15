@@ -37,6 +37,11 @@
   position: relative;
   @include user-select;
 
+  &[disabled] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
   &:hover,
   &.hovering {
     color: var(--btn-hover-color, var(--btn-base-hover-color));
