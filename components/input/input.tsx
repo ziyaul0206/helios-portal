@@ -4,12 +4,16 @@ import { Icon } from "@/components/icon"
 import { formatNumber } from "@/lib/utils/number"
 import { Variants } from "@/types/Variants"
 import { clsx } from "clsx"
-import { forwardRef, InputHTMLAttributes, ReactNode } from "react"
+import {
+  forwardRef,
+  InputHTMLAttributes,
+  ReactNode,
+  TextareaHTMLAttributes
+} from "react"
 import { Button } from "../button"
 import s from "./input.module.scss"
 
-interface InputProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "className"> {
+interface BaseInputProps {
   label?: string
   icon?: string
   balance?: number
@@ -23,7 +27,21 @@ interface InputProps
   endAdornment?: ReactNode
 }
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(
+interface InputProps
+  extends BaseInputProps,
+    Omit<InputHTMLAttributes<HTMLInputElement>, "className"> {
+  type?: "text" | "number" | "password" | "email" | "tel" | "url"
+}
+
+interface TextareaProps
+  extends BaseInputProps,
+    Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "className"> {
+  type: "textarea"
+}
+
+type Props = InputProps | TextareaProps
+
+export const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, Props>(
   (
     {
       label,
@@ -37,31 +55,56 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       helperText,
       startAdornment,
       endAdornment,
+      type = "text",
       ...props
     },
     ref
   ) => {
     const handleFocusInput = (e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target === e.currentTarget) {
-        e.currentTarget.querySelector("input")?.focus()
+        const input = e.currentTarget.querySelector("input, textarea") as
+          | HTMLInputElement
+          | HTMLTextAreaElement
+        input?.focus()
       }
     }
 
     return (
       <div className={clsx(s.wrapper, className)}>
-        <div className={s.input} onClick={handleFocusInput}>
-          {icon && <Icon icon={icon} className={s.icon} />}
-          {startAdornment}
-          <input ref={ref} className={s.value} {...props} />
-          {endAdornment}
-          {label && (
-            <label className={s.label}>
-              {label}
-              {balance !== undefined && (
-                <small>Balance: {formatNumber(balance)}</small>
-              )}
-            </label>
+        {label && (
+          <label className={s.label}>
+            {label}
+            {balance !== undefined && (
+              <small>Balance: {formatNumber(balance)}</small>
+            )}
+          </label>
+        )}
+        <div
+          className={clsx(s.input, type === "textarea" && s.textarea)}
+          onClick={handleFocusInput}
+        >
+          {icon && (
+            <Icon
+              icon={icon}
+              className={clsx(s.icon, type === "textarea" && s.iconTextarea)}
+            />
           )}
+          {startAdornment}
+          {type === "textarea" ? (
+            <textarea
+              ref={ref as React.RefObject<HTMLTextAreaElement>}
+              className={s.value}
+              {...(props as TextareaHTMLAttributes<HTMLTextAreaElement>)}
+            />
+          ) : (
+            <input
+              ref={ref as React.RefObject<HTMLInputElement>}
+              className={s.value}
+              type={type}
+              {...(props as InputHTMLAttributes<HTMLInputElement>)}
+            />
+          )}
+          {endAdornment}
           {showMaxButton && (
             <Button
               className={s.max}
