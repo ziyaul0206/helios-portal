@@ -2,7 +2,8 @@ import { Card } from "@/components/card"
 import { Heading } from "@/components/heading"
 import { Table, TableCell, TableRow } from "@/components/table"
 import { generateTransactionsDelegations } from "@/lib/faker"
-import { Row, TransactionDelegation } from "./row"
+import { TransactionDelegation } from "@/types/TransactionDelegation"
+import { Row } from "./row"
 import s from "./transactions.module.scss"
 
 export const Transactions = () => {
