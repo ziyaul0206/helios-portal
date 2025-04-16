@@ -10,14 +10,16 @@ export default function Page() {
   return (
     <>
       <div className={s.governance}>
-        <div className={s.middle}>
+        <div className={s.left}>
           <Power />
-          <Proposal />
+          <List />
+          <History />
         </div>
-        <List />
-        <Statistics />
-        <History />
-        <Guide />
+        <div className={s.right}>
+          <Proposal />
+          <Statistics />
+          <Guide />
+        </div>
       </div>
     </>
   )

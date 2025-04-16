@@ -1,11 +1,5 @@
 @use "styles/mixins" as *;
 
-.proposal {
-  @include min(1200px) {
-    max-width: calc(400px + 50 * (100vw - 320px) / 1080);
-  }
-}
-
 .description {
   line-height: 1.5;
   color: var(--text-secondary);
