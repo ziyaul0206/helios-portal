@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { useMutation, useQuery } from "@tanstack/react-query"
-import { ethers } from "ethers"
 import { Feedback } from "@/types/feedback"
 import { useAccount, useChainId } from "wagmi"
 import { BRIDGE_CONTRACT_ADDRESS, bridgeAbi } from "@/constant/helios-contracts"
