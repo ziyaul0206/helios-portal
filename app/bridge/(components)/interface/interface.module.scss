@@ -74,6 +74,28 @@ $responsiveSwap: 800px;
 
   &Token {
     cursor: pointer;
+    width: 100%;
+
+    &Found,
+    &NotFound {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      height: 32px;
+      padding: 0 15px;
+      border-radius: var(--radius-m);
+      background-color: var(--success-medium);
+      color: var(--white);
+
+      svg {
+        height: 16px;
+        width: auto;
+      }
+    }
+    &NotFound {
+      background-color: var(--warning-medium);
+    }
   }
 
   &:hover {
@@ -92,6 +114,7 @@ $responsiveSwap: 800px;
     width: 70%;
     font-weight: 600;
     letter-spacing: -0.015em;
+    height: 32px;
   }
 
   .label {
@@ -323,6 +346,18 @@ $responsiveSwap: 800px;
 
     span {
       color: var(--text-secondary);
+    }
+    strong {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      small {
+        color: var(--text-secondary);
+
+        font-weight: 500;
+        font-size: 11px;
+      }
     }
   }
 }

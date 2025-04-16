@@ -8,8 +8,9 @@ import {
 import { cookieStorage, createStorage } from "@wagmi/core"
 import { defineChain } from "viem"
 import { HELIOS_NETWORK_ID, RPC_URL } from "./app"
+import { env } from "@/env"
 
-export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID
+export const projectId = env.NEXT_PUBLIC_PROJECT_ID
 
 if (!projectId) {
   throw new Error("Project ID is not defined")

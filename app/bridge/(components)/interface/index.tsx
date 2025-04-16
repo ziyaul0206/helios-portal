@@ -8,17 +8,19 @@ import { Modal } from "@/components/modal"
 import { formatNumber } from "@/lib/utils/number"
 import clsx from "clsx"
 import Image from "next/image"
-import { useEffect, useState } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 import { toast } from "sonner"
 import s from "./interface.module.scss"
 import { useBridge } from "@/hooks/useBridge"
 import { HyperionChain } from "@/types/hyperion"
 import { getLogoByHash } from "@/utils/url"
 import { useAccount, useChainId, useSwitchChain } from "wagmi"
-import { TokenDenom } from "@/types/denom"
+// import { TokenDenom } from "@/types/denom"
+import { useTokenInfo } from "@/hooks/useTokenInfo"
+import { ethers } from "ethers"
 
 type BridgeForm = {
-  asset: TokenDenom | null
+  asset: string | null
   from: HyperionChain | null
   to: HyperionChain | null
   amount: number
@@ -27,11 +29,11 @@ type BridgeForm = {
 
 export const Interface = () => {
   const chainId = useChainId()
-  const { chains, tokens, heliosChainIndex } = useBridge()
+  const { chains, heliosChainIndex, sendToChain } = useBridge()
   const { switchChain } = useSwitchChain()
 
   const { address } = useAccount()
-  const [openToken, setOpenToken] = useState(false)
+  // const [openToken, setOpenToken] = useState(false)
   const [openChain, setOpenChain] = useState(false)
   const [chainType, setChainType] = useState<"from" | "to">("from")
   const [form, setForm] = useState<BridgeForm>({
@@ -42,15 +44,17 @@ export const Interface = () => {
     address: address || ""
   })
 
+  const tokenInfo = useTokenInfo(form.asset)
+
   const estimatedFees = form.amount / 100
   const isDeposit = heliosChainIndex
     ? form.to?.chainId === chains[heliosChainIndex].chainId
     : false
 
-  const handleChangeToken = (token: TokenDenom) => {
-    setForm({ ...form, asset: token })
-    setOpenToken(false)
-  }
+  // const handleChangeToken = (token: TokenDenom) => {
+  //   setForm({ ...form, asset: token })
+  //   setOpenToken(false)
+  // }
 
   const handleOpenChain = (type: "from" | "to") => {
     setChainType(type)
@@ -78,9 +82,64 @@ export const Interface = () => {
     }
   }
 
+  const handleMaxAmount = () => {
+    setForm({ ...form, amount: tokenInfo.data?.readableBalance || 0 })
+  }
+
   const handleCopyAddress = () => {
     navigator.clipboard.writeText(form.address)
     toast.success("Address copied to clipboard")
+  }
+
+  const handleTokenSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+
+    setForm({ ...form, asset: value })
+  }
+
+  const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value === "" ? 0 : parseFloat(e.target.value)
+    if (tokenInfo.data && value > tokenInfo.data.readableBalance) {
+      value = tokenInfo.data.readableBalance
+    }
+    setForm({ ...form, amount: value })
+  }
+
+  const handleSubmit = async () => {
+    if (!form.from || !form.to || !form.asset) {
+      toast.error("Missing chain or token information.")
+      return
+    }
+
+    if (!tokenInfo.data) {
+      toast.error("Token not found or not loaded.")
+      return
+    }
+
+    if (form.amount <= 0) {
+      toast.error("Amount must be greater than zero.")
+      return
+    }
+
+    if (!form.address || !/^0x[a-fA-F0-9]{40}$/.test(form.address)) {
+      toast.error("Invalid recipient address.")
+      return
+    }
+
+    try {
+      toast.loading("Sending cross-chain transaction...")
+
+      const decimals = tokenInfo.data.decimals
+      const amount = ethers.parseUnits(form.amount.toString(), decimals)
+      const fees = ethers.parseUnits(estimatedFees.toString(), decimals)
+
+      await sendToChain(form.to.chainId, form.address, form.asset, amount, fees)
+
+      toast.success("Bridge transaction sent successfully!")
+    } catch (err: any) {
+      toast.dismiss()
+      toast.error(err?.message || "Failed to send bridge transaction.")
+    }
   }
 
   useEffect(() => {
@@ -113,7 +172,7 @@ export const Interface = () => {
     }
   }, [form.from])
 
-  const isDisabled = !form.asset
+  const isDisabled = !tokenInfo.data || form.amount === 0 || !form.address
 
   return (
     <>
@@ -125,7 +184,7 @@ export const Interface = () => {
         />
         <div className={s.content}>
           <div className={s.form}>
-            <div
+            {/* <div
               className={clsx(s.input, s.inputToken)}
               onClick={() => setOpenToken(true)}
             >
@@ -144,6 +203,32 @@ export const Interface = () => {
                 Choose the cross-chain bridge asset
               </label>
               <Icon icon="hugeicons:arrow-right-01" className={s.arrow} />
+            </div> */}
+            <div className={clsx(s.input, s.inputToken)}>
+              <input
+                id="token"
+                className={s.value}
+                type="text"
+                value={form.asset || ""}
+                placeholder="Enter the token address"
+                onChange={handleTokenSearchChange}
+              />
+              {tokenInfo.data && (
+                <div className={s.inputTokenFound}>
+                  <Icon icon="hugeicons:checkmark-circle-02" />
+                  {tokenInfo.data.symbol} ({tokenInfo.data.name})
+                </div>
+              )}
+
+              {tokenInfo.isNotFound && (
+                <div className={s.inputTokenNotFound}>
+                  <Icon icon="hugeicons:help-circle" />
+                  Token not found
+                </div>
+              )}
+              <label htmlFor="token" className={s.label}>
+                Token address
+              </label>
             </div>
             {form.from && form.to && (
               <div className={s.swap}>
@@ -217,23 +302,22 @@ export const Interface = () => {
                 step="0.000001"
                 min="0"
                 value={form.amount}
-                onChange={(e) => {
-                  const value =
-                    e.target.value === "" ? 0 : parseFloat(e.target.value)
-                  setForm({ ...form, amount: value })
-                }}
+                onChange={handleAmountChange}
               />
               <label htmlFor="amount" className={s.label}>
                 Amount
-                <small>Balance: {formatNumber(1000000)}</small>
+                {tokenInfo.data && (
+                  <small>
+                    Balance: {formatNumber(tokenInfo.data?.readableBalance)}{" "}
+                    {tokenInfo.data.symbol}
+                  </small>
+                )}
               </label>
               <Button
                 variant="secondary"
                 className={s.max}
                 size="xsmall"
-                onClick={() => {
-                  setForm({ ...form, amount: 1000000 })
-                }}
+                onClick={handleMaxAmount}
               >
                 Max
               </Button>
@@ -269,13 +353,14 @@ export const Interface = () => {
             <div className={s.recapItem}>
               <span>Estimated Fees:</span>
               <strong>
-                {estimatedFees} {form.asset?.metadata.symbol}
+                <small>~1% =</small>
+                {estimatedFees} {tokenInfo.data?.symbol}
               </strong>
             </div>
             <div className={s.recapItem}>
               <span>You will receive:</span>
               <strong>
-                {form.amount} {form.asset?.metadata.symbol}
+                {form.amount} {tokenInfo.data?.symbol}
               </strong>
             </div>
           </div>
@@ -284,12 +369,13 @@ export const Interface = () => {
             className={s.deposit}
             icon={isDeposit ? "hugeicons:download-03" : "hugeicons:upload-03"}
             size="large"
+            onClick={handleSubmit}
           >
             {isDeposit ? "Deposit now" : "Withdraw now"}
           </Button>
         </div>
       </Card>
-      <Modal
+      {/* <Modal
         title="Select a Token"
         onClose={() => setOpenToken(false)}
         open={openToken}
@@ -322,7 +408,7 @@ export const Interface = () => {
             </li>
           ))}
         </ul>
-      </Modal>
+      </Modal> */}
       <Modal
         title="Select a Chain"
         onClose={() => setOpenChain(false)}

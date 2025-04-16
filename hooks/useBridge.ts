@@ -45,8 +45,8 @@ export const useBridge = () => {
       chainId: number
       receiverAddress: string
       tokenAddress: string
-      amount: number
-      fees: number
+      amount: bigint
+      fees: bigint
     }) => {
       if (!web3Provider) throw new Error("No wallet connected")
 
@@ -61,13 +61,7 @@ export const useBridge = () => {
           BRIDGE_CONTRACT_ADDRESS
         )
         const tx = await contract.methods
-          .sendToChain(
-            chainId,
-            receiverAddress,
-            tokenAddress,
-            ethers.parseEther(amount.toString()),
-            ethers.parseEther(fees.toString())
-          )
+          .sendToChain(chainId, receiverAddress, tokenAddress, amount, fees)
           .send({
             from: address,
             gas: "500000"
@@ -101,8 +95,8 @@ export const useBridge = () => {
     chainId: number,
     receiverAddress: string,
     tokenAddress: string,
-    amount: number,
-    fees: number
+    amount: bigint,
+    fees: bigint
   ) => {
     await sendToChainMutation.mutateAsync({
       chainId,
