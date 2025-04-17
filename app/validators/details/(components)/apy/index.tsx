@@ -1,0 +1,90 @@
+import { Blocks } from "@/components/blocks"
+import { Card } from "@/components/card"
+import { Heading } from "@/components/heading"
+import { Message } from "@/components/message"
+import { Progress } from "@/components/progress"
+import { RechartsPie } from "@/components/recharts/pie"
+import { TOKEN_COLORS } from "@/config/constants"
+import s from "./apy.module.scss"
+
+export const Apy = () => {
+  const blocks = [
+    {
+      title: "Base APY",
+      value: "8.5%",
+      bottom: "Without Helios Boost"
+    },
+    {
+      title: "Current APY",
+      value: "12.75%",
+      bottom: "Without current Helios Ratio",
+      color: "primary"
+    },
+    {
+      title: "Maximum APY",
+      value: "12.75%",
+      bottom: "Without optimal Helios Ratio"
+    }
+  ]
+
+  const data = [
+    {
+      name: "HLS",
+      value: 1000000,
+      percentage: 40,
+      color: TOKEN_COLORS.hls
+    },
+    { name: "ETH", value: 750000, percentage: 30, color: TOKEN_COLORS.eth },
+    { name: "USDT", value: 500000, percentage: 20, color: TOKEN_COLORS.usdt },
+    { name: "BNB", value: 250000, percentage: 10, color: TOKEN_COLORS.bnb }
+  ]
+
+  return (
+    <Card auto>
+      <Heading icon="hugeicons:shield-energy" title="APY Breakdown & Boost" />
+      <Blocks items={blocks} />
+      <div className={s.status}>
+        <h3>Helios Collateral Status</h3>
+        <ul>
+          <li>
+            <span>Helios Collateral</span>
+            <Progress className={s.progress} value={55} max={100} />
+            <span>55%</span>
+          </li>
+          <li>
+            <span>Helios Collateral</span>
+            <Progress
+              className={s.progress}
+              value={35}
+              max={100}
+              data-color="primary"
+            />
+            <span>35%</span>
+          </li>
+        </ul>
+        <Message
+          icon="hugeicons:information-circle"
+          title="How HELIOS Ratio Affects Your Rewards"
+        >
+          Validators must maintain a minimum ratio of HELIOS tokens relative to
+          other staked assets to maximize APY. When the HELIOS ratio falls below
+          the required threshold, the APY boost is reduced proportionally.
+        </Message>
+      </div>
+      <div className={s.chart}>
+        <h3>Asset Distribution & Delegation Breakdown</h3>
+        <RechartsPie data={data} className={s.pie} />
+        <div className={s.legend}>
+          {data.map((item, index) => (
+            <div key={index} className={s.item}>
+              <div className={s.dot} style={{ backgroundColor: item.color }} />
+              <span className={s.name}>{item.name}</span>
+              <span className={s.value}>${item.value.toLocaleString()}</span>
+              <span className={s.percentage}>{item.percentage}%</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </Card>
+  )
+}

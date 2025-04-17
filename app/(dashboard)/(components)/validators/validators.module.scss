@@ -16,21 +16,7 @@
 }
 
 .progress {
-  background-color: var(--background-higher);
-  width: 100%;
-  border-radius: var(--radius-rounded);
-  overflow: hidden;
   margin: calc(var(--card-padding) / 2) 0 var(--size-3);
-
-  &Bar {
-    height: var(--size-1);
-    background: linear-gradient(
-      to right,
-      var(--background-higher),
-      var(--success-low)
-    );
-    border-radius: inherit;
-  }
 }
 
 .latest {

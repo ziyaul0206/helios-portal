@@ -1,13 +1,15 @@
 "use client"
 
 import { Card } from "@/components/card"
+import { SkeletonCard } from "@/components/card/skeleton"
 import { Heading } from "@/components/heading"
 import { Icon } from "@/components/icon"
+import { useValidators } from "@/hooks/useValidators"
 import { useState } from "react"
 import { Item } from "../item"
+import { Empty } from "./empty"
 import { Informations } from "./informations"
 import s from "./list.module.scss"
-import { useValidators } from "@/hooks/useValidators"
 
 export const List = () => {
   const [searchTerm, setSearchTerm] = useState("")
@@ -47,20 +49,19 @@ export const List = () => {
           <Item key={"validators-" + i} {...validator} />
         ))}
         {filteredValidators.length === 0 && !validatorsIsLoading && (
-          <Card auto>
-            <div className={s.empty}>
-              <Icon icon="hugeicons:sad-02" className={s.sad} />
-              <p>No validators found</p>
-            </div>
-          </Card>
+          <Empty icon="hugeicons:sad-02" title="No validators found" />
         )}
         {validatorsIsLoading && (
-          <Card auto>
-            <div className={s.empty}>
-              <Icon icon="svg-spinners:clock" className={s.sad} />
-              <p>Loading validators</p>
-            </div>
-          </Card>
+          <>
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+          </>
         )}
       </div>
     </>

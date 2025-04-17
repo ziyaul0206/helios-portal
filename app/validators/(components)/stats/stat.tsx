@@ -5,7 +5,7 @@ interface StatProps {
   title: string
   icon: string
   children: React.ReactNode
-  bottom: React.ReactNode
+  bottom?: React.ReactNode
 }
 
 export const Stat = ({ title, icon, children, bottom }: StatProps) => {
@@ -16,7 +16,7 @@ export const Stat = ({ title, icon, children, bottom }: StatProps) => {
       </div>
       <h2>{title}</h2>
       <div className={s.content}>{children}</div>
-      <div className={s.bottom}>{bottom}</div>
+      {bottom && <div className={s.bottom}>{bottom}</div>}
     </div>
   )
 }

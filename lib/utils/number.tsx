@@ -35,10 +35,11 @@ export const formatCurrency = (
   )
 }
 
-export function formatNumber(number: number): string {
+export function formatNumber(number: number, decimals?: number): string {
   return number.toLocaleString("en-US", {
-    maximumFractionDigits: 0,
-    minimumFractionDigits: 0
+    maximumFractionDigits: decimals ?? 0,
+    minimumFractionDigits: decimals ?? 0,
+    useGrouping: true
   })
 }
 
