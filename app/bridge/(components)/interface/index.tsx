@@ -17,7 +17,7 @@ import { getLogoByHash } from "@/utils/url"
 import { useAccount, useChainId, useSwitchChain } from "wagmi"
 // import { TokenDenom } from "@/types/denom"
 import { useTokenInfo } from "@/hooks/useTokenInfo"
-import { ethers } from "ethers"
+import { HELIOS_NETWORK_ID } from "@/config/app"
 
 type BridgeForm = {
   asset: string | null
@@ -29,7 +29,7 @@ type BridgeForm = {
 
 export const Interface = () => {
   const chainId = useChainId()
-  const { chains, heliosChainIndex, sendToChain } = useBridge()
+  const { chains, heliosChainIndex, sendToChain, sendToHelios } = useBridge()
   const { switchChain } = useSwitchChain()
 
   const { address } = useAccount()
@@ -130,10 +130,19 @@ export const Interface = () => {
       toast.loading("Sending cross-chain transaction...")
 
       const decimals = tokenInfo.data.decimals
-      const amount = ethers.parseUnits(form.amount.toString(), decimals)
-      const fees = ethers.parseUnits(estimatedFees.toString(), decimals)
 
-      await sendToChain(form.to.chainId, form.address, form.asset, amount, fees)
+      if (form.to.chainId === HELIOS_NETWORK_ID) {
+        await sendToHelios(form.asset, form.address, form.amount, decimals)
+      } else {
+        await sendToChain(
+          form.to.chainId,
+          form.address,
+          form.asset,
+          form.amount,
+          estimatedFees,
+          decimals
+        )
+      }
 
       toast.success("Bridge transaction sent successfully!")
     } catch (err: any) {
