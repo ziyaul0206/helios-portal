@@ -1,11 +1,13 @@
 @use "styles/mixins" as *;
 
 .blocks {
+  --block-gap: calc(var(--card-padding) / 2);
   display: flex;
-  gap: calc(var(--card-padding) / 2);
+  gap: var(--block-gap);
   align-items: stretch;
   justify-content: space-between;
   width: 100%;
+  flex-wrap: wrap;
 
   @include max(1200px) {
     flex-wrap: wrap;
@@ -13,6 +15,18 @@
 
   @include max(600px) {
     flex-direction: column;
+  }
+
+  &.vertical {
+    flex-direction: column;
+
+    .block {
+      strong {
+        position: absolute;
+        right: var(--padding);
+        font-size: var(--size-5);
+      }
+    }
   }
 }
 
@@ -42,14 +56,22 @@
       font-size: var(--size-5);
     }
   }
+
+  svg {
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    top: 0.1em;
+  }
 }
 
 .bottom {
   position: relative;
   font-size: var(--size-3-5);
-  min-height: 1em;
+  min-height: 1.1em;
   width: 100%;
   display: block;
+  line-height: 1;
 
   small {
     top: 0;
@@ -57,5 +79,6 @@
     position: absolute;
     color: var(--text-tertiary);
     @include ellipsis;
+    height: 100%;
   }
 }

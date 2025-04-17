@@ -1,31 +1,33 @@
 @use "styles/mixins" as *;
 
 .banner {
-  --radius-2: calc(24px + 4 * (100vw - 320px) / 1080);
-
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1;
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 10;
   display: flex;
   justify-content: center;
   gap: 0.5em;
-  color: #f1a10d;
-
-  width: 100%;
-  border-radius: 0 0 var(--radius-2) var(--radius-2);
+  color: var(--color-medium, var(--primary-medium));
   text-align: center;
-  background: linear-gradient(to top, rgba(#f1a10d, 0.075), rgba(#f1a10d, 0.1));
   align-items: center;
-  justify-content: center;
   font-size: calc(12px + 2 * (100vw - 320px) / 1080);
   font-weight: 500;
   padding: 0.85em;
   letter-spacing: -0.015em;
 
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.1;
+    background: var(--color-medium, var(--primary-medium));
+    border-radius: 0 0 var(--radius-s) var(--radius-s);
+    pointer-events: none;
+  }
+
   a {
     text-decoration: underline;
+    font-weight: bold;
 
     &:hover {
       text-decoration: none;
@@ -36,8 +38,16 @@
 .tag {
   font-size: 0.8em;
   font-weight: 800;
-  border-radius: 50px;
-  background-color: rgba(#f1a10d, 0.1);
-  color: #f1a10d;
+  color: var(--color-medium, var(--primary-medium));
   padding: 0.3em 0.75em;
+  position: relative;
+
+  &::before {
+    border-radius: var(--radius-rounded);
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.1;
+    background: var(--color-medium, var(--primary-medium));
+  }
 }

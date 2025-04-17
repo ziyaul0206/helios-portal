@@ -1,0 +1,73 @@
+@use "styles/mixins" as *;
+
+.wrapper {
+  width: 100%;
+}
+
+.input {
+  --input-transition: 0.2s;
+  --input-padding: var(--size-3);
+  transition: outline var(--input-transition),
+    background-color var(--input-transition);
+  background-color: var(--background-medium);
+  border-radius: var(--radius-m);
+  padding: var(--input-padding);
+  display: flex;
+  align-items: center;
+  gap: var(--size-4);
+  font-size: var(--size-5);
+  text-align: left;
+  position: relative;
+  outline: 2px solid transparent;
+
+  &:focus-within {
+    background-color: var(--background-low);
+    outline: 2px solid var(--primary-medium);
+  }
+
+  .icon {
+    width: 1em;
+    margin: 0 0.25em;
+    transform: scale(1.5);
+    color: var(--primary-medium);
+  }
+
+  .value {
+    flex: 1;
+    width: 70%;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+
+    &::placeholder {
+      color: var(--text-tertiary);
+    }
+  }
+
+  .label {
+    @include ellipsis;
+    text-align: right;
+    font-size: var(--size-3-5);
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding-bottom: 0.05em;
+
+    small {
+      display: block;
+      font-size: 0.6em;
+      margin-top: 0.25em;
+    }
+  }
+}
+
+.helper {
+  display: block;
+  font-size: var(--size-3);
+  margin-top: var(--size-2);
+  color: var(--color-medium, var(--text-secondary));
+  text-align: left;
+  padding: 0 0.5em;
+}

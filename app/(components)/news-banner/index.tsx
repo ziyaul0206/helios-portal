@@ -1,16 +1,17 @@
+import { Link } from "@/components/link"
 import s from "./news-banner.module.scss"
 
 export const NewsBanner = () => {
   return (
-    <div className={s.banner}>
+    <div className={s.banner} data-color="warning">
       <div className={s.tag}>Announcement</div>
-      <div>
+      <p>
         Currently powered by Helios Testnet (RPC:{" "}
-        <a href="https://testnet1.helioschainlabs.org/docs" target="_blank">
+        <Link href="https://testnet1.helioschainlabs.org/docs">
           testnet1.helioschainlabs.org
-        </a>
+        </Link>
         )
-      </div>
+      </p>
     </div>
   )
 }

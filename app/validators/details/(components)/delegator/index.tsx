@@ -1,7 +1,7 @@
 import { Card } from "@/components/card"
 import { Heading } from "@/components/heading"
 import { Message } from "@/components/message"
-import { RechartsPie } from "@/components/recharts/pie"
+import { RechartsPie, RechartsPieLegend } from "@/components/recharts/pie"
 import { formatNumber } from "@/lib/utils/number"
 import s from "./delegator.module.scss"
 
@@ -38,16 +38,7 @@ export const Delegator = () => {
       <Heading icon="hugeicons:pie-chart-02" title="Delegator Breakdown" />
       <div className={s.chart}>
         <RechartsPie data={data} className={s.pie} />
-        <div className={s.legend}>
-          {data.map((item, index) => (
-            <div key={index} className={s.item}>
-              <div className={s.dot} style={{ backgroundColor: item.color }} />
-              <span className={s.name}>{item.name}</span>
-              <span className={s.value}>${formatNumber(item.value, 2)}</span>
-              <span className={s.percentage}>{item.percentage}%</span>
-            </div>
-          ))}
-        </div>
+        <RechartsPieLegend data={data} />
       </div>
       <Message icon="hugeicons:user-group-02" title="Unique Delegators">
         <strong className={s.number}>{formatNumber(1458)}</strong>

@@ -3,7 +3,7 @@ import { Card } from "@/components/card"
 import { Heading } from "@/components/heading"
 import { Message } from "@/components/message"
 import { Progress } from "@/components/progress"
-import { RechartsPie } from "@/components/recharts/pie"
+import { RechartsPie, RechartsPieLegend } from "@/components/recharts/pie"
 import { TOKEN_COLORS } from "@/config/constants"
 import s from "./apy.module.scss"
 
@@ -74,16 +74,7 @@ export const Apy = () => {
       <div className={s.chart}>
         <h3>Asset Distribution & Delegation Breakdown</h3>
         <RechartsPie data={data} className={s.pie} />
-        <div className={s.legend}>
-          {data.map((item, index) => (
-            <div key={index} className={s.item}>
-              <div className={s.dot} style={{ backgroundColor: item.color }} />
-              <span className={s.name}>{item.name}</span>
-              <span className={s.value}>${item.value.toLocaleString()}</span>
-              <span className={s.percentage}>{item.percentage}%</span>
-            </div>
-          ))}
-        </div>
+        <RechartsPieLegend data={data} />
       </div>
     </Card>
   )
