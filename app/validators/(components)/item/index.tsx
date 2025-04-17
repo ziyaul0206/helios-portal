@@ -9,7 +9,7 @@ import { StatItem } from "./stat"
 
 export const Item = ({
   moniker,
-  description,
+  // description,
   apr,
   status,
   commission

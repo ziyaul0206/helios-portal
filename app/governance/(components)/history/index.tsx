@@ -23,7 +23,7 @@ export const History = () => {
       >
         When you stake with a validator, your voting power is delegated to them
         by default. You can override this by voting directly on proposals, which
-        will supersede your validator's vote.
+        will supersede your validator&apos;s vote.
       </Message>
     </Card>
   )

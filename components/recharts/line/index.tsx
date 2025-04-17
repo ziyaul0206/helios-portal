@@ -24,7 +24,7 @@ interface RechartsLineProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const RechartsLine = ({
   data,
-  filters,
+  // filters,
   height = 300,
   ...props
 }: RechartsLineProps) => {
