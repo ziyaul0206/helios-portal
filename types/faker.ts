@@ -18,3 +18,13 @@ export interface ValidatorRow {
   assets: TokenWithAmount[]
   rewards: number
 }
+
+export type VoteVote = "yes" | "no" | "abstain" | "veto"
+
+export interface VoteProps {
+  status: "active" | "passed" | "rejected"
+  name: string
+  hip: number
+  date: string
+  vote: VoteVote
+}

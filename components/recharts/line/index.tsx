@@ -1,6 +1,5 @@
 "use client"
 
-import clsx from "clsx"
 import {
   Area,
   AreaChart,
@@ -11,7 +10,6 @@ import {
   YAxis
 } from "recharts"
 import { RechartsTooltip } from "../tooltip"
-import s from "./line.module.scss"
 
 interface RechartsLineProps extends React.HTMLAttributes<HTMLDivElement> {
   data: {
@@ -75,7 +73,7 @@ export const RechartsLine = ({
   const xAxisConfig = getXAxisConfig()
 
   return (
-    <div {...props} className={clsx(s.chart, props.className)}>
+    <div {...props} className={props.className}>
       <ResponsiveContainer width="100%" height={height}>
         <AreaChart data={data}>
           <defs>

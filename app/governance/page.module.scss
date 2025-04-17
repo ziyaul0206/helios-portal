@@ -1,0 +1,32 @@
+@use "styles/mixins" as *;
+
+@use "styles/mixins" as *;
+
+.governance {
+  --grid-gap: calc(var(--main-padding) / 1.75);
+  display: flex;
+  flex-direction: row;
+  gap: var(--grid-gap);
+
+  @include max(1200px) {
+    flex-direction: column;
+  }
+
+  & > * {
+    display: flex;
+    flex-direction: column;
+    gap: var(--grid-gap);
+  }
+
+  .left {
+    flex: 1;
+  }
+
+  .right {
+    @include min(1200px) {
+      position: sticky;
+      bottom: 0;
+      max-width: calc(450px + 50 * (100vw - 320px) / 1080);
+    }
+  }
+}

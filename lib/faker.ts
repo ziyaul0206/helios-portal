@@ -1,5 +1,5 @@
 import { getAllTokens, getToken } from "@/config/tokens"
-import { ValidatorProps } from "@/types/faker"
+import { ValidatorProps, VoteProps, VoteVote } from "@/types/faker"
 import { Token } from "@/types/Tokens"
 import { TransactionDelegation } from "@/types/TransactionDelegation"
 import {
@@ -165,5 +165,22 @@ export const generateTransactionsDelegations = (
       year: "numeric"
     }),
     explorer: `https://explorer.helios.network/tx/${faker.string.uuid()}`
+  }))
+}
+
+export const generateVotes = (count: number): VoteProps[] => {
+  faker.seed(10)
+
+  return Array.from({ length: count }, () => ({
+    status: faker.helpers.arrayElement(["active", "passed", "rejected"]),
+    name: faker.company.name(),
+    hip: faker.number.int({ min: 1, max: 100 }),
+    date: faker.date.recent({ days: 30 }).toISOString().split("T")[0],
+    vote: faker.helpers.arrayElement([
+      "yes",
+      "no",
+      "abstain",
+      "veto"
+    ]) as VoteVote
   }))
 }
