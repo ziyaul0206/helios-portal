@@ -6,6 +6,8 @@ import { Proposal } from "@/types/proposal"
 import { Transaction } from "@/types/transaction"
 import { Validator } from "@/types/validator"
 import { WhitelistedAsset } from "@/types/whitelistedAsset"
+import { HyperionChain } from "@/types/hyperion"
+import { TokenDenom } from "@/types/denom"
 
 export const getTokenBalance = (
   address: string,
@@ -13,8 +15,12 @@ export const getTokenBalance = (
   block: string = "latest"
 ) => request<string>("eth_getTokenBalance", [address, tokenAddress, block])
 
-export const getTokensBalance = (address: string, block: string = "latest") =>
-  request<TokenBalance[]>("eth_getTokensBalance", [address, block])
+export const getTokensBalance = (address: string, page: string, size: string) =>
+  request<TokenBalance[]>("eth_getAccountTokensBalanceByPageAndSize", [
+    address,
+    page,
+    size
+  ])
 
 export const getBlocksByPageAndSize = (
   page: number,
@@ -83,3 +89,17 @@ export const getBlockByNumber = (blockNumber: string) =>
   request<Block>("eth_getBlockByNumber", [blockNumber, false])
 
 export const getGasPrice = () => request<string>("eth_gasPrice", [])
+
+export const getHyperionChains = () =>
+  request<HyperionChain[]>("eth_getHyperionChains", [])
+
+export const getTokensByChainIdAndPageAndSize = (
+  chainId: number,
+  page: string,
+  size: string
+) =>
+  request<TokenDenom[]>("eth_getTokensByChainIdAndPageAndSize", [
+    chainId,
+    page,
+    size
+  ])

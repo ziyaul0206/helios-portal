@@ -1,15 +1,32 @@
 import { useState } from "react"
-import { useMutation } from "@tanstack/react-query"
-import { ethers } from "ethers"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { Feedback } from "@/types/feedback"
-import { useAccount } from "wagmi"
+import { useAccount, useChainId } from "wagmi"
 import { BRIDGE_CONTRACT_ADDRESS, bridgeAbi } from "@/constant/helios-contracts"
 import { getErrorMessage } from "@/utils/string"
 import { useWeb3Provider } from "./useWeb3Provider"
+import {
+  getHyperionChains,
+  getTokensByChainIdAndPageAndSize
+} from "@/helpers/rpc-calls"
+import { toHex } from "@/utils/number"
 
 export const useBridge = () => {
   const { address } = useAccount()
+  const chainId = useChainId()
   const web3Provider = useWeb3Provider()
+
+  const qHyperionChains = useQuery({
+    queryKey: ["hyperionChains"],
+    queryFn: getHyperionChains
+  })
+
+  const qTokensByChain = useQuery({
+    queryKey: ["tokens", chainId],
+    queryFn: () =>
+      getTokensByChainIdAndPageAndSize(chainId, toHex(1), toHex(10)),
+    enabled: !!chainId
+  })
 
   const [feedback, setFeedback] = useState<Feedback>({
     status: "idle",
@@ -27,8 +44,8 @@ export const useBridge = () => {
       chainId: number
       receiverAddress: string
       tokenAddress: string
-      amount: number
-      fees: number
+      amount: bigint
+      fees: bigint
     }) => {
       if (!web3Provider) throw new Error("No wallet connected")
 
@@ -43,13 +60,7 @@ export const useBridge = () => {
           BRIDGE_CONTRACT_ADDRESS
         )
         const tx = await contract.methods
-          .sendToChain(
-            chainId,
-            receiverAddress,
-            tokenAddress,
-            ethers.parseEther(amount.toString()),
-            ethers.parseEther(fees.toString())
-          )
+          .sendToChain(chainId, receiverAddress, tokenAddress, amount, fees)
           .send({
             from: address,
             gas: "500000"
@@ -83,8 +94,8 @@ export const useBridge = () => {
     chainId: number,
     receiverAddress: string,
     tokenAddress: string,
-    amount: number,
-    fees: number
+    amount: bigint,
+    fees: bigint
   ) => {
     await sendToChainMutation.mutateAsync({
       chainId,
@@ -96,6 +107,11 @@ export const useBridge = () => {
   }
 
   return {
+    chains: qHyperionChains.data || [],
+    tokens: qTokensByChain.data || [],
+    heliosChainIndex: qHyperionChains.data?.findIndex(
+      (chain) => chain.hyperionId === 0
+    ),
     sendToChain,
     feedback,
     isLoading: sendToChainMutation.isPending
