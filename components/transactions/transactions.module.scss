@@ -79,6 +79,8 @@ $responsive: 700px;
 }
 
 .cell {
+  font-variant-numeric: tabular-nums;
+
   &From,
   &To {
     @include max($responsive) {
@@ -86,6 +88,9 @@ $responsive: 700px;
     }
   }
   &Amount {
+    width: 110px;
+    text-align: right;
+
     @include min($responsive) {
       .small {
         display: none;
