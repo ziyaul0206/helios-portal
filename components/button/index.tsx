@@ -48,22 +48,32 @@ export const Button = ({
   ...props
 }: ButtonProps) => {
   const classIcon = clsx(s.icon, classNameIcon)
-  const IconRender =
-    iconRight === "logo" || iconLeft === "logo" || icon === "logo" ? (
-      <Logotype className={classIcon} data-icon />
-    ) : iconRight ? (
-      <Icon icon={iconRight} className={classIcon} data-icon data-icon-right />
-    ) : iconLeft ? (
+  const IconLeft =
+    iconLeft &&
+    (iconLeft === "logo" ? (
+      <Logotype className={classIcon} data-icon data-icon-left />
+    ) : (
       <Icon icon={iconLeft} className={classIcon} data-icon data-icon-left />
-    ) : icon ? (
-      <Icon icon={icon} className={classIcon} data-icon data-icon-right />
-    ) : null
+    ))
+
+  const IconRight =
+    (iconRight || icon) &&
+    (iconRight === "logo" || icon === "logo" ? (
+      <Logotype className={classIcon} data-icon data-icon-right />
+    ) : (
+      <Icon
+        icon={iconRight || icon || ""}
+        className={classIcon}
+        data-icon
+        data-icon-right
+      />
+    ))
 
   const Content = (
     <>
-      {iconLeft && IconRender}
-      {children && children}
-      {(iconRight || icon) && IconRender}
+      {IconLeft}
+      {children}
+      {IconRight}
     </>
   )
 

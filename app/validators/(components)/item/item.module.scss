@@ -1,0 +1,126 @@
+@use "styles/mixins" as *;
+
+.item {
+  --item-padding: var(--size-7);
+  --item-image: calc(56px + 8 * (100vw - 320px) / 1080);
+  --item-gap: calc(var(--item-padding) / 2);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--item-padding);
+  background-color: var(--background-low);
+  border-radius: var(--radius-m);
+  position: relative;
+  gap: var(--item-gap);
+}
+
+.top {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--item-gap);
+}
+
+.image {
+  font-size: var(--heading-icon, var(--size-13));
+  color: var(--primary-medium);
+  background-color: var(--background-high);
+  width: 1em;
+  min-width: 1em;
+  height: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--item-image);
+  height: var(--item-image);
+  border-radius: var(--radius-m);
+  background-color: var(--background-medium);
+  padding: 0.275em;
+
+  svg {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+.heading {
+  flex: 1;
+  line-height: 1.2;
+  @include ellipsis;
+
+  h3 {
+    @include ellipsis;
+    font-weight: bold;
+    font-size: var(--size-5);
+    margin-top: 0.15em;
+  }
+}
+
+.favorite {
+  position: absolute;
+  top: var(--item-gap);
+  right: var(--item-gap);
+}
+
+.stats {
+  --gap: calc(var(--item-gap) / 3);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+}
+
+.stat {
+  font-size: var(--size-3);
+  width: calc(50% - var(--gap));
+  background-color: var(--background-lower);
+  border-radius: var(--radius-m);
+  padding: 1.5em;
+  color: var(--color, var(--primary-medium));
+  position: relative;
+
+  span {
+    display: block;
+    color: var(--text-tertiary);
+    margin-bottom: 0.5em;
+  }
+
+  strong {
+    display: block;
+    color: var(--color);
+    font-size: 1.35em;
+    line-height: 1;
+    margin-bottom: -0.05em;
+  }
+
+  .icon {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    font-size: 1.25em;
+  }
+
+  &.apy {
+    --color: var(--other-apy);
+  }
+
+  &.reputation {
+    --color: var(--other-reputation);
+  }
+
+  &.uptime {
+    --color: var(--other-uptime);
+  }
+
+  &.commission {
+    --color: var(--other-commission);
+  }
+}
+
+.buttons {
+  display: flex;
+  gap: calc(var(--item-gap) / 2);
+
+  .stake {
+    flex: 1;
+  }
+}

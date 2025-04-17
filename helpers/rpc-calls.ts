@@ -77,6 +77,9 @@ export const getListTransactionsByPageAndSize = (page: string, size: string) =>
 export const getValidatorsByPageAndSize = (page: string, size: string) =>
   request<Validator[]>("eth_getValidatorsByPageAndSize", [page, size])
 
+export const getActiveValidatorCount = () =>
+  request<number>("eth_getActiveValidatorCount", [])
+
 export const getAllWhitelistedAssets = () =>
   request<WhitelistedAsset[]>("eth_getAllWhitelistedAssets", [])
 

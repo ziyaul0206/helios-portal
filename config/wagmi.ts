@@ -57,9 +57,9 @@ export const toAppKitNetwork = (chain: any): AppKitNetwork => ({
   name: chain.name,
   chainNamespace: "eip155",
   caipNetworkId: `eip155:${chain.id}`,
-  nativeCurrency: chain.nativeCurrency,
-  rpcUrls: chain.rpcUrls,
-  blockExplorers: chain.blockExplorers
+  nativeCurrency: { ...chain.nativeCurrency },
+  rpcUrls: { ...chain.rpcUrls },
+  blockExplorers: { ...chain.blockExplorers }
 })
 
 export const networks: AppKitNetwork[] = [

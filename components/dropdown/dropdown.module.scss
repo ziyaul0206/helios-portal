@@ -1,4 +1,5 @@
 @use "styles/mixins" as *;
+
 .dropdown {
   --content-margin: var(--size-2);
   position: relative;
@@ -38,7 +39,7 @@
   ul {
     display: flex;
     align-items: center;
-    gap: inherit;
+    gap: var(--size-1);
     flex-direction: column;
     border-radius: var(--radius-m);
     background: var(--background-low);
