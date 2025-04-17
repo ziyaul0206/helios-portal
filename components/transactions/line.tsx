@@ -44,7 +44,7 @@ export const TransactionsLine = (transaction: Transaction) => {
       </TableCell>
       <TableCell className={s.cellAmount}>
         <strong className={s.stronger}>
-          {fromWeiToEther(transaction.value)} HELIOS
+          {transaction.value ? fromWeiToEther(transaction.value) : 0} HLS
         </strong>
       </TableCell>
       {/* <TableCell>

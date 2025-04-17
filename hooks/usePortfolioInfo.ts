@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import { useAccount } from "wagmi"
 import { getTokensBalance } from "@/helpers/rpc-calls"
-import { fromWeiToEther } from "@/utils/number"
+import { fromWeiToEther, toHex } from "@/utils/number"
 import { fetchCGTokenData } from "@/utils/price"
 import { CGToken } from "@/types/token"
 import { TOKEN_COLORS } from "@/config/constants"
@@ -12,7 +12,7 @@ export const usePortfolioInfo = () => {
 
   const qTokenBalances = useQuery({
     queryKey: ["tokensBalance", address],
-    queryFn: () => getTokensBalance(address!),
+    queryFn: () => getTokensBalance(address!, toHex(1), toHex(10)),
     enabled: !!address
   })
 
@@ -41,7 +41,7 @@ export const usePortfolioInfo = () => {
       if (symbol === "ahelios") {
         return {
           name: "Helios",
-          symbol: "HELIOS",
+          symbol: "HLS",
           symbolIcon: "helios",
           amount,
           valueUSD,
