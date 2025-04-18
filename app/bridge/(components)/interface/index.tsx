@@ -18,6 +18,9 @@ import { useAccount, useChainId, useSwitchChain } from "wagmi"
 // import { TokenDenom } from "@/types/denom"
 import { useTokenInfo } from "@/hooks/useTokenInfo"
 import { HELIOS_NETWORK_ID } from "@/config/app"
+import { useQuery } from "@tanstack/react-query"
+import { toHex } from "viem"
+import { getTokensByChainIdAndPageAndSize } from "@/helpers/rpc-calls"
 
 type BridgeForm = {
   asset: string | null
@@ -29,7 +32,15 @@ type BridgeForm = {
 
 export const Interface = () => {
   const chainId = useChainId()
-  const { chains, heliosChainIndex, sendToChain, sendToHelios } = useBridge()
+  const {
+    chains,
+    heliosChainIndex,
+    txInProgress,
+    sendToChain,
+    sendToHelios,
+    loadTokensByChain,
+    feedback: bridgeFeedback
+  } = useBridge()
   const { switchChain } = useSwitchChain()
 
   const { address } = useAccount()
@@ -45,6 +56,12 @@ export const Interface = () => {
   })
 
   const tokenInfo = useTokenInfo(form.asset)
+  const qTokensByChain = useQuery({
+    queryKey: ["tokensByChain", form.to?.chainId],
+    queryFn: async () =>
+      getTokensByChainIdAndPageAndSize(form.to!.chainId, toHex(1), toHex(10)),
+    enabled: !!form.to
+  })
 
   const estimatedFees = form.amount / 100
   const isDeposit = heliosChainIndex
@@ -91,10 +108,9 @@ export const Interface = () => {
     toast.success("Address copied to clipboard")
   }
 
-  const handleTokenSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleTokenSearchChange = (e: { target: { value: string } }) => {
     const value = e.target.value
-
-    setForm({ ...form, asset: value })
+    setForm({ ...form, asset: value, amount: 0 })
   }
 
   const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -126,13 +142,18 @@ export const Interface = () => {
       return
     }
 
+    const toastId = toast.loading("Sending cross-chain transaction...")
     try {
-      toast.loading("Sending cross-chain transaction...")
-
       const decimals = tokenInfo.data.decimals
 
       if (form.to.chainId === HELIOS_NETWORK_ID) {
-        await sendToHelios(form.asset, form.address, form.amount, decimals)
+        await sendToHelios(
+          form.address,
+          form.asset,
+          form.amount,
+          estimatedFees,
+          decimals
+        )
       } else {
         await sendToChain(
           form.to.chainId,
@@ -144,10 +165,13 @@ export const Interface = () => {
         )
       }
 
-      toast.success("Bridge transaction sent successfully!")
+      toast.success("Bridge transaction sent successfully!", {
+        id: toastId
+      })
     } catch (err: any) {
-      toast.dismiss()
-      toast.error(err?.message || "Failed to send bridge transaction.")
+      toast.error(err?.message || "Failed to send bridge transaction.", {
+        id: toastId
+      })
     }
   }
 
@@ -180,6 +204,12 @@ export const Interface = () => {
       switchChain({ chainId: form.from.chainId })
     }
   }, [form.from])
+
+  useEffect(() => {
+    if (form.to) {
+      loadTokensByChain(form.to.chainId)
+    }
+  }, [form.from, form.to])
 
   const isDisabled = !tokenInfo.data || form.amount === 0 || !form.address
 
@@ -239,6 +269,28 @@ export const Interface = () => {
                 Token address
               </label>
             </div>
+            {qTokensByChain.data && (
+              <div className={s.bestTokens}>
+                <div className={s.bestTokensLabel}>Available tokens :</div>
+                <div className={s.bestTokensList}>
+                  {qTokensByChain.data.map((token) => (
+                    <Button
+                      key={token.metadata.contract_address}
+                      size="xsmall"
+                      onClick={() =>
+                        handleTokenSearchChange({
+                          target: {
+                            value: token.metadata.contract_address
+                          }
+                        })
+                      }
+                    >
+                      {token.metadata.symbol}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
             {form.from && form.to && (
               <div className={s.swap}>
                 <div
@@ -382,6 +434,18 @@ export const Interface = () => {
           >
             {isDeposit ? "Deposit now" : "Withdraw now"}
           </Button>
+
+          {bridgeFeedback && (
+            <div className={s.feedback}>
+              {bridgeFeedback.status}: {bridgeFeedback.message}
+            </div>
+          )}
+          {txInProgress && (
+            <div>
+              {txInProgress.status}: token contract in new chain ={" "}
+              {txInProgress.receivedToken.contract}
+            </div>
+          )}
         </div>
       </Card>
       {/* <Modal

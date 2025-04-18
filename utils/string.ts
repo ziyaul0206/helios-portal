@@ -1,7 +1,6 @@
 import { formatDistanceToNow } from "date-fns"
 
 export const getErrorMessage = (error: any) => {
-  console.log(JSON.parse(JSON.stringify(error)))
   if (error && error.data && error.data.message) {
     let errorMessage = error.data.message
     errorMessage = errorMessage.replace(

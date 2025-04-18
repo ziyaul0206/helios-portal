@@ -379,3 +379,22 @@ $responsiveSwap: 800px;
     width: 100%;
   }
 }
+
+.bestTokens {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 0 var(--input-padding);
+
+  &List {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &Label {
+    font-size: var(--size-4);
+    color: var(--text-secondary);
+  }
+}

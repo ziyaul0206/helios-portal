@@ -6,7 +6,7 @@ import { Proposal } from "@/types/proposal"
 import { Transaction } from "@/types/transaction"
 import { Validator } from "@/types/validator"
 import { WhitelistedAsset } from "@/types/whitelistedAsset"
-import { HyperionChain } from "@/types/hyperion"
+import { HyperionBridgeTx, HyperionChain } from "@/types/hyperion"
 import { TokenDenom } from "@/types/denom"
 
 export const getTokenBalance = (
@@ -103,3 +103,13 @@ export const getTokensByChainIdAndPageAndSize = (
     page,
     size
   ])
+
+export const getHyperionAccountTransferTxsByPageAndSize = (
+  address: string,
+  page: string,
+  size: string
+) =>
+  request<HyperionBridgeTx[]>(
+    "eth_getHyperionAccountTransferTxsByPageAndSize",
+    [address, page, size]
+  )

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useAccount, useChainId } from "wagmi"
 import { getErrorMessage } from "@/utils/string"
 import { useWeb3Provider } from "./useWeb3Provider"
@@ -12,26 +12,37 @@ import {
   erc20Abi
 } from "@/constant/helios-contracts"
 import {
+  getHyperionAccountTransferTxsByPageAndSize,
   getHyperionChains,
   getTokensByChainIdAndPageAndSize
 } from "@/helpers/rpc-calls"
 import { toHex } from "viem"
+import { secondsToMilliseconds } from "date-fns"
 
 export const useBridge = () => {
   const { address } = useAccount()
   const web3Provider = useWeb3Provider()
   const chainId = useChainId()
+  const queryClient = useQueryClient()
+
+  const [lastReceiverAddress, setLastReceiverAddress] = useState("")
+  const [txHashInProgress, setTxHashInProgress] = useState("")
 
   const qHyperionChains = useQuery({
     queryKey: ["hyperionChains"],
     queryFn: getHyperionChains
   })
 
-  const qTokensByChain = useQuery({
-    queryKey: ["tokens", chainId],
+  const qHyperionBridgeTxs = useQuery({
+    queryKey: ["hyperionBridgeTxs"],
     queryFn: () =>
-      getTokensByChainIdAndPageAndSize(chainId, toHex(1), toHex(10)),
-    enabled: !!chainId
+      getHyperionAccountTransferTxsByPageAndSize(
+        lastReceiverAddress,
+        toHex(1),
+        toHex(10)
+      ),
+    enabled: lastReceiverAddress !== "",
+    refetchInterval: secondsToMilliseconds(10)
   })
 
   const [feedback, setFeedback] = useState({
@@ -39,7 +50,33 @@ export const useBridge = () => {
     message: ""
   })
 
+  const loadTokensByChain = async (chainId: number) => {
+    return queryClient.fetchQuery({
+      queryKey: ["tokensByChain", chainId],
+      queryFn: () =>
+        getTokensByChainIdAndPageAndSize(chainId, toHex(1), toHex(10))
+    })
+  }
+
   // 🟡 sendToChain
+  const sendToChain = async (
+    chainId: number,
+    receiverAddress: string,
+    tokenAddress: string,
+    readableAmount: number,
+    readableFees: number,
+    decimals: number
+  ) => {
+    const amount = ethers.parseUnits(readableAmount.toString(), decimals)
+    const fees = ethers.parseUnits(readableFees.toString(), decimals)
+    return sendToChainMutation.mutateAsync({
+      chainId,
+      receiverAddress,
+      tokenAddress,
+      amount,
+      fees
+    })
+  }
   const sendToChainMutation = useMutation({
     mutationFn: async ({
       chainId,
@@ -85,6 +122,9 @@ export const useBridge = () => {
           message: `Transaction sent (hash: ${tx.transactionHash}), waiting for confirmation...`
         })
 
+        setTxHashInProgress(tx.transactionHash)
+        setLastReceiverAddress(receiverAddress)
+
         const receipt = await web3Provider.eth.getTransactionReceipt(
           tx.transactionHash
         )
@@ -106,15 +146,33 @@ export const useBridge = () => {
   })
 
   // 🟢 sendToHelios
+  const sendToHelios = async (
+    receiverAddress: string,
+    tokenAddress: string,
+    readableAmount: number,
+    readableFees: number,
+    decimals: number
+  ) => {
+    const amount = ethers.parseUnits(readableAmount.toString(), decimals)
+    const fees = ethers.parseUnits(readableFees.toString(), decimals)
+    const amountWithFees = amount + fees
+
+    return sendToHeliosMutation.mutateAsync({
+      receiverAddress,
+      tokenAddress,
+      amountWithFees
+    })
+  }
+
   const sendToHeliosMutation = useMutation({
     mutationFn: async ({
+      receiverAddress,
       tokenAddress,
-      heliosEthAddress,
-      amount
+      amountWithFees
     }: {
+      receiverAddress: string
       tokenAddress: string
-      heliosEthAddress: string
-      amount: bigint
+      amountWithFees: bigint
     }) => {
       if (!web3Provider || !address) throw new Error("No wallet connected")
 
@@ -128,8 +186,13 @@ export const useBridge = () => {
           erc20Abi as any,
           tokenAddress
         )
+        const chainContractAddress = qHyperionChains.data?.find(
+          (chain) => chain.chainId === chainId
+        )?.hyperionContractAddress
+        if (!chainContractAddress) return
+
         const approveTx = await tokenContract.methods
-          .approve(BRIDGE_HYPERION_ADDRESS, amount.toString())
+          .approve(chainContractAddress, amountWithFees.toString())
           .send({ from: address })
 
         setFeedback({
@@ -137,26 +200,29 @@ export const useBridge = () => {
           message: `Token approved. Tx: ${approveTx.transactionHash}`
         })
 
-        const destinationBytes32 = ethers.zeroPadValue(heliosEthAddress, 32)
+        const destinationBytes32 = ethers.zeroPadValue(receiverAddress, 32)
 
         const hyperionContract = new web3Provider.eth.Contract(
           bridgeSendToHeliosAbi,
           BRIDGE_HYPERION_ADDRESS
         )
-        const sendTx = await hyperionContract.methods
+        const tx = await hyperionContract.methods
           .sendToHelios(
             tokenAddress,
             destinationBytes32,
-            amount.toString(),
-            "0x"
+            amountWithFees.toString(),
+            ""
           )
           .send({
             from: address,
             gas: "500000"
           })
 
+        setTxHashInProgress(tx.transactionHash)
+        setLastReceiverAddress(receiverAddress)
+
         const receipt = await web3Provider.eth.getTransactionReceipt(
-          sendTx.transactionHash
+          tx.transactionHash
         )
 
         setFeedback({
@@ -175,43 +241,19 @@ export const useBridge = () => {
     }
   })
 
+  const txInProgress = qHyperionBridgeTxs.data?.find(
+    (tx) => tx.txHash === txHashInProgress
+  )
+
   return {
     chains: qHyperionChains.data || [],
-    tokens: qTokensByChain.data || [],
     heliosChainIndex: qHyperionChains.data?.findIndex(
       (chain) => chain.hyperionId === 0
     ),
-    sendToChain: async (
-      chainId: number,
-      receiverAddress: string,
-      tokenAddress: string,
-      readableAmount: number,
-      readableFees: number,
-      decimals: number
-    ) => {
-      const amount = ethers.parseUnits(readableAmount.toString(), decimals)
-      const fees = ethers.parseUnits(readableFees.toString(), decimals)
-      return sendToChainMutation.mutateAsync({
-        chainId,
-        receiverAddress,
-        tokenAddress,
-        amount,
-        fees
-      })
-    },
-    sendToHelios: async (
-      tokenAddress: string,
-      heliosEthAddress: string,
-      readableAmount: number,
-      decimals: number
-    ) => {
-      const amount = ethers.parseUnits(readableAmount.toString(), decimals)
-      return sendToHeliosMutation.mutateAsync({
-        tokenAddress,
-        heliosEthAddress,
-        amount
-      })
-    },
+    txInProgress,
+    sendToChain,
+    loadTokensByChain,
+    sendToHelios,
     feedback,
     isLoading: sendToChainMutation.isPending || sendToHeliosMutation.isPending
   }
