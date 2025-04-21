@@ -3,6 +3,8 @@ import { useChainId, useAccount } from "wagmi"
 import { fetchTokenInfo } from "@/hooks/useTokenInfo"
 import { TokenExtended } from "@/types/token"
 import { fetchCGTokenData } from "@/utils/price"
+import { TOKEN_COLORS } from "@/config/constants"
+import { APP_COLOR_DEFAULT } from "@/config/app"
 
 export const useTokenRegistry = () => {
   const [tokens, setTokens] = useState<TokenExtended[]>([])
@@ -23,22 +25,28 @@ export const useTokenRegistry = () => {
 
     try {
       const info = await fetchTokenInfo(tokenAddress, chainId, userAddress)
-      const cgData = await fetchCGTokenData([info.symbol])
+      const symbol = info.symbol.toLowerCase()
+      const cgData = await fetchCGTokenData([symbol])
       const cgToken = cgData[info.symbol.toLowerCase()]
+      const unitPrice = cgToken?.price || 0
 
       const newToken: TokenExtended = {
         display: {
           name: info.name,
           description: "",
           logo: cgToken?.logo || "",
-          symbol: info.symbol,
-          symbolIcon: "token:" + info.symbol.toLowerCase() || ""
+          symbol,
+          symbolIcon: symbol === "hls" ? "helios" : "token:" + symbol,
+          color:
+            TOKEN_COLORS[symbol as keyof typeof TOKEN_COLORS] ||
+            APP_COLOR_DEFAULT
         },
         price: {
-          usd: cgToken?.price || 0
+          usd: unitPrice
         },
         balance: {
-          amount: info.readableBalance
+          amount: info.readableBalance,
+          totalPrice: info.readableBalance * unitPrice
         },
         functionnal: {
           address: tokenAddress,
@@ -51,7 +59,7 @@ export const useTokenRegistry = () => {
       setTokens((prev) => [...prev, newToken])
       return newToken
     } catch (err) {
-      console.error("Error while fetching token:", err)
+      console.error("Error while fetching token address : " + tokenAddress, err)
       return null
     }
   }

@@ -33,12 +33,14 @@ export interface TokenExtended {
     logo: string
     symbol: string
     symbolIcon: string
+    color: string
   }
   price: {
     usd: number
   }
   balance: {
     amount: number
+    totalPrice: number
   }
   functionnal: {
     address: string

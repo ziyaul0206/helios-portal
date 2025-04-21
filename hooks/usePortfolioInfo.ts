@@ -1,25 +1,14 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueries } from "@tanstack/react-query"
 import { useAccount } from "wagmi"
 import { getTokensBalance } from "@/helpers/rpc-calls"
-import { fromWeiToEther, toHex } from "@/utils/number"
-import { fetchCGTokenData } from "@/utils/price"
-import { CGToken } from "@/types/token"
-import { TOKEN_COLORS } from "@/config/constants"
-import { APP_COLOR_SECONDARY } from "@/config/app"
-import { useEffect } from "react"
+import { toHex } from "@/utils/number"
 import { useTokenRegistry } from "./useTokenRegistry"
+import { TokenExtended } from "@/types/token"
+import { ethers } from "ethers"
 
 export const usePortfolioInfo = () => {
   const { address } = useAccount()
   const { getTokenByAddress } = useTokenRegistry()
-
-  useEffect(() => {
-    getTokenByAddress("0xC8E59eB54CF3345e1736650eEC685d0E8B821481").then(
-      (token) => {
-        if (token) console.log("Token fetched:", token)
-      }
-    )
-  }, [])
 
   const qTokenBalances = useQuery({
     queryKey: ["tokensBalance", address],
@@ -27,65 +16,56 @@ export const usePortfolioInfo = () => {
     enabled: !!address
   })
 
-  const qTokenData = useQuery({
-    queryKey: [
-      "tokenData",
-      qTokenBalances.data?.map((t) => t.symbol.toLowerCase())
-    ],
-    queryFn: () =>
-      fetchCGTokenData(
-        qTokenBalances.data?.map((t) => t.symbol.toLowerCase()) || []
-      ),
-    enabled: !!qTokenBalances.data
+  const tokenQueries = useQueries({
+    queries:
+      qTokenBalances.data?.map((token) => ({
+        queryKey: ["enrichedToken", token.address],
+        queryFn: async (): Promise<TokenExtended> => {
+          const enriched = await getTokenByAddress(token.address)
+          if (!enriched) throw new Error("Token not found")
+
+          const amount = ethers.formatUnits(
+            token.balance,
+            enriched.functionnal.decimals
+          )
+
+          return {
+            ...enriched,
+            display: {
+              ...enriched.display,
+              symbolIcon:
+                enriched.display.symbolIcon ||
+                `token:${enriched.display.symbol.toLowerCase()}`
+            },
+            balance: {
+              amount: parseFloat(amount)
+            },
+            price: {
+              usd: enriched.price.usd
+            }
+          }
+        },
+        enabled: !!token.address
+      })) || []
   })
 
-  let totalUSD = 0
-  let portfolio: CGToken[] = []
+  const isLoading =
+    qTokenBalances.isLoading || tokenQueries.some((q) => q.isLoading)
+  const error = qTokenBalances.error || tokenQueries.find((q) => q.error)?.error
 
-  if (qTokenBalances.data && qTokenData.data) {
-    portfolio = qTokenBalances.data.map((token) => {
-      const symbol = token.symbol.toLowerCase() as keyof typeof TOKEN_COLORS
-      const amount = fromWeiToEther(token.balance)
-      const priceUSD = qTokenData.data[symbol]?.price || 1 // TEMP
-      const valueUSD = parseFloat(amount) * priceUSD
+  const portfolio: TokenExtended[] = tokenQueries
+    .map((q) => q.data)
+    .filter(Boolean) as TokenExtended[]
 
-      if (symbol === "hls") {
-        return {
-          name: "Helios",
-          symbol: "HLS",
-          symbolIcon: "helios",
-          amount,
-          valueUSD,
-          priceUSD,
-          percentage: 0,
-          color: TOKEN_COLORS[symbol] || APP_COLOR_SECONDARY
-        }
-      }
-
-      return {
-        name: token.denom,
-        symbol: symbol.toUpperCase(),
-        symbolIcon: "token:" + token.symbol.toLowerCase(),
-        amount,
-        valueUSD,
-        priceUSD,
-        percentage: 0,
-        color: TOKEN_COLORS[symbol] || "#ddd"
-      }
-    })
-
-    totalUSD = portfolio.reduce((sum, asset) => sum + asset.valueUSD, 0)
-
-    portfolio = portfolio.map((asset) => ({
-      ...asset,
-      percentage: totalUSD ? (asset.valueUSD / totalUSD) * 100 : 0
-    }))
-  }
+  const totalUSD = portfolio.reduce(
+    (sum, token) => sum + token.balance.amount * token.price.usd,
+    0
+  )
 
   return {
     totalUSD,
     portfolio,
-    isLoading: qTokenBalances.isLoading || qTokenData.isLoading,
-    error: qTokenBalances.error || qTokenData.error
+    isLoading,
+    error
   }
 }

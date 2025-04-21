@@ -4,6 +4,7 @@ import { getValidatorWithHisDelegationAndCommission } from "@/helpers/rpc-calls"
 import { fetchCGTokenData } from "@/utils/price"
 import { TOKEN_COLORS } from "@/config/constants"
 import { fromWeiToEther } from "@/utils/number"
+import { APP_COLOR_DEFAULT } from "@/config/app"
 
 export const useValidatorDetail = (address: string) => {
   const qValidatorDetail = useQuery({
@@ -33,7 +34,7 @@ export const useValidatorDetail = (address: string) => {
         amount,
         price: price * parseFloat(amount),
         logo: tokenData?.logo,
-        color: TOKEN_COLORS[symbol] || "#ddd"
+        color: TOKEN_COLORS[symbol] || APP_COLOR_DEFAULT
       }
     })
   }, [assets, qTokenData.data])

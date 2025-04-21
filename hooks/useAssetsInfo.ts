@@ -1,4 +1,4 @@
-import { APP_COLOR_SECONDARY } from "@/config/app"
+import { APP_COLOR_DEFAULT } from "@/config/app"
 import { TOKEN_COLORS } from "@/config/constants"
 import { getAllWhitelistedAssets } from "@/helpers/rpc-calls"
 import { fromWeiToEther, secondsToMilliseconds } from "@/utils/number"
@@ -37,7 +37,7 @@ export const useAssetsInfo = () => {
 
       return {
         ...asset,
-        color: TOKEN_COLORS[symbol] || "#ddd",
+        color: TOKEN_COLORS[symbol] || APP_COLOR_DEFAULT,
         tokenAmount: tokenAmountFormatted,
         tvlUSD,
         name: isHelios ? "HELIOS" : asset.denom.toUpperCase(),

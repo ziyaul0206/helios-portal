@@ -40,7 +40,7 @@ export const PortfolioTokens = () => {
   const { portfolio: tokens } = usePortfolioInfo()
   const totalOtherTokens = tokens
     .slice(3)
-    .reduce((total, token) => total + (token.priceUSD || 0), 0)
+    .reduce((total, token) => total + (token.balance.totalPrice || 0), 0)
 
   if (tokens.length === 0) {
     return (
@@ -56,12 +56,17 @@ export const PortfolioTokens = () => {
     <ul className={s.tokens}>
       {tokens.slice(0, 3).map((token) => (
         <Line
-          key={token.symbol}
-          symbolIcon={<Symbol icon={token.symbolIcon} color={token.color} />}
-          symbol={token.symbol}
-          amount={token.amount}
-          name={token.name}
-          price={token.valueUSD || 0}
+          key={token.display.symbol}
+          symbolIcon={
+            <Symbol
+              icon={token.display.symbolIcon}
+              color={token.display.color}
+            />
+          }
+          symbol={token.display.symbol}
+          amount={token.balance.amount.toString()}
+          name={token.display.name}
+          price={token.balance.totalPrice || 0}
         />
       ))}
       {tokens.length > 3 && (
