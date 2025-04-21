@@ -35,7 +35,7 @@ export const usePortfolioInfo = () => {
     portfolio = qTokenBalances.data.map((token) => {
       const symbol = token.denom.toLowerCase() as keyof typeof TOKEN_COLORS
       const amount = fromWeiToEther(token.balance)
-      const priceUSD = qTokenData.data[symbol]?.price || 0
+      const priceUSD = qTokenData.data[symbol]?.price || 1 // TEMP
       const valueUSD = parseFloat(amount) * priceUSD
 
       if (symbol === "ahelios") {
@@ -59,7 +59,7 @@ export const usePortfolioInfo = () => {
         valueUSD,
         priceUSD,
         percentage: 0,
-        color: TOKEN_COLORS[symbol] || APP_COLOR_SECONDARY
+        color: TOKEN_COLORS[symbol] || "#ddd"
       }
     })
 

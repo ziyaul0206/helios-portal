@@ -61,7 +61,7 @@ export const PortfolioTokens = () => {
           symbol={token.symbol}
           amount={token.amount}
           name={token.name}
-          price={token.priceUSD || 0}
+          price={token.valueUSD || 0}
         />
       ))}
       {tokens.length > 3 && (

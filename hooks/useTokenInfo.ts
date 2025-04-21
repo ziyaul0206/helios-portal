@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 import { useChainId, useAccount } from "wagmi"
 import Web3 from "web3"
 import { ethers } from "ethers"
+import { erc20Abi } from "@/constant/helios-contracts"
 
 export interface TokenInfo {
   name: string
@@ -12,44 +13,6 @@ export interface TokenInfo {
   balance: string
   readableBalance: number
 }
-
-const erc20Abi = [
-  {
-    constant: true,
-    inputs: [],
-    name: "name",
-    outputs: [{ type: "string" }],
-    type: "function"
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: "symbol",
-    outputs: [{ type: "string" }],
-    type: "function"
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: "decimals",
-    outputs: [{ type: "uint8" }],
-    type: "function"
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: "totalSupply",
-    outputs: [{ type: "uint256" }],
-    type: "function"
-  },
-  {
-    constant: true,
-    inputs: [{ name: "_owner", type: "address" }],
-    name: "balanceOf",
-    outputs: [{ type: "uint256" }],
-    type: "function"
-  }
-]
 
 const infuraId = env.NEXT_PUBLIC_INFURA_KEY
 

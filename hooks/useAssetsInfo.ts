@@ -29,16 +29,15 @@ export const useAssetsInfo = () => {
       const tokenAmount = parseFloat(asset.totalShares) / asset.baseWeight
       const tokenAmountFormatted = fromWeiToEther(tokenAmount.toString())
       const tokenData = (qTokenData.data && qTokenData.data[symbol]) || {
-        price: 0,
+        price: 1, // TEMP
         symbolIcon: ""
       }
       const tvlUSD = parseFloat(tokenAmountFormatted) * tokenData.price
-
       const isHelios = asset.denom === "ahelios"
 
       return {
         ...asset,
-        color: TOKEN_COLORS[symbol] || APP_COLOR_SECONDARY,
+        color: TOKEN_COLORS[symbol] || "#ddd",
         tokenAmount: tokenAmountFormatted,
         tvlUSD,
         name: isHelios ? "HELIOS" : asset.denom.toUpperCase(),
