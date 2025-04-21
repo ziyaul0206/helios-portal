@@ -9,6 +9,26 @@ export interface Commission {
   update_time: string
 }
 
+export interface EnrichedAsset {
+  denom: string
+  baseAmount: string
+  amount: string
+  weightedAmount: string
+  price: number
+  logo?: string
+  color?: string
+}
+
+export interface Delegation {
+  validatorAddress: string
+  shares: string
+  assets: EnrichedAsset[]
+  rewards: {
+    denom: string
+    amount: string
+  }
+}
+
 export interface ValidatorDescription {
   moniker: string
   details?: string
@@ -30,4 +50,13 @@ export interface Validator {
   unbondingOnHoldRefCount: number
   unbondingTime: string
   validatorAddress: string
+}
+
+export interface ValidatorWithDelegationCommission {
+  validator: Validator
+  delegation: Delegation
+  commission: {
+    denom: string
+    amount: string
+  }
 }

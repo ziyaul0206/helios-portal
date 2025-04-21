@@ -43,9 +43,9 @@ export function formatNumber(number: number, decimals?: number): string {
   })
 }
 
-export const formatBigNumber = (number: number): string => {
+export const formatBigNumber = (number: number, toFixed = 2): string => {
   if (number < 1000) {
-    return number.toString()
+    return number.toFixed(toFixed)
   } else if (number < 1000000) {
     return `${(number / 1000).toFixed(1)}k`
   } else if (number < 1000000000) {

@@ -25,26 +25,22 @@ export const Nav = () => {
     {
       icon: "hugeicons:exchange-02",
       label: "Bridge",
-      href: routes.bridge,
-      disabled: true
+      href: routes.bridge
     },
     {
       icon: "hugeicons:flowchart-01",
       label: "Validators",
-      href: routes.validators,
-      disabled: true
+      href: routes.validators
     },
     {
       icon: "hugeicons:chart-rose",
       label: "Delegations",
-      href: routes.delegations,
-      disabled: true
+      href: routes.delegations
     },
     {
       icon: "hugeicons:chart-breakout-circle",
       label: "Governance",
-      href: routes.governance,
-      disabled: true
+      href: routes.governance
     }
   ]
 

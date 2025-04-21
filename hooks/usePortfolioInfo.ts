@@ -6,9 +6,20 @@ import { fetchCGTokenData } from "@/utils/price"
 import { CGToken } from "@/types/token"
 import { TOKEN_COLORS } from "@/config/constants"
 import { APP_COLOR_SECONDARY } from "@/config/app"
+import { useEffect } from "react"
+import { useTokenRegistry } from "./useTokenRegistry"
 
 export const usePortfolioInfo = () => {
   const { address } = useAccount()
+  const { getTokenByAddress } = useTokenRegistry()
+
+  useEffect(() => {
+    getTokenByAddress("0xC8E59eB54CF3345e1736650eEC685d0E8B821481").then(
+      (token) => {
+        if (token) console.log("Token fetched:", token)
+      }
+    )
+  }, [])
 
   const qTokenBalances = useQuery({
     queryKey: ["tokensBalance", address],
@@ -33,12 +44,12 @@ export const usePortfolioInfo = () => {
 
   if (qTokenBalances.data && qTokenData.data) {
     portfolio = qTokenBalances.data.map((token) => {
-      const symbol = token.denom.toLowerCase() as keyof typeof TOKEN_COLORS
+      const symbol = token.symbol.toLowerCase() as keyof typeof TOKEN_COLORS
       const amount = fromWeiToEther(token.balance)
       const priceUSD = qTokenData.data[symbol]?.price || 1 // TEMP
       const valueUSD = parseFloat(amount) * priceUSD
 
-      if (symbol === "ahelios") {
+      if (symbol === "hls") {
         return {
           name: "Helios",
           symbol: "HLS",
@@ -54,7 +65,7 @@ export const usePortfolioInfo = () => {
       return {
         name: token.denom,
         symbol: symbol.toUpperCase(),
-        symbolIcon: "token:" + token.denom,
+        symbolIcon: "token:" + token.symbol.toLowerCase(),
         amount,
         valueUSD,
         priceUSD,

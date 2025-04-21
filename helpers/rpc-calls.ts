@@ -4,7 +4,7 @@ import { Block } from "@/types/block"
 import { Delegation } from "@/types/delegation"
 import { Proposal } from "@/types/proposal"
 import { Transaction } from "@/types/transaction"
-import { Validator } from "@/types/validator"
+import { Validator, ValidatorWithDelegationCommission } from "@/types/validator"
 import { WhitelistedAsset } from "@/types/whitelistedAsset"
 import { HyperionBridgeTx, HyperionChain } from "@/types/hyperion"
 import { TokenDenom } from "@/types/denom"
@@ -112,4 +112,10 @@ export const getHyperionAccountTransferTxsByPageAndSize = (
   request<HyperionBridgeTx[]>(
     "eth_getHyperionAccountTransferTxsByPageAndSize",
     [address, page, size]
+  )
+
+export const getValidatorWithHisDelegationAndCommission = (address: string) =>
+  request<ValidatorWithDelegationCommission>(
+    "eth_getValidatorWithHisDelegationAndCommission",
+    [address]
   )

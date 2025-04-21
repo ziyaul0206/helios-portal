@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   gap: 0.75em;
-  max-width: 100%;
+  width: 100%;
 
   @include max($responsiveMobile) {
     font-size: var(--heading-size, var(--size-5));

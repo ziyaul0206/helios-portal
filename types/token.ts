@@ -25,3 +25,25 @@ export interface CGToken {
   percentage: number
   color: string
 }
+
+export interface TokenExtended {
+  display: {
+    name: string
+    description: string
+    logo: string
+    symbol: string
+    symbolIcon: string
+  }
+  price: {
+    usd: number
+  }
+  balance: {
+    amount: number
+  }
+  functionnal: {
+    address: string
+    chainId: number
+    denom: string
+    decimals: number
+  }
+}
