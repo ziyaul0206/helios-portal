@@ -56,7 +56,7 @@ export const PortfolioTokens = () => {
     <ul className={s.tokens}>
       {tokens.slice(0, 3).map((token) => (
         <Line
-          key={token.display.symbol}
+          key={"portfoliotokens-" + token.display.symbol}
           symbolIcon={
             <Symbol
               icon={token.display.symbolIcon}

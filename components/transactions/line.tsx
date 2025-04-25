@@ -1,57 +1,50 @@
 import { fromWeiToEther } from "@/utils/number"
 import { TableCell, TableRow } from "../table"
 import s from "./transactions.module.scss"
-import { Transaction } from "@/types/transaction"
+import { TransactionLast } from "@/types/transaction"
 import { formatHash } from "@/utils/string"
 import { EXPLORER_URL } from "@/config/app"
+import Category from "./category"
+import { formatRelativeDate } from "@/lib/utils/date"
+import { formatBigNumber, formatCurrency } from "@/lib/utils/number"
+import { Button } from "../button"
 
-export const TransactionsLine = (transaction: Transaction) => {
+export const TransactionsLine = (transaction: TransactionLast) => {
   // const price = (
   //   <small className={s.small}>
   //     {formatCurrency(transaction.token.pricePerToken * transaction.amount)}
   //   </small>
   // )
 
+  const explorerLink = EXPLORER_URL + "/tx/" + transaction.RawTransaction.hash
+
   return (
     <TableRow>
       <TableCell>
-        {/* <Category type={transaction.type} status={transaction.status} /> */}
-        <a
-          href={`${EXPLORER_URL}/tx/${transaction.hash}`}
-          target="_blank"
-          className={s.small}
-        >
-          {formatHash(transaction.hash)}
-        </a>
-      </TableCell>
-      <TableCell className={s.cellFrom}>
-        <a
-          href={`${EXPLORER_URL}/tx/${transaction.from}`}
-          target="_blank"
-          className={s.small}
-        >
-          {transaction.from ? formatHash(transaction.from) : "0x0000...0000"}
-        </a>
-      </TableCell>
-      <TableCell className={s.cellTo}>
-        <a
-          href={`${EXPLORER_URL}/tx/${transaction.to}`}
-          target="_blank"
-          className={s.small}
-        >
-          {transaction.to ? formatHash(transaction.to) : "0x0000...0000"}
-        </a>
-      </TableCell>
-      <TableCell className={s.cellAmount}>
-        <strong className={s.stronger}>
-          {transaction.value ? fromWeiToEther(transaction.value) : 0} HLS
-        </strong>
+        <Category type={transaction.ParsedInfo.type} />
       </TableCell>
       {/* <TableCell>
-        <small className={s.small}>
-          {formatTimestamp(transaction.createdAt)}
-        </small>
-      </TableCell> */}
+      <small className={s.small}>
+        {formatRelativeDate(transaction.date)}
+      </small>
+    </TableCell> */}
+
+      <TableCell className={s.cellAmount}>
+        {transaction.ParsedInfo.amount && (
+          <strong className={s.stronger}>
+            {fromWeiToEther(transaction.ParsedInfo.amount)}{" "}
+            {transaction.ParsedInfo.denom?.toUpperCase()}
+          </strong>
+        )}
+      </TableCell>
+      <TableCell align="right" className={s.cellRight}>
+        <Button
+          icon="hugeicons:link-square-02"
+          variant="secondary"
+          border
+          href={explorerLink}
+        />
+      </TableCell>
     </TableRow>
   )
 }

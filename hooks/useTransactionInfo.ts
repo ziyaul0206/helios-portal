@@ -1,11 +1,11 @@
-import { getTransactionsByPageAndSize } from "@/helpers/rpc-calls"
+import { getLastTransactions } from "@/helpers/rpc-calls"
 import { secondsToMilliseconds, toHex } from "@/utils/number"
 import { useQuery } from "@tanstack/react-query"
 
-export const useTransactionInfo = (page = 1, size = 3) => {
+export const useTransactionInfo = (size = 3) => {
   const qTransactions = useQuery({
-    queryKey: ["transactions", page, size],
-    queryFn: () => getTransactionsByPageAndSize(toHex(page), toHex(size)),
+    queryKey: ["transactions", size],
+    queryFn: () => getLastTransactions(toHex(size)),
     refetchInterval: secondsToMilliseconds(10)
   })
 

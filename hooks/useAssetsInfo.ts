@@ -10,7 +10,7 @@ export const useAssetsInfo = () => {
   const qAssets = useQuery({
     queryKey: ["whitelistedAssets"],
     queryFn: getAllWhitelistedAssets,
-    refetchInterval: secondsToMilliseconds(10)
+    refetchInterval: secondsToMilliseconds(60)
   })
 
   const qFilteredAssets = useQuery({

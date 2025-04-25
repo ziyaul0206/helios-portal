@@ -1,18 +1,12 @@
 import { Card } from "@/components/card"
 import { Heading } from "@/components/heading"
 import { Symbol } from "@/components/symbol"
-import {
-  formatBigNumber,
-  formatCurrency,
-  formatNumber
-} from "@/lib/utils/number"
+import { formatCurrency, formatNumber } from "@/lib/utils/number"
 import s from "./tvl.module.scss"
 import { useAssetsInfo } from "@/hooks/useAssetsInfo"
 
 export const TVL = () => {
   const { assets, holders, totalTVL } = useAssetsInfo()
-
-  console.log(assets)
 
   return (
     <Card className={s.tvl}>
@@ -29,7 +23,7 @@ export const TVL = () => {
       </Heading>
       <div className={s.list}>
         {assets.map((token) => (
-          <div className={s.item} key={`token-${token.contractAddress}`}>
+          <div className={s.item} key={`tvl-${token.contractAddress}`}>
             <div className={s.bar}>
               <div
                 style={

@@ -18,9 +18,8 @@ export const useTokenRegistry = () => {
     const chainId = tempChainId || currentChainId
     const existing = tokens.find(
       (t) =>
-        (t.functionnal.address.toLowerCase() === tokenAddress.toLowerCase() &&
-          t.functionnal.chainId === chainId) ||
-        chainId
+        t.functionnal.address.toLowerCase() === tokenAddress.toLowerCase() &&
+        t.functionnal.chainId === chainId
     )
     if (existing) return existing
 

@@ -3,7 +3,7 @@ import { Token, TokenBalance } from "@/types/token"
 import { Block } from "@/types/block"
 import { Delegation } from "@/types/delegation"
 import { Proposal } from "@/types/proposal"
-import { Transaction } from "@/types/transaction"
+import { Transaction, TransactionLast } from "@/types/transaction"
 import { Validator, ValidatorWithDelegationCommission } from "@/types/validator"
 import { WhitelistedAsset } from "@/types/whitelistedAsset"
 import { HyperionBridgeTx, HyperionChain } from "@/types/hyperion"
@@ -119,3 +119,6 @@ export const getValidatorWithHisDelegationAndCommission = (address: string) =>
     "eth_getValidatorWithHisDelegationAndCommission",
     [address]
   )
+
+export const getLastTransactions = (size: string) =>
+  request<TransactionLast[]>("eth_getLastTransactionsInfo", [size])
