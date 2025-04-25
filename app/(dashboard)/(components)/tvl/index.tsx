@@ -12,6 +12,8 @@ import { useAssetsInfo } from "@/hooks/useAssetsInfo"
 export const TVL = () => {
   const { assets, holders, totalTVL } = useAssetsInfo()
 
+  console.log(assets)
+
   return (
     <Card className={s.tvl}>
       <Heading
@@ -27,31 +29,31 @@ export const TVL = () => {
       </Heading>
       <div className={s.list}>
         {assets.map((token) => (
-          <div className={s.item} key={`token-${token.id}`}>
+          <div className={s.item} key={`token-${token.contractAddress}`}>
             <div className={s.bar}>
               <div
                 style={
                   {
-                    "--color": token.color,
+                    "--color": token.enriched.display.color,
                     height: `${(token.tvlUSD / totalTVL) * 100}%`
                   } as React.CSSProperties
                 }
               >
                 <div className={s.hover}>
-                  <strong>{token.name}</strong>
+                  <strong>{token.enriched.display.name}</strong>
                   <span>{formatCurrency(token.tvlUSD)}</span>
                 </div>
               </div>
             </div>
             <Symbol
-              icon={token.symbolIcon}
-              color={token.color}
+              icon={token.enriched.display.symbolIcon}
+              color={token.enriched.display.color}
               className={s.symbol}
             />
-            <div className={s.name}>{token.symbol}</div>
-            <div className={s.price}>
-              {token.tokenAmount} (${formatBigNumber(token.tvlUSD)})
+            <div className={s.name}>
+              {token.enriched.display.symbol.toUpperCase()}
             </div>
+            <div className={s.price}>{token.tokenAmount}</div>
           </div>
         ))}
       </div>

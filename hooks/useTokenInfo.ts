@@ -33,6 +33,12 @@ export const fetchTokenInfo = async (
 
   try {
     const web3 = new Web3(rpcUrl)
+
+    const code = await web3.eth.getCode(tokenAddress)
+    if (code === "0x") {
+      throw new Error("Address is not a contract")
+    }
+
     const contract = new web3.eth.Contract(erc20Abi, tokenAddress)
 
     const [name, symbol, decimals, totalSupply, balanceRaw] = await Promise.all(

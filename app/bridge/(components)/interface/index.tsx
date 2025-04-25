@@ -8,7 +8,7 @@ import { Modal } from "@/components/modal"
 import { formatNumber } from "@/lib/utils/number"
 import clsx from "clsx"
 import Image from "next/image"
-import { ChangeEvent, useEffect, useState } from "react"
+import { ChangeEvent, useEffect, useMemo, useState } from "react"
 import { toast } from "sonner"
 import s from "./interface.module.scss"
 import { useBridge } from "@/hooks/useBridge"
@@ -21,6 +21,7 @@ import { HELIOS_NETWORK_ID } from "@/config/app"
 import { useQuery } from "@tanstack/react-query"
 import { toHex } from "viem"
 import { getTokensByChainIdAndPageAndSize } from "@/helpers/rpc-calls"
+import { useTokenRegistry } from "@/hooks/useTokenRegistry"
 
 type BridgeForm = {
   asset: string | null
@@ -56,12 +57,30 @@ export const Interface = () => {
   })
 
   const tokenInfo = useTokenInfo(form.asset)
+  const { getTokenByAddress } = useTokenRegistry()
+
   const qTokensByChain = useQuery({
     queryKey: ["tokensByChain", form.to?.chainId],
-    queryFn: async () =>
+    queryFn: () =>
       getTokensByChainIdAndPageAndSize(form.to!.chainId, toHex(1), toHex(10)),
     enabled: !!form.to
   })
+
+  const qEnrichedTokensByChain = useQuery({
+    queryKey: ["enrichedTokensByChain", form.to?.chainId],
+    enabled: !!form.to && !!qTokensByChain.data?.length,
+    queryFn: async () => {
+      const results = await Promise.all(
+        qTokensByChain.data!.map((token) =>
+          getTokenByAddress(token.metadata.contract_address, form.to!.chainId)
+        )
+      )
+
+      return results.filter((v) => v !== null)
+    }
+  })
+
+  const tokensByChain = qEnrichedTokensByChain.data || []
 
   const estimatedFees = form.amount / 100
   const isDeposit = heliosChainIndex
@@ -269,23 +288,23 @@ export const Interface = () => {
                 Token address
               </label>
             </div>
-            {qTokensByChain.data && (
+            {tokensByChain.length > 0 && (
               <div className={s.bestTokens}>
                 <div className={s.bestTokensLabel}>Available tokens :</div>
                 <div className={s.bestTokensList}>
-                  {qTokensByChain.data.map((token) => (
+                  {tokensByChain.map((token) => (
                     <Button
-                      key={token.metadata.contract_address}
+                      key={token.functionnal.address}
                       size="xsmall"
                       onClick={() =>
                         handleTokenSearchChange({
                           target: {
-                            value: token.metadata.contract_address
+                            value: token.functionnal.address
                           }
                         })
                       }
                     >
-                      {token.metadata.symbol}
+                      {token.display.symbol}
                     </Button>
                   ))}
                 </div>

@@ -8,18 +8,19 @@ import { APP_COLOR_DEFAULT } from "@/config/app"
 
 export const useTokenRegistry = () => {
   const [tokens, setTokens] = useState<TokenExtended[]>([])
-  const chainId = useChainId()
+  const currentChainId = useChainId()
   const { address: userAddress } = useAccount()
 
-  console.log("tokens", tokens)
-
   const getTokenByAddress = async (
-    tokenAddress: string
+    tokenAddress: string,
+    tempChainId?: number
   ): Promise<TokenExtended | null> => {
+    const chainId = tempChainId || currentChainId
     const existing = tokens.find(
       (t) =>
-        t.functionnal.address.toLowerCase() === tokenAddress.toLowerCase() &&
-        t.functionnal.chainId === chainId
+        (t.functionnal.address.toLowerCase() === tokenAddress.toLowerCase() &&
+          t.functionnal.chainId === chainId) ||
+        chainId
     )
     if (existing) return existing
 
@@ -64,8 +65,26 @@ export const useTokenRegistry = () => {
     }
   }
 
+  const getTokenBySymbol = (
+    symbol: string,
+    tempChainId?: number
+  ): TokenExtended | null => {
+    const chainId = tempChainId || currentChainId
+
+    const loweredSymbol = symbol.toLowerCase()
+
+    const existing = tokens.find(
+      (t) =>
+        t.display.symbol.toLowerCase() === loweredSymbol &&
+        t.functionnal.chainId === chainId
+    )
+
+    return existing || null
+  }
+
   return {
     tokens,
-    getTokenByAddress
+    getTokenByAddress,
+    getTokenBySymbol
   }
 }

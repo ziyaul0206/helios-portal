@@ -9,6 +9,8 @@ import { useTransactionInfo } from "@/hooks/useTransactionInfo"
 export const Recents = () => {
   const { transactions } = useTransactionInfo()
 
+  // console.log(transactions)
+
   return (
     <Card>
       <Heading icon="hugeicons:blockchain-05" title="Recent Transactions">

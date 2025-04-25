@@ -63,7 +63,7 @@ export const PortfolioTokens = () => {
               color={token.display.color}
             />
           }
-          symbol={token.display.symbol}
+          symbol={token.display.symbol.toUpperCase()}
           amount={token.balance.amount.toString()}
           name={token.display.name}
           price={token.balance.totalPrice || 0}
