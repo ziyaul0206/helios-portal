@@ -22,6 +22,7 @@ import { useQuery } from "@tanstack/react-query"
 import { toHex } from "viem"
 import { getTokensByChainIdAndPageAndSize } from "@/helpers/rpc-calls"
 import { useTokenRegistry } from "@/hooks/useTokenRegistry"
+import { Alert } from "@/app/(components)/alert"
 
 type BridgeForm = {
   asset: string | null
@@ -39,7 +40,6 @@ export const Interface = () => {
     txInProgress,
     sendToChain,
     sendToHelios,
-    loadTokensByChain,
     feedback: bridgeFeedback
   } = useBridge()
   const { switchChain } = useSwitchChain()
@@ -67,17 +67,17 @@ export const Interface = () => {
   })
 
   const qEnrichedTokensByChain = useQuery({
-    queryKey: ["enrichedTokensByChain", form.to?.chainId],
-    enabled: !!form.to && !!qTokensByChain.data?.length,
+    queryKey: ["enrichedTokensByChain", form.from?.chainId],
     queryFn: async () => {
       const results = await Promise.all(
         qTokensByChain.data!.map((token) =>
-          getTokenByAddress(token.metadata.contract_address, form.to!.chainId)
+          getTokenByAddress(token.metadata.contract_address, form.from!.chainId)
         )
       )
 
       return results.filter((v) => v !== null)
-    }
+    },
+    enabled: !!form.from && !!qTokensByChain.data?.length
   })
 
   const tokensByChain = qEnrichedTokensByChain.data || []
@@ -167,6 +167,7 @@ export const Interface = () => {
 
       if (form.to.chainId === HELIOS_NETWORK_ID) {
         await sendToHelios(
+          form.from.chainId,
           form.address,
           form.asset,
           form.amount,
@@ -211,8 +212,8 @@ export const Interface = () => {
 
     setForm((prevForm) => ({
       ...prevForm,
-      from,
-      to,
+      from: prevForm.from ?? from,
+      to: prevForm.to ?? to,
       asset: null,
       amount: 0
     }))
@@ -224,13 +225,11 @@ export const Interface = () => {
     }
   }, [form.from])
 
-  useEffect(() => {
-    if (form.to) {
-      loadTokensByChain(form.to.chainId)
-    }
-  }, [form.from, form.to])
-
-  const isDisabled = !tokenInfo.data || form.amount === 0 || !form.address
+  const isDisabled =
+    !tokenInfo.data ||
+    form.amount === 0 ||
+    !form.address ||
+    form.from?.chainId === form.to?.chainId
 
   return (
     <>
@@ -294,6 +293,7 @@ export const Interface = () => {
                 <div className={s.bestTokensList}>
                   {tokensByChain.map((token) => (
                     <Button
+                      iconLeft={token.display.symbolIcon}
                       key={token.functionnal.address}
                       size="xsmall"
                       onClick={() =>
@@ -304,7 +304,7 @@ export const Interface = () => {
                         })
                       }
                     >
-                      {token.display.symbol}
+                      {token.display.symbol.toUpperCase()}
                     </Button>
                   ))}
                 </div>
@@ -454,10 +454,8 @@ export const Interface = () => {
             {isDeposit ? "Deposit now" : "Withdraw now"}
           </Button>
 
-          {bridgeFeedback && (
-            <div className={s.feedback}>
-              {bridgeFeedback.status}: {bridgeFeedback.message}
-            </div>
+          {bridgeFeedback && bridgeFeedback.message !== "" && (
+            <Alert type={bridgeFeedback.status}>{bridgeFeedback.message}</Alert>
           )}
           {txInProgress && (
             <div>

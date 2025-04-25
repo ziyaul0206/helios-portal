@@ -18,6 +18,9 @@ import {
 } from "@/helpers/rpc-calls"
 import { toHex } from "viem"
 import { secondsToMilliseconds } from "date-fns"
+import { AlertType } from "@/app/(components)/alert"
+import { EXPLORER_URL } from "@/config/app"
+import { explorerByChain } from "./useTokenInfo"
 
 export const useBridge = () => {
   const { address } = useAccount()
@@ -46,7 +49,7 @@ export const useBridge = () => {
   })
 
   const [feedback, setFeedback] = useState({
-    status: "idle",
+    status: "idle" as AlertType,
     message: ""
   })
 
@@ -95,7 +98,7 @@ export const useBridge = () => {
 
       try {
         setFeedback({
-          status: "loading",
+          status: "primary",
           message: "Sending cross-chain transaction..."
         })
 
@@ -118,7 +121,7 @@ export const useBridge = () => {
           })
 
         setFeedback({
-          status: "loading",
+          status: "primary",
           message: `Transaction sent (hash: ${tx.transactionHash}), waiting for confirmation...`
         })
 
@@ -131,13 +134,13 @@ export const useBridge = () => {
 
         setFeedback({
           status: "success",
-          message: `Transaction confirmed in block ${receipt.blockNumber}`
+          message: `Transaction confirmed in block <strong>#${receipt.blockNumber}</strong>.`
         })
 
         return receipt
       } catch (error: unknown) {
         setFeedback({
-          status: "error",
+          status: "danger",
           message: getErrorMessage(error) || "Error during sendToChain"
         })
         throw error
@@ -147,6 +150,7 @@ export const useBridge = () => {
 
   // 🟢 sendToHelios
   const sendToHelios = async (
+    fromChainId: number,
     receiverAddress: string,
     tokenAddress: string,
     readableAmount: number,
@@ -158,6 +162,7 @@ export const useBridge = () => {
     const amountWithFees = amount + fees
 
     return sendToHeliosMutation.mutateAsync({
+      fromChainId,
       receiverAddress,
       tokenAddress,
       amountWithFees
@@ -166,10 +171,12 @@ export const useBridge = () => {
 
   const sendToHeliosMutation = useMutation({
     mutationFn: async ({
+      fromChainId,
       receiverAddress,
       tokenAddress,
       amountWithFees
     }: {
+      fromChainId: number
       receiverAddress: string
       tokenAddress: string
       amountWithFees: bigint
@@ -178,7 +185,7 @@ export const useBridge = () => {
 
       try {
         setFeedback({
-          status: "loading",
+          status: "primary",
           message: "Approving token..."
         })
 
@@ -195,9 +202,12 @@ export const useBridge = () => {
           .approve(chainContractAddress, amountWithFees.toString())
           .send({ from: address })
 
+        const explorerLink =
+          explorerByChain[fromChainId] + "/tx/" + approveTx.transactionHash
+
         setFeedback({
-          status: "loading",
-          message: `Token approved. Tx: ${approveTx.transactionHash}`
+          status: "primary",
+          message: `Tokens approved. Tx: <a href="${explorerLink}" target="_blank"><strong>${approveTx.transactionHash}</strong></a>.`
         })
 
         const destinationBytes32 = ethers.zeroPadValue(receiverAddress, 32)
@@ -227,13 +237,13 @@ export const useBridge = () => {
 
         setFeedback({
           status: "success",
-          message: `Token sent to Helios in block ${receipt.blockNumber}`
+          message: `Tokens sent to Helios in block <strong>#${receipt.blockNumber}</strong>.`
         })
 
         return receipt
       } catch (error: unknown) {
         setFeedback({
-          status: "error",
+          status: "danger",
           message: getErrorMessage(error) || "Error during sendToHelios"
         })
         throw error

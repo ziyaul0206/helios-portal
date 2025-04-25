@@ -4,6 +4,7 @@ import { useChainId, useAccount } from "wagmi"
 import Web3 from "web3"
 import { ethers } from "ethers"
 import { erc20Abi } from "@/constant/helios-contracts"
+import { EXPLORER_URL } from "@/config/app"
 
 export interface TokenInfo {
   name: string
@@ -16,11 +17,18 @@ export interface TokenInfo {
 
 const infuraId = env.NEXT_PUBLIC_INFURA_KEY
 
-const rpcByChain: Record<number, string> = {
+export const rpcByChain: Record<number, string> = {
   1: "https://mainnet.infura.io/v3/" + infuraId,
   11155111: "https://sepolia.infura.io/v3/" + infuraId,
   80002: "https://rpc-amoy.polygon.technology",
   42000: "https://testnet1.helioschainlabs.org"
+}
+
+export const explorerByChain: Record<number, string> = {
+  1: "https://etherscan.io",
+  11155111: "https://sepolia.etherscan.io",
+  80002: "https://web3.okx.com/fr/explorer/amoy",
+  42000: EXPLORER_URL
 }
 
 export const fetchTokenInfo = async (

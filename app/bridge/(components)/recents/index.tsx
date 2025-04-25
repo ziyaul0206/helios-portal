@@ -4,19 +4,24 @@ import { Button } from "@/components/button"
 import { Card } from "@/components/card"
 import { Heading } from "@/components/heading"
 import s from "./recents.module.scss"
-// import { Transactions } from "@/components/transactions"
+import { useTransactionInfo } from "@/hooks/useTransactionInfo"
+import { Transactions } from "@/components/transactions"
 // import { useUserStore } from "@/stores/user"
 
 export const Recents = () => {
-  // const { history } = useUserStore()
+  const { transactions } = useTransactionInfo(20)
+
+  const bridgeTransactions = transactions.filter((tr) =>
+    ["BRIDGE_IN", "BRIDGE_OUT"].includes(tr.ParsedInfo.type)
+  )
 
   return (
     <Card className={s.recents}>
-      <Heading icon="hugeicons:blockchain-05" title="Recent Transactions">
-        <Button icon="hugeicons:arrow-right-01" variant="secondary" border />
-      </Heading>
-      TODO
-      {/* <Transactions transactions={history.slice(0, 3)} /> */}
+      <Heading
+        icon="hugeicons:blockchain-05"
+        title="Recent Bridge Transactions"
+      ></Heading>
+      <Transactions transactions={bridgeTransactions.slice(0, 3)} />
     </Card>
   )
 }

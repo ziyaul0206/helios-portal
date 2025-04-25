@@ -24,7 +24,9 @@ export const useTokenRegistry = () => {
     if (existing) return existing
 
     try {
+      console.log("1", tokenAddress, chainId, userAddress)
       const info = await fetchTokenInfo(tokenAddress, chainId, userAddress)
+      console.log("2")
       const symbol = info.symbol.toLowerCase()
       const cgData = await fetchCGTokenData([symbol])
       const cgToken = cgData[info.symbol.toLowerCase()]
