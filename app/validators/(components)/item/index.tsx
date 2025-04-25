@@ -1,7 +1,6 @@
 import { Badge } from "@/components/badge"
 import { Button } from "@/components/button"
 import { Icon } from "@/components/icon"
-import { getToken } from "@/config/tokens"
 import { formatBigNumber } from "@/lib/utils/number"
 import { Validator } from "@/types/validator"
 import s from "./item.module.scss"

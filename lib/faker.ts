@@ -1,51 +1,47 @@
-import { getAllTokens, getToken } from "@/config/tokens"
+import { getToken } from "@/config/tokens"
 import { ValidatorProps, VoteProps, VoteVote } from "@/types/faker"
 import { Token } from "@/types/Tokens"
 import { TransactionDelegation } from "@/types/TransactionDelegation"
-import {
-  Transaction,
-  TransactionStatus,
-  TransactionType
-} from "@/types/Transactions"
+// import { Transaction, TransactionStatus } from "@/types/Transactions"
 import { faker } from "@faker-js/faker"
 
 faker.seed(6)
 
-export const generateRandomTransactions = (count: number): Transaction[] => {
-  const transactions: Transaction[] = []
+// export const generateRandomTransactions = (count: number): Transaction[] => {
+//   const transactions: Transaction[] = []
 
-  const transactionTypes: TransactionType[] = [
-    "bridge-out",
-    "bridge-in",
-    "governance-vote",
-    "stake-in",
-    "stake-out",
-    "deposit",
-    "withdraw"
-  ]
+//   const transactionTypes: Transa[] = [
+//     "bridge-out",
+//     "bridge-in",
+//     "governance-vote",
+//     "stake-in",
+//     "stake-out",
+//     "deposit",
+//     "withdraw"
+//   ]
 
-  const statuses: TransactionStatus[] = ["pending", "completed", "failed"]
-  const availableTokens = getAllTokens()
+//   const statuses: TransactionStatus[] = ["pending", "completed", "failed"]
+//   const availableTokens = getAllTokens()
 
-  for (let i = 0; i < count; i++) {
-    const token = faker.helpers.arrayElement(availableTokens)
+//   for (let i = 0; i < count; i++) {
+//     const token = faker.helpers.arrayElement(availableTokens)
 
-    const transaction: Transaction = {
-      id: faker.string.uuid(),
-      type: faker.helpers.arrayElement(transactionTypes),
-      token,
-      amount: Number(faker.finance.amount({ min: 0.1, max: 1000, dec: 4 })),
-      date: faker.date.recent({ days: 30 }).toISOString(),
-      status: faker.helpers.arrayElement(statuses)
-    }
+//     const transaction: Transaction = {
+//       id: faker.string.uuid(),
+//       type: faker.helpers.arrayElement(transactionTypes),
+//       token,
+//       amount: Number(faker.finance.amount({ min: 0.1, max: 1000, dec: 4 })),
+//       date: faker.date.recent({ days: 30 }).toISOString(),
+//       status: faker.helpers.arrayElement(statuses)
+//     }
 
-    transactions.push(transaction)
-  }
+//     transactions.push(transaction)
+//   }
 
-  return transactions.sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  )
-}
+//   return transactions.sort(
+//     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+//   )
+// }
 
 export interface TvlData {
   token: Token

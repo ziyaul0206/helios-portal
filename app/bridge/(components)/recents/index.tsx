@@ -1,6 +1,5 @@
 "use client"
 
-import { Button } from "@/components/button"
 import { Card } from "@/components/card"
 import { Heading } from "@/components/heading"
 import s from "./recents.module.scss"

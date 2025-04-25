@@ -2,11 +2,8 @@ import { fromWeiToEther } from "@/utils/number"
 import { TableCell, TableRow } from "../table"
 import s from "./transactions.module.scss"
 import { TransactionLast } from "@/types/transaction"
-import { formatHash } from "@/utils/string"
 import { EXPLORER_URL } from "@/config/app"
 import Category from "./category"
-import { formatRelativeDate } from "@/lib/utils/date"
-import { formatBigNumber, formatCurrency } from "@/lib/utils/number"
 import { Button } from "../button"
 
 export const TransactionsLine = (transaction: TransactionLast) => {
