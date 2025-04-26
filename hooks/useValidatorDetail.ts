@@ -1,52 +1,65 @@
-import { useMemo } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { getValidatorWithHisDelegationAndCommission } from "@/helpers/rpc-calls"
-import { fetchCGTokenData } from "@/utils/price"
-import { TOKEN_COLORS } from "@/config/constants"
-import { fromWeiToEther } from "@/utils/number"
-import { APP_COLOR_DEFAULT } from "@/config/app"
+import { useTokenRegistry } from "@/hooks/useTokenRegistry"
+import { ethers } from "ethers"
+import { TokenExtended } from "@/types/token"
+import { HELIOS_NETWORK_ID } from "@/config/app"
 
 export const useValidatorDetail = (address: string) => {
+  const { getTokenByAddress } = useTokenRegistry()
+
   const qValidatorDetail = useQuery({
     queryKey: ["validatorDetail", address],
     queryFn: () => getValidatorWithHisDelegationAndCommission(address),
     enabled: !!address
   })
 
-  const assets = qValidatorDetail.data?.delegation?.assets ?? []
+  const enrichedAssetsQuery = useQuery({
+    queryKey: ["enrichedValidatorAssets", address],
+    enabled: !!qValidatorDetail.data?.delegation?.assets.length,
+    queryFn: async (): Promise<TokenExtended[]> => {
+      const assets = qValidatorDetail.data!.delegation.assets
 
-  const qTokenData = useQuery({
-    queryKey: ["tokenData", assets.map((a) => a.denom.toLowerCase())],
-    queryFn: () => fetchCGTokenData(assets.map((a) => a.denom.toLowerCase())),
-    enabled: assets.length > 0
+      const results = await Promise.all(
+        assets.map(async (asset) => {
+          const enriched = await getTokenByAddress(
+            asset.contractAddress,
+            HELIOS_NETWORK_ID
+          )
+          if (!enriched) return null
+
+          const amount = parseFloat(
+            ethers.formatUnits(asset.amount, enriched.functionnal.decimals)
+          )
+
+          return {
+            ...enriched,
+            display: {
+              ...enriched.display,
+              symbolIcon:
+                enriched.display.symbolIcon ||
+                `token:${enriched.display.symbol.toLowerCase()}`
+            },
+            balance: {
+              amount,
+              totalPrice: amount * enriched.price.usd
+            }
+          }
+        })
+      )
+
+      return results.filter((token): token is TokenExtended => token !== null)
+    }
   })
-
-  const enrichedAssets = useMemo(() => {
-    if (!assets.length || !qTokenData.data) return assets
-
-    return assets.map((asset) => {
-      const tokenData = qTokenData.data[asset.denom.toLowerCase()]
-      const symbol = asset.denom.toLowerCase() as keyof typeof TOKEN_COLORS
-      const amount = fromWeiToEther(asset.amount)
-      const price = tokenData?.price || 1 // TEMP
-      return {
-        ...asset,
-        amount,
-        price: price * parseFloat(amount),
-        logo: tokenData?.logo,
-        color: TOKEN_COLORS[symbol] || APP_COLOR_DEFAULT
-      }
-    })
-  }, [assets, qTokenData.data])
 
   return {
     validator: qValidatorDetail.data?.validator,
     delegation: {
       ...qValidatorDetail.data?.delegation,
-      assets: enrichedAssets
+      assets: enrichedAssetsQuery.data || []
     },
     commission: qValidatorDetail.data?.commission,
-    isLoading: qValidatorDetail.isLoading || qTokenData.isLoading,
-    error: qValidatorDetail.error || qTokenData.error
+    isLoading: qValidatorDetail.isLoading || enrichedAssetsQuery.isLoading,
+    error: qValidatorDetail.error || enrichedAssetsQuery.error
   }
 }

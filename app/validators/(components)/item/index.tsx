@@ -54,11 +54,13 @@ export const Item = ({
 
   const tokens = delegation.assets
 
-  const totalDelegated = tokens.reduce((acc, token) => acc + token.price, 0)
+  const totalDelegated = tokens.reduce((acc, token) => acc + token.price.usd, 0)
 
   const ratioOptimal =
-    (tokens.find((token) => token.denom === "ahelios")?.price || 0) >=
+    (tokens.find((token) => token.display.symbol === "hls")?.price.usd || 0) >=
     totalDelegated
+
+  console.log(tokens)
 
   return (
     <div className={s.item}>
@@ -110,43 +112,47 @@ export const Item = ({
           icon="hugeicons:clock-01"
         />
       </div>
-      <div className={s.total}>
-        <span>Total Delegated</span>
-        <strong>${formatBigNumber(totalDelegated)}</strong>
-      </div>
-      <div className={s.bars}>
-        {tokens.map((token) => (
-          <div
-            className={s.bar}
-            key={token.denom}
-            style={
-              {
-                "--width": `${(token.price / totalDelegated) * 100}%`,
-                "--color": token.color
-              } as React.CSSProperties
-            }
-          >
-            <div className={s.popover}>
-              <span>{token.denom}</span>
-              <strong>${formatBigNumber(token.price)}</strong>
-            </div>
+      {tokens.length > 0 && (
+        <>
+          <div className={s.total}>
+            <span>Total Delegated</span>
+            <strong>${formatBigNumber(totalDelegated)}</strong>
           </div>
-        ))}
-      </div>
-      <div
-        className={s.message}
-        data-color={ratioOptimal ? "success" : "primary"}
-      >
-        <Icon icon="hugeicons:checkmark-circle-03" />
-        {ratioOptimal ? "Optimal Helios Ratio" : "Good Helios Ratio"}
-      </div>
+          <div className={s.bars}>
+            {tokens.map((token) => (
+              <div
+                className={s.bar}
+                key={"validators-" + token.functionnal.address}
+                style={
+                  {
+                    "--width": `${(token.price.usd / totalDelegated) * 100}%`,
+                    "--color": token.display.color
+                  } as React.CSSProperties
+                }
+              >
+                <div className={s.popover}>
+                  <span>{token.display.symbol}</span>
+                  <strong>${formatBigNumber(token.balance.amount)}</strong>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div
+            className={s.message}
+            data-color={ratioOptimal ? "success" : "primary"}
+          >
+            <Icon icon="hugeicons:checkmark-circle-03" />
+            {ratioOptimal ? "Optimal Helios Ratio" : "Good Helios Ratio"}
+          </div>
+        </>
+      )}
 
       <div className={s.buttons}>
         <Button className={s.stake} border>
           Stake Now
         </Button>
         <Button
-          href="/validators/details"
+          href={"/validators/" + validatorAddress}
           variant="secondary"
           border
           icon="hugeicons:link-square-02"

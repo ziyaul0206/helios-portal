@@ -17,6 +17,7 @@ export interface EnrichedAsset {
   price: number
   logo?: string
   color?: string
+  contractAddress: string // Not yet available
 }
 
 export interface Delegation {
