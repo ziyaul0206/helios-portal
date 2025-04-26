@@ -54,13 +54,14 @@ export const Item = ({
 
   const tokens = delegation.assets
 
-  const totalDelegated = tokens.reduce((acc, token) => acc + token.price.usd, 0)
+  const totalDelegated = tokens.reduce(
+    (acc, token) => acc + token.balance.totalPrice,
+    0
+  )
 
   const ratioOptimal =
-    (tokens.find((token) => token.display.symbol === "hls")?.price.usd || 0) >=
-    totalDelegated
-
-  console.log(tokens)
+    (tokens.find((token) => token.display.symbol === "hls")?.balance
+      .totalPrice || 0) >= totalDelegated
 
   return (
     <div className={s.item}>
