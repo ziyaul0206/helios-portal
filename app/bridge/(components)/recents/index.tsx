@@ -8,7 +8,7 @@ import { Transactions } from "@/components/transactions"
 // import { useUserStore } from "@/stores/user"
 
 export const Recents = () => {
-  const { transactions } = useTransactionInfo(20)
+  const { transactions } = useTransactionInfo(30)
 
   const bridgeTransactions = transactions.filter((tr) =>
     ["BRIDGE_IN", "BRIDGE_OUT"].includes(tr.ParsedInfo.type)

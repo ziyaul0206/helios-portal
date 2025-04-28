@@ -23,7 +23,7 @@ export const RechartsPie = ({ data, className }: RechartsPieProps) => {
         <RechartsTooltip>
           <strong>{data.name}</strong>
           <span>${data.value.toLocaleString()}</span>
-          <span>{data.percentage}%</span>
+          <span>{data.percentage.toFixed(2)}%</span>
         </RechartsTooltip>
       )
     }
@@ -75,7 +75,7 @@ export const RechartsPieLegend = ({
           <div className={s.dot} style={{ backgroundColor: item.color }} />
           <span className={s.name}>{item.name}</span>
           <span className={s.value}>${item.value.toLocaleString()}</span>
-          <span className={s.percentage}>{item.percentage}%</span>
+          <span className={s.percentage}>{item.percentage.toFixed(2)}%</span>
         </div>
       ))}
     </div>

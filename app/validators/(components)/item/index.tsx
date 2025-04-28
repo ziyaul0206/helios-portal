@@ -126,14 +126,16 @@ export const Item = ({
                 key={"validators-" + token.functionnal.address}
                 style={
                   {
-                    "--width": `${(token.price.usd / totalDelegated) * 100}%`,
+                    "--width": `${
+                      (token.balance.totalPrice / totalDelegated) * 100
+                    }%`,
                     "--color": token.display.color
                   } as React.CSSProperties
                 }
               >
                 <div className={s.popover}>
-                  <span>{token.display.symbol}</span>
-                  <strong>${formatBigNumber(token.balance.amount)}</strong>
+                  <span>{token.display.symbol.toUpperCase()}</span>
+                  <strong>${formatBigNumber(token.balance.totalPrice)}</strong>
                 </div>
               </div>
             ))}

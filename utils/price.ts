@@ -16,7 +16,7 @@ export const fetchCGTokenData = async (
 
   return symbols.reduce<Record<string, TokenData>>((acc, symbol) => {
     acc[symbol.toLowerCase()] = {
-      price: Math.random() * 10 + 1, // prix aléatoire entre 1 et 11
+      price: (Math.random() * 10000) / 10000,
       logo: `https://via.placeholder.com/32?text=${symbol[0].toUpperCase()}`
     }
     return acc
