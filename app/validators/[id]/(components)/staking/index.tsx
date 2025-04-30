@@ -1,52 +1,59 @@
 import { Card } from "@/components/card"
 import { Heading } from "@/components/heading"
 import { Symbol } from "@/components/symbol"
-import { TOKENS } from "@/config/tokens"
-import { formatNumber } from "@/lib/utils/number"
+// import { TOKENS } from "@/config/tokens"
+// import { formatNumber } from "@/lib/utils/number"
 import s from "./staking.module.scss"
+import { useValidatorDetail } from "@/hooks/useValidatorDetail"
+import { useParams } from "next/navigation"
+import { useAssetsInfo } from "@/hooks/useAssetsInfo"
+import clsx from "clsx"
 
 export const Staking = () => {
+  const params = useParams()
+  const validatorId = params.id as string
+  const { validator } = useValidatorDetail(validatorId)
+  const { assets } = useAssetsInfo()
+
+  if (!validator) return <></>
+
   const details = [
-    {
-      label: "Minimum Stake",
-      value: "1 HLS / 0.01 ETH / 0.05 BNB"
-    },
-    {
-      label: "Unbonding Period",
-      value: "14 days"
-    },
-    {
-      label: "Reward Distribution",
-      value: "Daily at 00:00 UTC"
-    },
+    // {
+    //   label: "Minimum Stake",
+    //   value: "1 HLS / 0.01 ETH / 0.05 BNB"
+    // },
+    // {
+    //   label: "Unbonding Period",
+    //   value: "14 days"
+    // },
     {
       label: "Commission Rate",
-      value: "5%"
+      value: parseFloat(validator.commission.commission_rates.rate) + "%"
     },
     {
-      label: "Commission Change",
-      value: "7-day notice required"
+      label: "Commission Max Rate",
+      value: parseFloat(validator.commission.commission_rates.max_rate) + "%"
     }
   ]
 
-  const assets = [
-    {
-      ...TOKENS.get("hls"),
-      amount: 1000000
-    },
-    {
-      ...TOKENS.get("eth"),
-      amount: 5
-    },
-    {
-      ...TOKENS.get("bnb"),
-      amount: 10
-    },
-    {
-      ...TOKENS.get("usdt"),
-      amount: 500
-    }
-  ]
+  // const assets = [
+  //   {
+  //     ...TOKENS.get("hls"),
+  //     amount: 1000000
+  //   },
+  //   {
+  //     ...TOKENS.get("eth"),
+  //     amount: 5
+  //   },
+  //   {
+  //     ...TOKENS.get("bnb"),
+  //     amount: 10
+  //   },
+  //   {
+  //     ...TOKENS.get("usdt"),
+  //     amount: 500
+  //   }
+  // ]
 
   return (
     <Card auto>
@@ -67,22 +74,23 @@ export const Staking = () => {
       </div>
       <div className={s.block}>
         <h3>Supported Assets</h3>
-        <ul className={s.assets}>
+        <ul className={clsx(s.assets, s.temp)}>
           {assets.map((asset, index) => (
             <li key={index}>
               <div className={s.token}>
                 <Symbol
-                  icon={asset.symbolIcon as string}
-                  color={asset.color}
+                  icon={asset.enriched.display.symbolIcon as string}
+                  color={asset.enriched.display.color}
                   className={s.icon}
                 />
                 <div className={s.name}>
-                  {asset.name} <small>{asset.symbol}</small>
+                  {asset.enriched.display.name}{" "}
+                  <small>{asset.enriched.display.symbol}</small>
                 </div>
               </div>
-              <div className={s.amount}>
+              {/* <div className={s.amount}>
                 {formatNumber(asset.amount, 2)} <small>Available</small>
-              </div>
+              </div> */}
             </li>
           ))}
         </ul>
