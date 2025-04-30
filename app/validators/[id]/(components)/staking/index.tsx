@@ -17,11 +17,21 @@ export const Staking = () => {
 
   if (!validator) return <></>
 
+  const minDelegation = parseFloat(validator.minDelegation)
+  const minStakeAssets = assets
+    .map(
+      (asset) =>
+        (minDelegation / asset.baseWeight).toFixed(2) +
+        " " +
+        asset.enriched.display.symbol.toUpperCase()
+    )
+    .join(" / ")
+
   const details = [
-    // {
-    //   label: "Minimum Stake",
-    //   value: "1 HLS / 0.01 ETH / 0.05 BNB"
-    // },
+    {
+      label: "Minimum Stake",
+      value: minDelegation === 0 ? "None" : minStakeAssets
+    },
     // {
     //   label: "Unbonding Period",
     //   value: "14 days"

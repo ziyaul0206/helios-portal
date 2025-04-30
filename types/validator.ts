@@ -42,6 +42,7 @@ export interface Validator {
   commission: Commission
   description: ValidatorDescription
   jailed: boolean
+  minDelegation: string
   minSelfDelegation: string
   moniker: string
   shares: string
