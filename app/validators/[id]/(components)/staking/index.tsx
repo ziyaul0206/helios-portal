@@ -17,7 +17,7 @@ export const Staking = () => {
 
   if (!validator) return <></>
 
-  const minDelegation = parseFloat(validator.minDelegation)
+  const minDelegation = parseFloat(validator.minSelfDelegation)
   const minStakeAssets = assets
     .map(
       (asset) =>
