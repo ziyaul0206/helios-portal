@@ -1,3 +1,4 @@
+import { TokenExtended } from "./token"
 import { TokenWithAmount } from "./Tokens"
 
 export interface ValidatorProps {
@@ -14,9 +15,9 @@ export interface ValidatorRow {
   name: string
   commission: number
   apy: number
-  base: number
-  assets: TokenWithAmount[]
-  rewards: number
+  // base: number
+  assets: TokenExtended[]
+  // rewards: number
 }
 
 export type VoteVote = "yes" | "no" | "abstain" | "veto"

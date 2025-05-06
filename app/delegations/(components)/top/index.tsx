@@ -1,36 +1,43 @@
 import { Blocks } from "@/components/blocks"
 import { Card } from "@/components/card"
 import { Heading } from "@/components/heading"
-import { Claim } from "../claim"
+// import { Claim } from "../claim"
 import s from "./top.module.scss"
+import { useDelegationInfo } from "@/hooks/useDelegationInfo"
+import { formatBigNumber } from "@/lib/utils/number"
 
 export const Top = () => {
+  const { totalDelegatedUSD, validatorsCount, averageApr } = useDelegationInfo()
   const blocks = [
     {
       title: "Total Staked Value",
-      value: "$9,000",
-      bottom: "Across 2 validators"
+      value: `$${formatBigNumber(totalDelegatedUSD)}`,
+      bottom:
+        validatorsCount > 1
+          ? `Across ${validatorsCount} validators`
+          : `Across ${validatorsCount} validator`
     },
     {
       title: "Average APY",
-      value: "12.13%",
+      value: `${averageApr.toFixed(2)}%`,
       bottom: "Weighted average",
       color: "success"
-    },
-    {
-      title: "Unbonding Value",
-      value: "$2,500",
-      bottom: "Across 2 validators",
-      color: "warning"
     }
+    // {
+    //   title: "Unbonding Value",
+    //   value: "$2,500",
+    //   bottom: "Across 2 validators",
+    //   color: "warning"
+    // }
   ]
 
   return (
     <Card auto>
       <Heading icon="hugeicons:laurel-wreath-01" title="My Delegations" />
       <div className={s.content}>
-        <Blocks items={blocks} className={s.blocks} vertical />
-        <Claim />
+        <Blocks items={blocks} className={s.blocks} />
+        {/* <Blocks items={blocks} className={s.blocks} vertical /> */}
+        {/* <Claim /> */}
       </div>
     </Card>
   )

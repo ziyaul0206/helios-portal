@@ -7,15 +7,15 @@
 
 .container {
   width: 100%;
-  height: var(--size-20);
+  // height: var(--size-20);
   position: relative;
-  margin-bottom: var(--size-10);
+  // margin-bottom: var(--size-10);
 }
 
 .list {
   overflow: visible;
   cursor: grab;
-  position: absolute;
+  // position: absolute;
   width: 100%;
   height: 100%;
 
@@ -30,7 +30,7 @@
   width: auto !important;
   background-color: var(--background-lower);
   border-radius: var(--radius-m);
-  display: flex;
+  display: flex !important;
   flex-direction: column;
   align-items: center;
   justify-content: center;

@@ -2,87 +2,88 @@ import { Badge } from "@/components/badge"
 import { Button } from "@/components/button"
 import { Icon } from "@/components/icon"
 import { TableCell, TableRow } from "@/components/table"
-import { type TransactionDelegation } from "@/types/TransactionDelegation"
 import { Variants } from "@/types/Variants"
 import s from "./transactions.module.scss"
+import { TransactionLastType } from "@/types/transaction"
 
-const STATUS_LABELS: Record<number, string> = {
-  1: "Confirmed",
-  2: "Unbonding",
-  3: "Unbonded"
-} as const
-
-const TRANSACTION_LABELS: Record<number, string> = {
-  1: "Stake",
-  2: "Unstake",
-  3: "Claim"
-} as const
-
-interface LabelProps {
-  value: number
-  labels: Record<number, string>
-  variant?: Variants
-  className?: string
-  icon?: string
+const TRANSACTION_LABELS: Record<
+  TransactionLastType,
+  { label: string; variant: Variants; icon: string }
+> = {
+  BRIDGE_OUT: {
+    label: "Bridge Out",
+    variant: "danger",
+    icon: "hugeicons:arrow-left-up-03"
+  },
+  BRIDGE_IN: {
+    label: "Bridge In",
+    variant: "success",
+    icon: "hugeicons:arrow-down-right-03"
+  },
+  STAKE_IN: {
+    label: "Stake",
+    variant: "primary",
+    icon: "hugeicons:plus-sign-circle"
+  },
+  STAKE_OUT: {
+    label: "Unstake",
+    variant: "warning",
+    icon: "hugeicons:minus-sign-circle"
+  },
+  GOVERNANCE_VOTE: {
+    label: "Vote",
+    variant: "primary",
+    icon: "hugeicons:vote"
+  },
+  DEPOSIT: {
+    label: "Deposit",
+    variant: "primary",
+    icon: "hugeicons:download-02"
+  },
+  WITHDRAW: {
+    label: "Withdraw",
+    variant: "warning",
+    icon: "hugeicons:upload-02"
+  },
+  UNKNOWN: {
+    label: "Unknown",
+    variant: "secondary",
+    icon: "hugeicons:help-hexagon"
+  }
 }
 
-const Label = ({
-  value,
-  labels,
-  variant = "primary",
-  icon,
-  className
-}: LabelProps) => {
-  const label = labels[value] || "Unknown"
-
-  return (
-    <Badge className={className} status={variant} icon={icon}>
-      {label}
-    </Badge>
-  )
+interface TransactionRowProps {
+  type: TransactionLastType
+  amount?: number
+  tokenSymbol?: string
+  explorer: string
+  date?: string
+  from?: string
+  to?: string
 }
 
 export const Row = ({
   type,
-  validator,
   amount,
-  status,
-  date,
+  tokenSymbol,
   explorer
-}: TransactionDelegation) => {
+}: TransactionRowProps) => {
+  const { label, variant, icon } = TRANSACTION_LABELS[type]
+
   return (
     <TableRow className={s.row}>
       <TableCell>
-        <Label
-          value={type}
-          labels={TRANSACTION_LABELS}
-          variant={type === 1 ? "primary" : type === 2 ? "danger" : "success"}
-          className={s.type}
-          icon={
-            type === 1
-              ? "hugeicons:plus-sign-circle"
-              : type === 2
-              ? "hugeicons:minus-sign-circle"
-              : "hugeicons:reverse-withdrawal-01"
-          }
-        />
+        <Badge status={variant} icon={icon} className={s.type}>
+          {label}
+        </Badge>
       </TableCell>
-      <TableCell>{validator}</TableCell>
       <TableCell>
         <div className={s.amount}>
-          {amount} <Icon icon="helios" />
+          {amount?.toFixed(4)}{" "}
+          {tokenSymbol && <Icon icon={`token:${tokenSymbol.toLowerCase()}`} />}
         </div>
       </TableCell>
-      <TableCell>
-        <Label
-          value={status}
-          labels={STATUS_LABELS}
-          variant={
-            status === 1 ? "success" : status === 2 ? "warning" : "danger"
-          }
-        />
-      </TableCell>
-      <TableCell className={s.date}>{date}</TableCell>
+      {/* <TableCell className={s.date}>{date || "-"}</TableCell> */}
       <TableCell align="right" className={s.explorer}>
         <Button
           icon="hugeicons:link-square-02"

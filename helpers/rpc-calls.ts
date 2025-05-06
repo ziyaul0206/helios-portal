@@ -114,6 +114,9 @@ export const getHyperionAccountTransferTxsByPageAndSize = (
     [address, page, size]
   )
 
+export const getValidator = (address: string) =>
+  request<Validator>("eth_getValidator", [address])
+
 export const getValidatorWithHisDelegationAndCommission = (address: string) =>
   request<ValidatorWithDelegationCommission>(
     "eth_getValidatorWithHisDelegationAndCommission",
@@ -122,3 +125,6 @@ export const getValidatorWithHisDelegationAndCommission = (address: string) =>
 
 export const getLastTransactions = (size: string) =>
   request<TransactionLast[]>("eth_getLastTransactionsInfo", [size])
+
+export const getAccountLastTransactions = (address: string) =>
+  request<TransactionLast[]>("eth_getAccountLastTransactionsInfo", [address])

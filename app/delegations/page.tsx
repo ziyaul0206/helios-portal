@@ -1,10 +1,12 @@
+"use client"
+
 import { Active } from "./(components)/active"
 import { Distribution } from "./(components)/distribution"
-import { History } from "./(components)/history"
-import { Projections } from "./(components)/projections"
+// import { History } from "./(components)/history"
+// import { Projections } from "./(components)/projections"
 import { Top } from "./(components)/top"
 import { Transactions } from "./(components)/transactions"
-import { Unbonding } from "./(components)/unbonding"
+// import { Unbonding } from "./(components)/unbonding"
 import s from "./page.module.scss"
 
 export default function Page() {
@@ -14,11 +16,11 @@ export default function Page() {
         <Top />
         <div className={s.middle}>
           <Distribution />
-          <History />
+          {/* <History /> */}
         </div>
         <Active />
-        <Unbonding />
-        <Projections />
+        {/* <Unbonding /> */}
+        {/* <Projections /> */}
         <Transactions />
       </div>
     </>

@@ -1,12 +1,12 @@
 "use client"
 
 import { Button } from "@/components/button"
-import { Icon } from "@/components/icon"
+// import { Icon } from "@/components/icon"
 import { Symbol } from "@/components/symbol"
 import { TableCell, TableRow } from "@/components/table"
 import { ValidatorRow } from "@/types/faker"
 import { useState } from "react"
-import { ModalClaim } from "../claim/modal"
+// import { ModalClaim } from "../claim/modal"
 import s from "./active.module.scss"
 import { ModalStake } from "./stake"
 import { ModalUnstake } from "./unstake"
@@ -15,14 +15,14 @@ export const Row = ({
   name,
   commission,
   assets,
-  rewards,
-  apy,
-  base
-}: ValidatorRow) => {
-  const [openRewards, setOpenRewards] = useState(false)
+  // rewards,
+  apy
+}: // base
+ValidatorRow) => {
+  // const [openRewards, setOpenRewards] = useState(false)
   const [openStake, setOpenStake] = useState(false)
   const [openUnstake, setOpenUnstake] = useState(false)
-  const [rewardsAmount, setRewardsAmount] = useState(rewards)
+  // const [rewardsAmount, setRewardsAmount] = useState(rewards)
 
   return (
     <TableRow className={s.row}>
@@ -38,19 +38,22 @@ export const Row = ({
           {assets.map((asset, index) => (
             <li key={index}>
               <div className={s.name}>
-                <Symbol icon={asset.symbolIcon} color={asset.color} />
-                {asset.name}
+                <Symbol
+                  icon={asset.display.symbolIcon}
+                  color={asset.display.color}
+                />
+                {asset.display.name}
               </div>
-              <div className={s.amount}>{asset.amount}</div>
+              <div className={s.amount}>{asset.balance.amount}</div>
             </li>
           ))}
         </ul>
       </TableCell>
       <TableCell className={s.apy}>
-        <strong>{apy}%</strong>
-        <small>{base}%</small>
+        <strong>{apy.toFixed(2)}%</strong>
+        {/* <small>{base}%</small> */}
       </TableCell>
-      <TableCell>
+      {/* <TableCell>
         <strong className={s.rewards}>
           {rewardsAmount} <Icon icon="helios" />
         </strong>
@@ -60,23 +63,23 @@ export const Row = ({
         <time className={s.last}>
           <Icon icon="hugeicons:clock-02" /> 2 hours ago
         </time>
-      </TableCell>
+      </TableCell> */}
       <TableCell align="right">
         <div className={s.actions}>
-          <Button
+          {/* <Button
             icon="helios"
             variant="success"
             size="xsmall"
             border
             onClick={() => setOpenRewards(true)}
-          />
-          <ModalClaim
+          /> */}
+          {/* <ModalClaim
             title={`Claim ${name} Rewards`}
             open={openRewards}
             setOpen={setOpenRewards}
             rewards={rewardsAmount}
             setRewards={setRewardsAmount}
-          />
+          /> */}
           <Button
             icon="hugeicons:add-circle"
             variant="primary"

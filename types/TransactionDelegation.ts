@@ -1,8 +1,10 @@
+import { TransactionLastType } from "./transaction"
+
 export interface TransactionDelegation {
-  type: number
-  validator: string
+  type: TransactionLastType
+  // validator: string
   amount: number
-  status: number
-  date: string
+  // status: number
+  // date: string
   explorer: string
 }

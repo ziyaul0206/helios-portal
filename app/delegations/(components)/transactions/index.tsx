@@ -1,15 +1,27 @@
 import { Card } from "@/components/card"
 import { Heading } from "@/components/heading"
 import { Table, TableCell, TableRow } from "@/components/table"
-import { generateTransactionsDelegations } from "@/lib/faker"
+// import { generateTransactionsDelegations } from "@/lib/faker"
 import { TransactionDelegation } from "@/types/TransactionDelegation"
 import { Row } from "./row"
 import s from "./transactions.module.scss"
+import { useAccountLastTransactions } from "@/hooks/useAccountLastTransactions"
+// import { takeCoverage } from "v8"
+import { EXPLORER_URL } from "@/config/app"
 
 export const Transactions = () => {
-  const transactions = generateTransactionsDelegations(
-    6
-  ) as TransactionDelegation[]
+  // const transactions = generateTransactionsDelegations(
+  //   6
+  // ) as TransactionDelegation[]
+  const { transactions } = useAccountLastTransactions()
+
+  console.log(transactions)
+
+  const formattedTxs: TransactionDelegation[] = transactions.map((tx) => ({
+    type: tx.type,
+    amount: tx.amount || 0,
+    explorer: `${EXPLORER_URL}/tx/${tx.hash}`
+  }))
 
   return (
     <Card className={s.transactions} auto>
@@ -21,15 +33,15 @@ export const Transactions = () => {
         <thead>
           <TableRow>
             <TableCell>Type</TableCell>
-            <TableCell>Validator</TableCell>
+            {/* <TableCell>Validator</TableCell> */}
             <TableCell>Amount</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell>Date</TableCell>
+            {/* <TableCell>Status</TableCell> */}
+            {/* <TableCell>Date</TableCell> */}
             <TableCell align="right">Explorer</TableCell>
           </TableRow>
         </thead>
         <tbody>
-          {transactions.map((transaction, index) => (
+          {formattedTxs.map((transaction, index) => (
             <Row key={index} {...transaction} />
           ))}
         </tbody>

@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from "react"
 import { useChainId, useAccount } from "wagmi"
 import { fetchTokenInfo } from "@/hooks/useTokenInfo"

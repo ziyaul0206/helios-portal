@@ -19,7 +19,6 @@ import {
 import { toHex } from "viem"
 import { secondsToMilliseconds } from "date-fns"
 import { AlertType } from "@/app/(components)/alert"
-import { EXPLORER_URL } from "@/config/app"
 import { explorerByChain } from "./useTokenInfo"
 
 export const useBridge = () => {
@@ -184,11 +183,6 @@ export const useBridge = () => {
       if (!web3Provider || !address) throw new Error("No wallet connected")
 
       try {
-        setFeedback({
-          status: "primary",
-          message: "Approving token..."
-        })
-
         const tokenContract = new web3Provider.eth.Contract(
           erc20Abi as any,
           tokenAddress
@@ -198,17 +192,34 @@ export const useBridge = () => {
         )?.hyperionContractAddress
         if (!chainContractAddress) return
 
-        const approveTx = await tokenContract.methods
-          .approve(chainContractAddress, amountWithFees.toString())
-          .send({ from: address })
+        const currentAllowanceStr: string = await tokenContract.methods
+          .allowance(address, chainContractAddress)
+          .call()
+        const currentAllowance = BigInt(currentAllowanceStr)
 
-        const explorerLink =
-          explorerByChain[fromChainId] + "/tx/" + approveTx.transactionHash
+        if (currentAllowance < amountWithFees) {
+          setFeedback({
+            status: "primary",
+            message: "Approving token..."
+          })
 
-        setFeedback({
-          status: "primary",
-          message: `Tokens approved. Tx: <a href="${explorerLink}" target="_blank"><strong>${approveTx.transactionHash}</strong></a>.`
-        })
+          const approveTx = await tokenContract.methods
+            .approve(chainContractAddress, amountWithFees.toString())
+            .send({ from: address })
+
+          const explorerLink =
+            explorerByChain[fromChainId] + "/tx/" + approveTx.transactionHash
+
+          setFeedback({
+            status: "primary",
+            message: `Tokens approved. Tx: <a href="${explorerLink}" target="_blank"><strong>${approveTx.transactionHash}</strong></a>.`
+          })
+        } else {
+          setFeedback({
+            status: "primary",
+            message: "Token already approved for sufficient amount."
+          })
+        }
 
         const destinationBytes32 = ethers.zeroPadValue(receiverAddress, 32)
 
@@ -237,7 +248,7 @@ export const useBridge = () => {
 
         setFeedback({
           status: "success",
-          message: `Tokens sent to Helios in block <strong>#${receipt.blockNumber}</strong>.`
+          message: `Tokens sent to Helios in block <strong>#${receipt.blockNumber}</strong>. It will be available in a few minutes.`
         })
 
         return receipt
