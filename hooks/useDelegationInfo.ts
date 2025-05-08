@@ -12,7 +12,9 @@ export const useDelegationInfo = () => {
 
   const qDelegations = useQuery({
     queryKey: ["delegations", address],
-    queryFn: () => getDelegations(address!),
+    queryFn: () => {
+      return getDelegations(address!)
+    },
     enabled: !!address
   })
 
@@ -23,8 +25,11 @@ export const useDelegationInfo = () => {
   const qValidators = useQuery({
     queryKey: ["validators", address],
     enabled: uniqueValidatorAddresses.length > 0,
-    queryFn: () =>
-      Promise.all(uniqueValidatorAddresses.map((addr) => getValidator(addr)))
+    queryFn: () => {
+      return Promise.all(
+        uniqueValidatorAddresses.map((addr) => getValidator(addr))
+      )
+    }
   })
 
   const enrichedDelegationsQuery = useQuery({
@@ -43,6 +48,8 @@ export const useDelegationInfo = () => {
         totalUSD: number
         tokens: TokenExtended[]
       }> = []
+
+      console.log(qDelegations.data)
 
       for (const delegation of qDelegations.data!) {
         const validator = validatorsMap.get(delegation.validatorAddress)

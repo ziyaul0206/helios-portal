@@ -7,6 +7,7 @@ import { TokenExtended } from "@/types/token"
 import { fetchCGTokenData } from "@/utils/price"
 import { TOKEN_COLORS } from "@/config/constants"
 import { APP_COLOR_DEFAULT } from "@/config/app"
+import { getTokenDetail } from "@/helpers/rpc-calls"
 
 export const useTokenRegistry = () => {
   const [tokens, setTokens] = useState<TokenExtended[]>([])
@@ -18,23 +19,26 @@ export const useTokenRegistry = () => {
     tempChainId?: number
   ): Promise<TokenExtended | null> => {
     const chainId = tempChainId || currentChainId
-    const existing = tokens.find(
-      (t) =>
-        t.functionnal.address.toLowerCase() === tokenAddress.toLowerCase() &&
-        t.functionnal.chainId === chainId
-    )
-    if (existing) return existing
+    // const existing = tokens.find(
+    //   (t) =>
+    //     t.functionnal.address.toLowerCase() === tokenAddress.toLowerCase() &&
+    //     t.functionnal.chainId === chainId
+    // )
+    // if (existing) return existing
 
     try {
+      const data = await getTokenDetail(tokenAddress);
+      if (!data) {throw new Error("Token not found")}
+
       const info = await fetchTokenInfo(tokenAddress, chainId, userAddress)
-      const symbol = info.symbol.toLowerCase()
+      const symbol = data.metadata.symbol.toLowerCase()
       const cgData = await fetchCGTokenData([symbol])
-      const cgToken = cgData[info.symbol.toLowerCase()]
+      const cgToken = cgData[symbol]
       const unitPrice = cgToken?.price || 0
 
       const newToken: TokenExtended = {
         display: {
-          name: info.name,
+          name: data.metadata.name,
           description: "",
           logo: cgToken?.logo || "",
           symbol,
@@ -53,8 +57,8 @@ export const useTokenRegistry = () => {
         functionnal: {
           address: tokenAddress,
           chainId: chainId,
-          denom: info.symbol,
-          decimals: info.decimals
+          denom: data.metadata.base,
+          decimals: data.metadata.decimals
         }
       }
 

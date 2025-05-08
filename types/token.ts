@@ -49,3 +49,29 @@ export interface TokenExtended {
     decimals: number
   }
 }
+
+export interface TokenMetadataResponse {
+  metadata: {
+    description: string
+    denomUnits: {
+      denom: string
+      exponent?: number
+    }[]
+    base: string
+    display: string
+    name: string
+    symbol: string
+    decimals: number
+    logo: string
+    contract_address: string
+    chainsMetadatas: {
+      chainId: number
+      symbol: string
+      decimals: number
+      contractAddress: string
+      isOriginated: boolean
+    }[]
+  }
+  holdersCount: number
+  total_supply: string
+}

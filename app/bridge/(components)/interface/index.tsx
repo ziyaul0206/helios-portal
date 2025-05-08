@@ -457,11 +457,10 @@ export const Interface = () => {
           {bridgeFeedback && bridgeFeedback.message !== "" && (
             <Alert type={bridgeFeedback.status}>{bridgeFeedback.message}</Alert>
           )}
-          {txInProgress && (
-            <div>
-              {txInProgress.status}: token contract in new chain ={" "}
-              {txInProgress.receivedToken.contract}
-            </div>
+          {(txInProgress && txInProgress.receivedToken.contract) && (
+            <Alert type="success">
+              {`Token contract in new chain is  ${txInProgress.receivedToken.contract}`}
+            </Alert>
           )}
         </div>
       </Card>

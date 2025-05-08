@@ -12,6 +12,7 @@ export interface ValidatorProps {
 }
 
 export interface ValidatorRow {
+  address: string
   name: string
   commission: number
   apy: number

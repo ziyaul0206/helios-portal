@@ -10,8 +10,11 @@ import { useState } from "react"
 import s from "./active.module.scss"
 import { ModalStake } from "./stake"
 import { ModalUnstake } from "./unstake"
+import { useChainId, useSwitchChain } from "wagmi"
+import { HELIOS_NETWORK_ID } from "@/config/app"
 
 export const Row = ({
+  address,
   name,
   commission,
   assets,
@@ -23,6 +26,16 @@ ValidatorRow) => {
   const [openStake, setOpenStake] = useState(false)
   const [openUnstake, setOpenUnstake] = useState(false)
   // const [rewardsAmount, setRewardsAmount] = useState(rewards)
+  const chainId = useChainId()
+  const { switchChain } = useSwitchChain()
+
+  const handleOpenStake = () => {
+    if (chainId !== HELIOS_NETWORK_ID) {
+      switchChain({ chainId: HELIOS_NETWORK_ID})
+    }
+
+    setOpenStake(true)
+  }
 
   return (
     <TableRow className={s.row}>
@@ -85,10 +98,11 @@ ValidatorRow) => {
             variant="primary"
             size="xsmall"
             border
-            onClick={() => setOpenStake(true)}
+            onClick={() => handleOpenStake()}
           />
           <ModalStake
-            title={`Stake ${name}`}
+            title={`Stake on ${name}`}
+            validatorAddress={address}
             open={openStake}
             setOpen={setOpenStake}
           />
@@ -100,12 +114,14 @@ ValidatorRow) => {
             onClick={() => setOpenUnstake(true)}
           />
           <ModalUnstake
-            title={`Unstake ${name}`}
+            title={`Unstake on ${name}`}
+            validatorAddress={address}
+            delegatedAssets={assets}
             open={openUnstake}
             setOpen={setOpenUnstake}
           />
           <Button
-            href="/validators/details"
+            href={`/validators/${address}`}
             icon="hugeicons:link-circle-02"
             variant="secondary"
             size="xsmall"

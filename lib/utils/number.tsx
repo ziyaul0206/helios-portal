@@ -38,7 +38,7 @@ export const formatCurrency = (
 export function formatNumber(number: number, decimals?: number): string {
   return number.toLocaleString("en-US", {
     maximumFractionDigits: decimals ?? 0,
-    minimumFractionDigits: decimals ?? 0,
+    minimumFractionDigits: 2,
     useGrouping: true
   })
 }

@@ -11,6 +11,7 @@ interface SelectProps
   label?: string
   icon?: string
   className?: string
+  placeholder?: string
   error?: string
   helperText?: string
   helperVariant?: Variants
@@ -29,6 +30,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
       icon,
       className,
       error,
+      placeholder,
       helperVariant,
       helperText,
       startAdornment,
@@ -45,6 +47,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           {icon && <Icon icon={icon} className={s.icon} />}
           {startAdornment}
           <select ref={ref} className={s.value} {...props}>
+            {placeholder && <option value="" disabled>{placeholder}</option>}
             {options.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}

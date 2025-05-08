@@ -15,8 +15,6 @@ export const Transactions = () => {
   // ) as TransactionDelegation[]
   const { transactions } = useAccountLastTransactions()
 
-  console.log(transactions)
-
   const formattedTxs: TransactionDelegation[] = transactions.map((tx) => ({
     type: tx.type,
     amount: tx.amount || 0,

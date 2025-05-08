@@ -75,7 +75,7 @@ export const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, Props>(
           <label className={s.label}>
             {label}
             {balance !== undefined && (
-              <small>Balance: {formatNumber(balance)}</small>
+              <small>Balance: {formatNumber(balance, 6)}</small>
             )}
           </label>
         )}

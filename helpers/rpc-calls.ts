@@ -1,5 +1,5 @@
 import { request } from "./request"
-import { Token, TokenBalance } from "@/types/token"
+import { Token, TokenBalance, TokenMetadataResponse } from "@/types/token"
 import { Block } from "@/types/block"
 import { Delegation } from "@/types/delegation"
 import { Proposal } from "@/types/proposal"
@@ -20,6 +20,12 @@ export const getTokensBalance = (address: string, page: string, size: string) =>
     address,
     page,
     size
+  ])
+
+
+export const getTokenDetail = (address: string) =>
+  request<TokenMetadataResponse>("eth_getTokenDetails", [
+    address,
   ])
 
 export const getBlocksByPageAndSize = (

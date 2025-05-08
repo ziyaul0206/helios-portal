@@ -4,6 +4,7 @@ import { getAccountLastTransactions } from "@/helpers/rpc-calls"
 import { useTokenRegistry } from "@/hooks/useTokenRegistry"
 import { HELIOS_NETWORK_ID } from "@/config/app"
 import { formatUnits } from "ethers"
+import { secondsToMilliseconds } from "@/utils/number"
 
 export const useAccountLastTransactions = () => {
   const { address } = useAccount()
@@ -12,6 +13,7 @@ export const useAccountLastTransactions = () => {
   const qLastTxs = useQuery({
     queryKey: ["accountLastTxs", address],
     queryFn: () => getAccountLastTransactions(address!),
+    refetchInterval: secondsToMilliseconds(60),
     enabled: !!address
   })
 

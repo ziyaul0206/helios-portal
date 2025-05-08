@@ -9,9 +9,10 @@ import { useDelegationInfo } from "@/hooks/useDelegationInfo"
 
 export const Active = () => {
   const { delegationsByValidator } = useDelegationInfo()
-
+  
   const validators: ValidatorRow[] = delegationsByValidator.map(
     (validator) => ({
+      address: validator.validatorAddress,
       name: validator.moniker,
       commission: validator.commission,
       apy: validator.apr,

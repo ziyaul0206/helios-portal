@@ -53,7 +53,7 @@ export const fetchTokenInfo = async (
       [
         contract.methods.name().call() as Promise<string>,
         contract.methods.symbol().call() as Promise<string>,
-        contract.methods.decimals().call() as Promise<string | number>,
+        contract.methods.decimals().call() as Promise<string>,
         contract.methods.totalSupply().call() as Promise<string>,
         userAddress
           ? (contract.methods.balanceOf(userAddress).call() as Promise<string>)
@@ -61,8 +61,7 @@ export const fetchTokenInfo = async (
       ]
     )
 
-    const decimalsInt =
-      typeof decimals === "string" ? parseInt(decimals) : decimals
+    const decimalsInt = parseInt(decimals);
     const readableBalance = parseFloat(
       ethers.formatUnits(balanceRaw.toString(), decimalsInt)
     )
@@ -73,7 +72,7 @@ export const fetchTokenInfo = async (
       decimals: decimalsInt,
       totalSupply: totalSupply.toString(),
       balance: balanceRaw.toString(),
-      readableBalance
+      readableBalance,
     }
   } catch {
     throw new Error("Token not found")

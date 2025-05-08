@@ -3,7 +3,7 @@
 import s from "./alert.module.scss"
 import { Icon } from "@/components/icon"
 
-export type AlertType = "success" | "warning" | "danger" | "primary"
+export type AlertType = "idle" | "success" | "warning" | "danger" | "primary"
 
 interface AlertProps {
   type: AlertType
@@ -11,6 +11,7 @@ interface AlertProps {
 }
 
 const iconByType: Record<AlertType, string> = {
+  idle: "",
   success: "hugeicons:checkmark-circle-02",
   warning: "hugeicons:alert-diamond",
   danger: "hugeicons:alert-02",
