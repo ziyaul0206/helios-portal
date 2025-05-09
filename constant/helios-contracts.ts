@@ -397,6 +397,32 @@ export const delegateAbi = [
     type: "function"
   }
 ]
+export const claimAllRewardsAbi = [
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "delegatorAddress",
+        type: "address"
+      },
+      {
+        internalType: "uint32",
+        name: "maxRetrieve",
+        type: "uint32"
+      }
+    ],
+    name: "claimRewards",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "success",
+        type: "bool"
+      }
+    ],
+    stateMutability: "nonpayable",
+    type: "function"
+  }
+]
 export const withdrawDelegatorRewardsAbi = [
   {
     inputs: [

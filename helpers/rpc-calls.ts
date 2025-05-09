@@ -1,5 +1,5 @@
 import { request } from "./request"
-import { Token, TokenBalance, TokenMetadataResponse } from "@/types/token"
+import { Token, TokenMetadataResponse, TokensBalance } from "@/types/token"
 import { Block } from "@/types/block"
 import { Delegation } from "@/types/delegation"
 import { Proposal } from "@/types/proposal"
@@ -16,17 +16,14 @@ export const getTokenBalance = (
 ) => request<string>("eth_getTokenBalance", [address, tokenAddress, block])
 
 export const getTokensBalance = (address: string, page: string, size: string) =>
-  request<TokenBalance[]>("eth_getAccountTokensBalanceByPageAndSize", [
+  request<TokensBalance>("eth_getAccountTokensBalanceByPageAndSize", [
     address,
     page,
     size
   ])
 
-
 export const getTokenDetail = (address: string) =>
-  request<TokenMetadataResponse>("eth_getTokenDetails", [
-    address,
-  ])
+  request<TokenMetadataResponse>("eth_getTokenDetails", [address])
 
 export const getBlocksByPageAndSize = (
   page: number,
@@ -134,3 +131,6 @@ export const getLastTransactions = (size: string) =>
 
 export const getAccountLastTransactions = (address: string) =>
   request<TransactionLast[]>("eth_getAccountLastTransactionsInfo", [address])
+
+export const getAllHyperionTransferTxs = async (size: string) =>
+  request<HyperionBridgeTx[]>("eth_getAllHyperionTransferTxs", [size])

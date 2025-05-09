@@ -8,7 +8,7 @@ import { secondsToMilliseconds } from "@/utils/number"
 
 export const useAccountLastTransactions = () => {
   const { address } = useAccount()
-  const { getTokenBySymbol } = useTokenRegistry()
+  const { getTokenByAddress } = useTokenRegistry()
 
   const qLastTxs = useQuery({
     queryKey: ["accountLastTxs", address],
@@ -18,7 +18,7 @@ export const useAccountLastTransactions = () => {
   })
 
   const enrichedTxsQuery = useQuery({
-    queryKey: ["accountLastTxsEnriched", address],
+    queryKey: ["accountLastTxsEnriched", address, qLastTxs.data],
     enabled: !!qLastTxs.data,
     queryFn: async () => {
       const results = await Promise.all(
@@ -30,8 +30,11 @@ export const useAccountLastTransactions = () => {
           let amount = null
           let usdValue = null
 
-          if (parsed.denom && parsed.amount) {
-            token = getTokenBySymbol(parsed.denom, HELIOS_NETWORK_ID) // WIP Replace with address when available
+          if (parsed.contractAddress && parsed.amount) {
+            token = await getTokenByAddress(
+              parsed.contractAddress,
+              HELIOS_NETWORK_ID
+            )
             if (token) {
               amount = parseFloat(
                 formatUnits(parsed.amount, token.functionnal.decimals)
@@ -48,13 +51,7 @@ export const useAccountLastTransactions = () => {
             blockNumber: parseInt(raw.blockNumber, 16),
             amount,
             usdValue,
-            token: token
-              ? {
-                  symbol: token.display.symbol,
-                  logo: token.display.symbolIcon,
-                  color: token.display.color
-                }
-              : null
+            token: token ?? null
           }
         })
       )

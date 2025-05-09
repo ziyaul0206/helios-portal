@@ -37,10 +37,11 @@ export const Interface = () => {
   const {
     chains,
     heliosChainIndex,
-    txInProgress,
+    // txInProgress,
     sendToChain,
     sendToHelios,
-    feedback: bridgeFeedback
+    feedback: bridgeFeedback,
+    resetFeedback
   } = useBridge()
   const { switchChain } = useSwitchChain()
 
@@ -217,6 +218,8 @@ export const Interface = () => {
       asset: null,
       amount: 0
     }))
+
+    resetFeedback()
   }, [chains, heliosChainIndex, chainId])
 
   useEffect(() => {
@@ -433,8 +436,14 @@ export const Interface = () => {
             <div className={s.recapItem}>
               <span>Estimated Fees:</span>
               <strong>
-                <small>~1% =</small>
-                {estimatedFees} {tokenInfo.data?.symbol}
+                {isDeposit ? (
+                  "No Fees"
+                ) : (
+                  <>
+                    <small>~1% =</small>
+                    {estimatedFees} {tokenInfo.data?.symbol}
+                  </>
+                )}
               </strong>
             </div>
             <div className={s.recapItem}>
@@ -457,11 +466,11 @@ export const Interface = () => {
           {bridgeFeedback && bridgeFeedback.message !== "" && (
             <Alert type={bridgeFeedback.status}>{bridgeFeedback.message}</Alert>
           )}
-          {(txInProgress && txInProgress.receivedToken.contract) && (
+          {/* {txInProgress && txInProgress.receivedToken.contract && (
             <Alert type="success">
               {`Token contract in new chain is  ${txInProgress.receivedToken.contract}`}
             </Alert>
-          )}
+          )} */}
         </div>
       </Card>
       {/* <Modal

@@ -1,7 +1,7 @@
 import { Blocks } from "@/components/blocks"
 import { Card } from "@/components/card"
 import { Heading } from "@/components/heading"
-// import { Claim } from "../claim"
+import { Claim } from "../claim"
 import s from "./top.module.scss"
 import { useDelegationInfo } from "@/hooks/useDelegationInfo"
 import { formatBigNumber } from "@/lib/utils/number"
@@ -37,7 +37,7 @@ export const Top = () => {
       <div className={s.content}>
         <Blocks items={blocks} className={s.blocks} />
         {/* <Blocks items={blocks} className={s.blocks} vertical /> */}
-        {/* <Claim /> */}
+        <Claim />
       </div>
     </Card>
   )

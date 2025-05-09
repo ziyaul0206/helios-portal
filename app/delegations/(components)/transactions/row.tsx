@@ -5,6 +5,7 @@ import { TableCell, TableRow } from "@/components/table"
 import { Variants } from "@/types/Variants"
 import s from "./transactions.module.scss"
 import { TransactionLastType } from "@/types/transaction"
+import { formatNumber } from "@/lib/utils/number"
 
 const TRANSACTION_LABELS: Record<
   TransactionLastType,
@@ -55,7 +56,8 @@ const TRANSACTION_LABELS: Record<
 interface TransactionRowProps {
   type: TransactionLastType
   amount?: number
-  tokenSymbol?: string
+  symbol?: string
+  symbolIcon?: string
   explorer: string
   date?: string
   from?: string
@@ -65,7 +67,8 @@ interface TransactionRowProps {
 export const Row = ({
   type,
   amount,
-  tokenSymbol,
+  symbol,
+  symbolIcon,
   explorer
 }: TransactionRowProps) => {
   const { label, variant, icon } = TRANSACTION_LABELS[type]
@@ -79,8 +82,8 @@ export const Row = ({
       </TableCell>
       <TableCell>
         <div className={s.amount}>
-          {amount?.toFixed(4)}{" "}
-          {tokenSymbol && <Icon icon={`token:${tokenSymbol.toLowerCase()}`} />}
+          {symbolIcon && <Icon icon={symbolIcon} />}
+          {formatNumber(amount || 0, 6)} {symbol?.toUpperCase()}
         </div>
       </TableCell>
       {/* <TableCell className={s.date}>{date || "-"}</TableCell> */}

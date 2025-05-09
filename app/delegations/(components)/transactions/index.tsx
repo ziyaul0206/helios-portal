@@ -18,7 +18,9 @@ export const Transactions = () => {
   const formattedTxs: TransactionDelegation[] = transactions.map((tx) => ({
     type: tx.type,
     amount: tx.amount || 0,
-    explorer: `${EXPLORER_URL}/tx/${tx.hash}`
+    explorer: `${EXPLORER_URL}/tx/${tx.hash}`,
+    symbol: tx.token?.display.symbol || "",
+    symbolIcon: tx.token?.display.symbolIcon || ""
   }))
 
   return (

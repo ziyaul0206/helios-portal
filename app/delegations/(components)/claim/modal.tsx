@@ -9,6 +9,8 @@ import clsx from "clsx"
 import { useState } from "react"
 import { toast } from "sonner"
 import s from "./claim.module.scss"
+import { formatNumber } from "@/lib/utils/number"
+import { useRewards } from "@/hooks/useRewards"
 
 interface ModalClaimProps {
   title: string
@@ -22,16 +24,17 @@ export const ModalClaim = ({
   title,
   open,
   setOpen,
-  rewards,
-  setRewards
-}: ModalClaimProps) => {
+  rewards
+}: // setRewards
+ModalClaimProps) => {
   const [loading, setLoading] = useState(false)
   const classes = clsx(s.claim, rewards > 0 && s.claimAvailable)
+  const { claimRewards } = useRewards()
 
   const handleClaim = async () => {
     setLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    setRewards(0)
+    await claimRewards()
+    console.log("next")
     setOpen(false)
     setLoading(false)
     toast.success(
@@ -55,9 +58,9 @@ export const ModalClaim = ({
       <div className={classes}>
         <h3>Available Rewards</h3>
         <div className={s.available}>
-          {rewards} <Icon icon="helios" />
+          {formatNumber(rewards)} <Icon icon="helios" />
         </div>
-        <div className={s.price}>≈${rewards * 100}</div>
+        <div className={s.price}>≈$TODO</div>
       </div>
       <Button
         icon={loading ? "svg-spinners:6-dots-rotate" : "helios"}

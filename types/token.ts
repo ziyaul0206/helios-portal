@@ -1,3 +1,8 @@
+export interface TokensBalance {
+  Balances: TokenBalance[]
+  TotalCount: number
+}
+
 export interface TokenBalance {
   address: string
   balance: string

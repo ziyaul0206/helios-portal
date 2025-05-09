@@ -7,4 +7,5 @@ export interface TransactionDelegation {
   // status: number
   // date: string
   explorer: string
+  symbolIcon: string
 }

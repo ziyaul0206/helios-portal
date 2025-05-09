@@ -12,9 +12,7 @@ export const useDelegationInfo = () => {
 
   const qDelegations = useQuery({
     queryKey: ["delegations", address],
-    queryFn: () => {
-      return getDelegations(address!)
-    },
+    queryFn: () => getDelegations(address!),
     enabled: !!address
   })
 
@@ -23,17 +21,19 @@ export const useDelegationInfo = () => {
   const uniqueValidatorAddresses = Array.from(new Set(validatorAddresses))
 
   const qValidators = useQuery({
-    queryKey: ["validators", address],
+    queryKey: ["validators", address, uniqueValidatorAddresses],
     enabled: uniqueValidatorAddresses.length > 0,
-    queryFn: () => {
-      return Promise.all(
-        uniqueValidatorAddresses.map((addr) => getValidator(addr))
-      )
-    }
+    queryFn: () =>
+      Promise.all(uniqueValidatorAddresses.map((addr) => getValidator(addr)))
   })
 
   const enrichedDelegationsQuery = useQuery({
-    queryKey: ["delegationsEnriched", address],
+    queryKey: [
+      "delegationsEnriched",
+      address,
+      qDelegations.data,
+      qValidators.data
+    ],
     enabled: !!qDelegations.data?.length && !!qValidators.data,
     queryFn: async () => {
       const validatorsMap = new Map(
@@ -48,8 +48,6 @@ export const useDelegationInfo = () => {
         totalUSD: number
         tokens: TokenExtended[]
       }> = []
-
-      console.log(qDelegations.data)
 
       for (const delegation of qDelegations.data!) {
         const validator = validatorsMap.get(delegation.validatorAddress)
@@ -104,11 +102,22 @@ export const useDelegationInfo = () => {
       ? averageApr / enrichedDelegationsQuery.data.length
       : 0
 
+  const totalRewards =
+    qDelegations.data?.reduce((sum, v) => {
+      return sum + parseFloat(ethers.formatUnits(v.rewards.amount, 18))
+    }, 0) ?? 0
+
+  const totalRewardsUSD =
+    totalRewards *
+    (enrichedDelegationsQuery.data?.[0]?.tokens[0]?.price?.usd ?? 0)
+
   return {
     totalDelegatedUSD,
     averageApr: finalApr,
     validatorsCount: enrichedDelegationsQuery.data?.length || 0,
     delegationsByValidator: enrichedDelegationsQuery.data || [],
+    totalRewards,
+    totalRewardsUSD,
     isLoading:
       qDelegations.isLoading ||
       qValidators.isLoading ||

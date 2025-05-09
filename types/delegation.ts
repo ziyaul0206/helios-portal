@@ -16,5 +16,5 @@ export interface Delegation {
   validatorAddress: string
   shares: string
   assets: DelegationAsset[]
-  rewards: DelegationReward[]
+  rewards: DelegationReward
 }

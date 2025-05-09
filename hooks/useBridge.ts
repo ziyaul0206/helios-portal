@@ -5,7 +5,6 @@ import { getErrorMessage } from "@/utils/string"
 import { useWeb3Provider } from "./useWeb3Provider"
 import { ethers } from "ethers"
 import {
-  BRIDGE_HYPERION_ADDRESS,
   BRIDGE_CONTRACT_ADDRESS,
   bridgeSendToChainAbi,
   bridgeSendToHeliosAbi,
@@ -20,6 +19,7 @@ import { toHex } from "viem"
 import { secondsToMilliseconds } from "date-fns"
 import { AlertType } from "@/app/(components)/alert"
 import { explorerByChain } from "./useTokenInfo"
+import { getBestGasPrice } from "@/lib/utils/gas"
 
 export const useBridge = () => {
   const { address } = useAccount()
@@ -34,6 +34,11 @@ export const useBridge = () => {
     queryKey: ["hyperionChains"],
     queryFn: getHyperionChains
   })
+
+  // const qAllHyperionTxs = useQuery({
+  //   queryKey: ["allHyperionTxs"],
+  //   queryFn: () => getAllHyperionTransferTxs(toHex(5))
+  // })
 
   const qHyperionBridgeTxs = useQuery({
     queryKey: ["hyperionBridgeTxs"],
@@ -51,6 +56,13 @@ export const useBridge = () => {
     status: "idle" as AlertType,
     message: ""
   })
+  const resetFeedback = () => {
+    setFeedback({
+      status: "idle",
+      message: ""
+    })
+    setTxHashInProgress("")
+  }
 
   const loadTokensByChain = async (chainId: number) => {
     return queryClient.fetchQuery({
@@ -96,6 +108,45 @@ export const useBridge = () => {
       if (!web3Provider || !address) throw new Error("No wallet connected")
 
       try {
+        const tokenContract = new web3Provider.eth.Contract(
+          erc20Abi as any,
+          tokenAddress
+        )
+
+        const bestGasPrice = await getBestGasPrice(web3Provider)
+        const currentAllowanceStr: string = await tokenContract.methods
+          .allowance(address, BRIDGE_CONTRACT_ADDRESS)
+          .call()
+        const currentAllowance = BigInt(currentAllowanceStr)
+        const totalAmount = amount + fees
+
+        if (currentAllowance < totalAmount) {
+          setFeedback({
+            status: "primary",
+            message: "Approving token..."
+          })
+          const approveTx = await tokenContract.methods
+            .approve(BRIDGE_CONTRACT_ADDRESS, totalAmount.toString())
+            .send({
+              from: address,
+              gas: "100000", // approve gas limit
+              gasPrice: bestGasPrice.toString()
+            })
+
+          const explorerLink =
+            explorerByChain[chainId] + "/tx/" + approveTx.transactionHash
+
+          setFeedback({
+            status: "primary",
+            message: `Tokens approved. Tx: <a href="${explorerLink}" target="_blank"><strong>${approveTx.transactionHash}</strong></a>.`
+          })
+        } else {
+          setFeedback({
+            status: "primary",
+            message: "Token already approved for sufficient amount."
+          })
+        }
+
         setFeedback({
           status: "primary",
           message: "Sending cross-chain transaction..."
@@ -116,7 +167,8 @@ export const useBridge = () => {
           )
           .send({
             from: address,
-            gas: "500000"
+            gas: "150000", // sendToChain gas limit
+            gasPrice: bestGasPrice.toString()
           })
 
         setFeedback({
@@ -133,7 +185,7 @@ export const useBridge = () => {
 
         setFeedback({
           status: "success",
-          message: `Transaction confirmed in block <strong>#${receipt.blockNumber}</strong>.`
+          message: `Transaction confirmed in block <strong>#${receipt.blockNumber}</strong>. It will be available in a few minutes.`
         })
 
         return receipt
@@ -157,14 +209,14 @@ export const useBridge = () => {
     decimals: number
   ) => {
     const amount = ethers.parseUnits(readableAmount.toString(), decimals)
-    const fees = ethers.parseUnits(readableFees.toString(), decimals)
-    const amountWithFees = amount + fees
+    // const fees = ethers.parseUnits(readableFees.toString(), decimals)
+    // const amountWithFees = amount + fees
 
     return sendToHeliosMutation.mutateAsync({
       fromChainId,
       receiverAddress,
       tokenAddress,
-      amountWithFees
+      amountWithFees: amount
     })
   }
 
@@ -192,6 +244,7 @@ export const useBridge = () => {
         )?.hyperionContractAddress
         if (!chainContractAddress) return
 
+        const bestGasPrice = await getBestGasPrice(web3Provider)
         const currentAllowanceStr: string = await tokenContract.methods
           .allowance(address, chainContractAddress)
           .call()
@@ -202,10 +255,13 @@ export const useBridge = () => {
             status: "primary",
             message: "Approving token..."
           })
-
           const approveTx = await tokenContract.methods
             .approve(chainContractAddress, amountWithFees.toString())
-            .send({ from: address })
+            .send({
+              from: address,
+              gas: "100000", // approve gas limit
+              gasPrice: bestGasPrice.toString()
+            })
 
           const explorerLink =
             explorerByChain[fromChainId] + "/tx/" + approveTx.transactionHash
@@ -225,8 +281,9 @@ export const useBridge = () => {
 
         const hyperionContract = new web3Provider.eth.Contract(
           bridgeSendToHeliosAbi,
-          BRIDGE_HYPERION_ADDRESS
+          chainContractAddress
         )
+
         const tx = await hyperionContract.methods
           .sendToHelios(
             tokenAddress,
@@ -236,7 +293,8 @@ export const useBridge = () => {
           )
           .send({
             from: address,
-            gas: "500000"
+            gas: "1500000", // sendToHelios gas limit
+            gasPrice: bestGasPrice.toString()
           })
 
         setTxHashInProgress(tx.transactionHash)
@@ -276,6 +334,7 @@ export const useBridge = () => {
     loadTokensByChain,
     sendToHelios,
     feedback,
+    resetFeedback,
     isLoading: sendToChainMutation.isPending || sendToHeliosMutation.isPending
   }
 }

@@ -50,6 +50,7 @@ export interface TransactionLast {
   ParsedInfo: {
     amount?: string
     denom?: string
+    contractAddress?: string
     type: TransactionLastType
   }
 }

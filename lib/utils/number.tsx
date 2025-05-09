@@ -36,8 +36,10 @@ export const formatCurrency = (
 }
 
 export function formatNumber(number: number, decimals?: number): string {
+  const safeDecimals = Math.min(Math.max(decimals ?? 2, 0), 20)
+
   return number.toLocaleString("en-US", {
-    maximumFractionDigits: decimals ?? 0,
+    maximumFractionDigits: safeDecimals,
     minimumFractionDigits: 2,
     useGrouping: true
   })

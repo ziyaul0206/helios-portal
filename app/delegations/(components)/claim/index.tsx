@@ -6,8 +6,11 @@ import clsx from "clsx"
 import { useState } from "react"
 import s from "./claim.module.scss"
 import { ModalClaim } from "./modal"
+import { useDelegationInfo } from "@/hooks/useDelegationInfo"
+import { formatNumber } from "@/lib/utils/number"
 
 export const Claim = () => {
+  const { totalRewards } = useDelegationInfo()
   const [open, setOpen] = useState(false)
   const [rewards, setRewards] = useState(71.5)
   const classes = clsx(s.claim, rewards > 0 && s.claimAvailable)
@@ -17,9 +20,9 @@ export const Claim = () => {
       <div className={classes}>
         <h3>Rewards Available</h3>
         <div className={s.available}>
-          {rewards} <Icon icon="helios" />
+          {formatNumber(totalRewards)} <Icon icon="helios" />
         </div>
-        <div className={s.price}>≈${rewards * 100}</div>
+        <div className={s.price}>≈$TODO</div>
         <Button
           icon="helios"
           onClick={() => setOpen(true)}
@@ -32,7 +35,7 @@ export const Claim = () => {
         title="Claim Staking Rewards"
         open={open}
         setOpen={setOpen}
-        rewards={rewards}
+        rewards={totalRewards}
         setRewards={setRewards}
       />
     </>

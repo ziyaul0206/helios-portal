@@ -18,11 +18,12 @@ export const usePortfolioInfo = () => {
   })
 
   const enrichedTokensQuery = useQuery({
-    queryKey: ["enrichedPortfolio", address],
-    enabled: !!qTokenBalances.data?.length,
+    queryKey: ["enrichedPortfolio", address, qTokenBalances.data],
+    enabled: !!qTokenBalances.data,
     queryFn: async (): Promise<TokenExtended[]> => {
+      console.log(qTokenBalances.data)
       const results = await Promise.all(
-        qTokenBalances.data!.map(async (token) => {
+        qTokenBalances.data!.Balances.map(async (token) => {
           const enriched = await getTokenByAddress(
             token.address,
             HELIOS_NETWORK_ID

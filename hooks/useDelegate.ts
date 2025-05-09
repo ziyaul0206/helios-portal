@@ -67,8 +67,6 @@ export const useDelegate = () => {
           tx.transactionHash
         )
 
-
-
         return receipt
       } catch (error: any) {
         setFeedback({
@@ -130,7 +128,6 @@ export const useDelegate = () => {
           tx.transactionHash
         )
 
-
         return receipt
       } catch (error: any) {
         setFeedback({
@@ -155,17 +152,14 @@ export const useDelegate = () => {
       decimals
     })
 
-
     setFeedback({
       status: "success",
       message: `Delegation successful ! Refreshing your delegations...`
     })
 
-    await queryClient.refetchQueries({ queryKey: ['delegations', address] })
-    await queryClient.refetchQueries({ queryKey: ['validators', address] })
-    await queryClient.refetchQueries({ queryKey: ['delegationsEnriched', address] })
-    await queryClient.refetchQueries({ queryKey: ['whitelistedAssets'] })
-
+    await queryClient.refetchQueries({ queryKey: ["delegations", address] })
+    await queryClient.refetchQueries({ queryKey: ["accountLastTxs", address] })
+    await queryClient.refetchQueries({ queryKey: ["whitelistedAssets"] })
   }
 
   const undelegate = async (
@@ -180,18 +174,15 @@ export const useDelegate = () => {
       symbol,
       decimals
     })
-    
+
     setFeedback({
       status: "success",
       message: `Undelegation successful! Refreshing your delegations...`
     })
 
-    await queryClient.refetchQueries({ queryKey: ['delegations', address] })
-    await queryClient.refetchQueries({ queryKey: ['validators', address] })
-    await queryClient.refetchQueries({ queryKey: ['delegationsEnriched', address] })
-    await queryClient.refetchQueries({ queryKey: ['whitelistedAssets'] })
-
-
+    await queryClient.refetchQueries({ queryKey: ["delegations", address] })
+    await queryClient.refetchQueries({ queryKey: ["accountLastTxs", address] })
+    await queryClient.refetchQueries({ queryKey: ["whitelistedAssets"] })
   }
 
   return {

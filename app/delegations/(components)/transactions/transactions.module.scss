@@ -23,14 +23,15 @@
 }
 
 .amount {
-  display: inline-flex;
+  display: flex;
+  align-content: center;
   color: var(--primary-medium);
   font-weight: bold;
-
+  gap: 8px;
   svg {
-    margin-left: 0.25em;
     position: relative;
-    top: 0.1em;
+    width: 20px;
+    // top: 0.1em;
   }
 }
 
