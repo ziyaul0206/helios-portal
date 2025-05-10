@@ -1,3 +1,5 @@
+import { TokenExtended } from "./token"
+
 export interface Access {
   address: string
   storageKeys: string[]
@@ -64,3 +66,10 @@ export type TransactionLastType =
   | "DEPOSIT"
   | "WITHDRAW"
   | "UNKNOWN"
+
+export type TransactionBridgeLight = {
+  type: TransactionLastType
+  token: TokenExtended | null
+  amount: string
+  hash: string
+}

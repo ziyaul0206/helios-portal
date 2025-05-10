@@ -1,10 +1,10 @@
-import { TransactionLast } from "@/types/transaction"
+import { TransactionBridgeLight } from "@/types/transaction"
 import { Table } from "../table"
 import { TransactionsLine } from "./line"
 import { Alert } from "@/app/(components)/alert"
 
 interface TransactionsProps {
-  transactions: TransactionLast[]
+  transactions: TransactionBridgeLight[]
 }
 
 export const Transactions = ({ transactions }: TransactionsProps) => {
@@ -17,7 +17,7 @@ export const Transactions = ({ transactions }: TransactionsProps) => {
       <tbody>
         {transactions.map((transaction) => (
           <TransactionsLine
-            key={"transactions-" + transaction.RawTransaction.hash}
+            key={"transactions-" + transaction.hash}
             {...transaction}
           />
         ))}

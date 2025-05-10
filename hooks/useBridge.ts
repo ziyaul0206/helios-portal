@@ -11,6 +11,7 @@ import {
   erc20Abi
 } from "@/constant/helios-contracts"
 import {
+  getAllHyperionTransferTxs,
   getHyperionAccountTransferTxsByPageAndSize,
   getHyperionChains,
   getTokensByChainIdAndPageAndSize
@@ -20,12 +21,15 @@ import { secondsToMilliseconds } from "date-fns"
 import { AlertType } from "@/app/(components)/alert"
 import { explorerByChain } from "./useTokenInfo"
 import { getBestGasPrice } from "@/lib/utils/gas"
+import { useTokenRegistry } from "./useTokenRegistry"
+import { TransactionBridgeLight } from "@/types/transaction"
 
 export const useBridge = () => {
   const { address } = useAccount()
   const web3Provider = useWeb3Provider()
   const chainId = useChainId()
   const queryClient = useQueryClient()
+  const { getTokenByAddress } = useTokenRegistry()
 
   const [lastReceiverAddress, setLastReceiverAddress] = useState("")
   const [txHashInProgress, setTxHashInProgress] = useState("")
@@ -35,10 +39,36 @@ export const useBridge = () => {
     queryFn: getHyperionChains
   })
 
-  // const qAllHyperionTxs = useQuery({
-  //   queryKey: ["allHyperionTxs"],
-  //   queryFn: () => getAllHyperionTransferTxs(toHex(5))
-  // })
+  const qAllHyperionTxs = useQuery({
+    queryKey: ["allHyperionTxs"],
+    queryFn: () => getAllHyperionTransferTxs(toHex(5))
+  })
+
+  const enrichedHyperionTxs = useQuery({
+    queryKey: ["enrichedHyperionTxs", qAllHyperionTxs.data],
+    enabled: !!qAllHyperionTxs.data,
+    queryFn: async () => {
+      return Promise.all(
+        qAllHyperionTxs.data!.map(async (tx) => {
+          const contractAddress =
+            tx.direction === "IN"
+              ? tx.receivedToken.contract
+              : tx.sentToken.contract
+          const token = await getTokenByAddress(contractAddress, tx.chainId)
+
+          return {
+            type: tx.direction === "IN" ? "BRIDGE_IN" : "BRIDGE_OUT",
+            token,
+            amount:
+              tx.direction === "IN"
+                ? tx.receivedToken.amount
+                : tx.sentToken.amount,
+            hash: tx.txHash
+          } as TransactionBridgeLight
+        })
+      )
+    }
+  })
 
   const qHyperionBridgeTxs = useQuery({
     queryKey: ["hyperionBridgeTxs"],
@@ -329,6 +359,7 @@ export const useBridge = () => {
     heliosChainIndex: qHyperionChains.data?.findIndex(
       (chain) => chain.hyperionId === 0
     ),
+    lastBridgeTxs: enrichedHyperionTxs.data || [],
     txInProgress,
     sendToChain,
     loadTokensByChain,
