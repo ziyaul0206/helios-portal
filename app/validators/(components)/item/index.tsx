@@ -6,6 +6,10 @@ import { Validator } from "@/types/validator"
 import s from "./item.module.scss"
 import { StatItem } from "./stat"
 import { useValidatorDetail } from "@/hooks/useValidatorDetail"
+import { useState } from "react"
+import { ModalStake } from "@/app/delegations/(components)/active/stake"
+import { useChainId, useSwitchChain } from "wagmi"
+import { HELIOS_NETWORK_ID } from "@/config/app"
 
 export const Item = ({
   moniker,
@@ -25,7 +29,9 @@ export const Item = ({
   //     toast.success(`Validator "${name}" removed from favorites.`)
   //   }
   // }
-
+  const [openStake, setOpenStake] = useState(false)
+  const chainId = useChainId()
+  const { switchChain } = useSwitchChain()
   const { delegation } = useValidatorDetail(validatorAddress)
 
   const isActive = status === 3
@@ -62,6 +68,14 @@ export const Item = ({
   const ratioOptimal =
     (tokens.find((token) => token.display.symbol === "hls")?.balance
       .totalPrice || 0) >= totalDelegated
+
+  const handleOpenStake = () => {
+    if (chainId !== HELIOS_NETWORK_ID) {
+      switchChain({ chainId: HELIOS_NETWORK_ID })
+    }
+
+    setOpenStake(true)
+  }
 
   return (
     <div className={s.item}>
@@ -151,9 +165,15 @@ export const Item = ({
       )}
 
       <div className={s.buttons}>
-        <Button className={s.stake} border>
+        <Button className={s.stake} border onClick={handleOpenStake}>
           Stake Now
         </Button>
+        <ModalStake
+          title={`Stake on ${moniker}`}
+          validatorAddress={validatorAddress}
+          open={openStake}
+          setOpen={setOpenStake}
+        />
         <Button
           href={"/validators/" + validatorAddress}
           variant="secondary"

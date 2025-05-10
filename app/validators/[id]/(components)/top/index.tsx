@@ -9,11 +9,18 @@ import { StatItem } from "../../../(components)/item/stat"
 import s from "./top.module.scss"
 import { useParams } from "next/navigation"
 import { useValidatorDetail } from "@/hooks/useValidatorDetail"
+import { useChainId, useSwitchChain } from "wagmi"
+import { HELIOS_NETWORK_ID } from "@/config/app"
+import { useState } from "react"
+import { ModalStake } from "@/app/delegations/(components)/active/stake"
 
 export const Top = () => {
   const params = useParams()
   const validatorId = params.id as string
   const { validator, delegation } = useValidatorDetail(validatorId)
+  const chainId = useChainId()
+  const { switchChain } = useSwitchChain()
+  const [openStake, setOpenStake] = useState(false)
 
   if (!validator) return <></>
 
@@ -51,6 +58,14 @@ export const Top = () => {
     (tokens.find((token) => token.display.symbol === "hls")?.price.usd || 0) >=
     totalDelegated
 
+  const handleOpenStake = () => {
+    if (chainId !== HELIOS_NETWORK_ID) {
+      switchChain({ chainId: HELIOS_NETWORK_ID })
+    }
+
+    setOpenStake(true)
+  }
+
   return (
     <Grid className={s.top}>
       <Area area="a">
@@ -67,7 +82,18 @@ export const Top = () => {
               </>
             }
           >
-            <Button icon="hugeicons:download-03" />
+            <Button
+              icon="hugeicons:download-03"
+              onClick={() => handleOpenStake()}
+            >
+              Stake now
+            </Button>
+            <ModalStake
+              title={`Stake on ${validator.moniker}`}
+              validatorAddress={validator.validatorAddress}
+              open={openStake}
+              setOpen={setOpenStake}
+            />
           </Heading>
           {/* <div className={s.description}>
             <p>

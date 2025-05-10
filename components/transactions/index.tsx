@@ -1,10 +1,10 @@
-import { TransactionBridgeLight } from "@/types/transaction"
+import { TransactionLight } from "@/types/transaction"
 import { Table } from "../table"
 import { TransactionsLine } from "./line"
 import { Alert } from "@/app/(components)/alert"
 
-interface TransactionsProps {
-  transactions: TransactionBridgeLight[]
+type TransactionsProps = {
+  transactions: TransactionLight[]
 }
 
 export const Transactions = ({ transactions }: TransactionsProps) => {

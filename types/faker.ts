@@ -18,7 +18,8 @@ export interface ValidatorRow {
   apy: number
   // base: number
   assets: TokenExtended[]
-  // rewards: number
+  rewards: number
+  rewardsPrice: number
 }
 
 export type VoteVote = "yes" | "no" | "abstain" | "veto"

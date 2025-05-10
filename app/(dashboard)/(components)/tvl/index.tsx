@@ -7,6 +7,7 @@ import { useAssetsInfo } from "@/hooks/useAssetsInfo"
 
 export const TVL = () => {
   const { assets, holders, totalTVL } = useAssetsInfo()
+  const filteredAssets = assets.filter((asset) => asset.totalShares !== "0")
 
   return (
     <Card className={s.tvl}>
@@ -22,7 +23,7 @@ export const TVL = () => {
         </div>
       </Heading>
       <div className={s.list}>
-        {assets.map((token) => (
+        {filteredAssets.map((token) => (
           <div className={s.item} key={`tvl-${token.contractAddress}`}>
             <div className={s.bar}>
               <div

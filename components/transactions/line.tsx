@@ -1,18 +1,13 @@
 import { fromWeiToEther } from "@/utils/number"
 import { TableCell, TableRow } from "../table"
 import s from "./transactions.module.scss"
-import { TransactionBridgeLight } from "@/types/transaction"
+import { TransactionLight } from "@/types/transaction"
 import { EXPLORER_URL } from "@/config/app"
 import Category from "./category"
 import { Button } from "../button"
+import { Symbol } from "@/components/symbol"
 
-export const TransactionsLine = (transaction: TransactionBridgeLight) => {
-  // const price = (
-  //   <small className={s.small}>
-  //     {formatCurrency(transaction.token.pricePerToken * transaction.amount)}
-  //   </small>
-  // )
-
+export const TransactionsLine = (transaction: TransactionLight) => {
   const explorerLink = EXPLORER_URL + "/tx/" + transaction.hash
 
   return (
@@ -20,18 +15,21 @@ export const TransactionsLine = (transaction: TransactionBridgeLight) => {
       <TableCell>
         <Category type={transaction.type} />
       </TableCell>
-      {/* <TableCell>
-      <small className={s.small}>
-        {formatRelativeDate(transaction.date)}
-      </small>
-    </TableCell> */}
 
       <TableCell className={s.cellAmount}>
         {transaction.amount && (
-          <strong className={s.stronger}>
-            {fromWeiToEther(transaction.amount)}{" "}
-            {transaction.token?.display.symbol.toUpperCase()}
-          </strong>
+          <>
+            <strong className={s.stronger}>
+              {transaction.token && (
+                <Symbol
+                  icon={transaction.token.display.symbolIcon}
+                  color={transaction.token.display.color}
+                />
+              )}
+              {fromWeiToEther(transaction.amount)}{" "}
+              {transaction.token?.display.symbol.toUpperCase()}
+            </strong>
+          </>
         )}
       </TableCell>
       <TableCell align="right" className={s.cellRight}>

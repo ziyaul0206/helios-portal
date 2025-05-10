@@ -18,10 +18,9 @@ export const useAssetsInfo = () => {
     enabled: !!qAssets.data,
     queryFn: async () => {
       const data = qAssets.data || []
-      const filteredAssets = data.filter((asset) => asset.totalShares !== "0")
 
       const enrichedAssets = await Promise.all(
-        filteredAssets.map(async (asset) => {
+        data.map(async (asset) => {
           const enriched = await getTokenByAddress(
             asset.contractAddress,
             HELIOS_NETWORK_ID

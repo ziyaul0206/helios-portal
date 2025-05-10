@@ -9,6 +9,12 @@
   }
 }
 
+.flex {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .illu {
   --size-illu: 3em;
   width: var(--size-illu);

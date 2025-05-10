@@ -67,7 +67,7 @@ export type TransactionLastType =
   | "WITHDRAW"
   | "UNKNOWN"
 
-export type TransactionBridgeLight = {
+export type TransactionLight = {
   type: TransactionLastType
   token: TokenExtended | null
   amount: string

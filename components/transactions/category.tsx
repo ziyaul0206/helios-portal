@@ -27,7 +27,7 @@ export interface CategoryProps {
 }
 
 const Category = ({ type }: CategoryProps) => {
-  const config = CategoryConfig[type]
+  const config = type ? CategoryConfig[type] : CategoryConfig.UNKNOWN
 
   return (
     <div className={s.type}>

@@ -22,7 +22,7 @@ import { AlertType } from "@/app/(components)/alert"
 import { explorerByChain } from "./useTokenInfo"
 import { getBestGasPrice } from "@/lib/utils/gas"
 import { useTokenRegistry } from "./useTokenRegistry"
-import { TransactionBridgeLight } from "@/types/transaction"
+import { TransactionLight } from "@/types/transaction"
 
 export const useBridge = () => {
   const { address } = useAccount()
@@ -64,7 +64,7 @@ export const useBridge = () => {
                 ? tx.receivedToken.amount
                 : tx.sentToken.amount,
             hash: tx.txHash
-          } as TransactionBridgeLight
+          } as TransactionLight
         })
       )
     }

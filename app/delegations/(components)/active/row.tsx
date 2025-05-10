@@ -12,26 +12,28 @@ import { ModalStake } from "./stake"
 import { ModalUnstake } from "./unstake"
 import { useChainId, useSwitchChain } from "wagmi"
 import { HELIOS_NETWORK_ID } from "@/config/app"
+import { ModalClaim } from "../claim/modal"
 
 export const Row = ({
   address,
   name,
   commission,
   assets,
-  // rewards,
+  rewards,
+  rewardsPrice,
   apy
 }: // base
 ValidatorRow) => {
-  // const [openRewards, setOpenRewards] = useState(false)
+  const [openRewards, setOpenRewards] = useState(false)
   const [openStake, setOpenStake] = useState(false)
   const [openUnstake, setOpenUnstake] = useState(false)
-  // const [rewardsAmount, setRewardsAmount] = useState(rewards)
+  const [rewardsAmount, setRewardsAmount] = useState(rewards)
   const chainId = useChainId()
   const { switchChain } = useSwitchChain()
 
   const handleOpenStake = () => {
     if (chainId !== HELIOS_NETWORK_ID) {
-      switchChain({ chainId: HELIOS_NETWORK_ID})
+      switchChain({ chainId: HELIOS_NETWORK_ID })
     }
 
     setOpenStake(true)
@@ -40,11 +42,13 @@ ValidatorRow) => {
   return (
     <TableRow className={s.row}>
       <TableCell className={s.first}>
-        <div className={s.illu}></div>
-      </TableCell>
-      <TableCell>
-        <strong>{name}</strong>
-        <small>Commission: {commission}%</small>
+        <div className={s.flex}>
+          <div className={s.illu}></div>
+          <div>
+            <strong>{name}</strong>
+            <small>Commission: {commission}%</small>
+          </div>
+        </div>
       </TableCell>
       <TableCell>
         <ul className={s.assets}>
@@ -79,20 +83,22 @@ ValidatorRow) => {
       </TableCell> */}
       <TableCell align="right">
         <div className={s.actions}>
-          {/* <Button
+          <Button
             icon="helios"
             variant="success"
             size="xsmall"
             border
             onClick={() => setOpenRewards(true)}
-          /> */}
-          {/* <ModalClaim
+          />
+          <ModalClaim
             title={`Claim ${name} Rewards`}
             open={openRewards}
             setOpen={setOpenRewards}
             rewards={rewardsAmount}
+            rewardsPrice={rewardsPrice}
             setRewards={setRewardsAmount}
-          /> */}
+            validatorAddress={address}
+          />
           <Button
             icon="hugeicons:add-circle"
             variant="primary"
@@ -114,7 +120,7 @@ ValidatorRow) => {
             onClick={() => setOpenUnstake(true)}
           />
           <ModalUnstake
-            title={`Unstake on ${name}`}
+            title={`Unstake from ${name}`}
             validatorAddress={address}
             delegatedAssets={assets}
             open={openUnstake}

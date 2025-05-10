@@ -20,7 +20,8 @@ export const Transactions = () => {
     amount: tx.amount || 0,
     explorer: `${EXPLORER_URL}/tx/${tx.hash}`,
     symbol: tx.token?.display.symbol || "",
-    symbolIcon: tx.token?.display.symbolIcon || ""
+    symbolIcon: tx.token?.display.symbolIcon || "",
+    color: tx.token?.display.color || ""
   }))
 
   return (

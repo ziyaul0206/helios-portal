@@ -1,5 +1,6 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/button"
 import { Input } from "@/components/input/input"
 import { Select } from "@/components/input/select"
@@ -18,7 +19,13 @@ interface ModalStakeProps {
   setOpen: (open: boolean) => void
 }
 
-export const ModalStake = ({ title, validatorAddress, open, setOpen }: ModalStakeProps) => {
+export const ModalStake = ({
+  title,
+  validatorAddress,
+  open,
+  setOpen
+}: ModalStakeProps) => {
+  const router = useRouter()
   const [amount, setAmount] = useState(0)
   const [selectedAsset, setSelectedAsset] = useState("")
   const { assets } = useAssetsInfo()
@@ -42,12 +49,14 @@ export const ModalStake = ({ title, validatorAddress, open, setOpen }: ModalStak
         enrichedAsset.enriched.functionnal.denom,
         enrichedAsset.enriched.functionnal.decimals
       )
-      
+
       toast.success("Delegation successful!", {
         id: toastId
       })
       setOpen(false)
       resetFeedback()
+
+      router.push("/delegations")
     } catch (err: any) {
       toast.error(err?.message || "Error during delegation", {
         id: toastId
@@ -76,21 +85,25 @@ export const ModalStake = ({ title, validatorAddress, open, setOpen }: ModalStak
         label="Choose an asset"
       />
 
-      {enrichedAsset && <Input
-        icon={enrichedAsset.enriched.display.symbolIcon}
-        label="Amount"
-        type="number"
-        step="0.000001"
-        min="0"
-        value={amount}
-        onChange={(e: ChangeEvent<HTMLInputElement>) => {
-          const value = e.target.value === "" ? 0 : parseFloat(e.target.value)
-          setAmount(value)
-        }}
-        balance={enrichedAsset.enriched.balance.amount}
-        showMaxButton
-        onMaxClick={() => setAmount(Math.floor(enrichedAsset.enriched.balance.amount))}
-      />}
+      {enrichedAsset && (
+        <Input
+          icon={enrichedAsset.enriched.display.symbolIcon}
+          label="Amount"
+          type="number"
+          step="0.000001"
+          min="0"
+          value={amount}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            const value = e.target.value === "" ? 0 : parseFloat(e.target.value)
+            setAmount(value)
+          }}
+          balance={enrichedAsset.enriched.balance.amount}
+          showMaxButton
+          onMaxClick={() =>
+            setAmount(Math.floor(enrichedAsset.enriched.balance.amount))
+          }
+        />
+      )}
       <div className={s.group}>
         <Button
           variant="secondary"
@@ -109,8 +122,8 @@ export const ModalStake = ({ title, validatorAddress, open, setOpen }: ModalStak
         </Button>
       </div>
       {feedback && feedback.message !== "" && (
-  <Alert type={feedback.status}>{feedback.message}</Alert>
-)}
+        <Alert type={feedback.status}>{feedback.message}</Alert>
+      )}
     </Modal>
   )
 }

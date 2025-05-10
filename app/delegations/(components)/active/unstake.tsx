@@ -20,7 +20,13 @@ interface ModalUnstakeProps {
   setOpen: (open: boolean) => void
 }
 
-export const ModalUnstake = ({ title, validatorAddress, delegatedAssets, open, setOpen }: ModalUnstakeProps) => {
+export const ModalUnstake = ({
+  title,
+  validatorAddress,
+  delegatedAssets,
+  open,
+  setOpen
+}: ModalUnstakeProps) => {
   const [amount, setAmount] = useState(0)
   const [selectedAsset, setSelectedAsset] = useState("")
   const { undelegate, isLoading, feedback } = useDelegate()
@@ -43,7 +49,7 @@ export const ModalUnstake = ({ title, validatorAddress, delegatedAssets, open, s
         enrichedAsset.functionnal.denom,
         enrichedAsset.functionnal.decimals
       )
-      
+
       toast.success("Unstake successful!", {
         id: toastId
       })
@@ -76,21 +82,23 @@ export const ModalUnstake = ({ title, validatorAddress, delegatedAssets, open, s
         label="Choose an asset"
       />
 
-      {enrichedAsset && <Input
-        icon={enrichedAsset.display.symbolIcon}
-        label="Amount"
-        type="number"
-        step="0.000001"
-        min="0"
-        value={amount}
-        onChange={(e: ChangeEvent<HTMLInputElement>) => {
-          const value = e.target.value === "" ? 0 : parseFloat(e.target.value)
-          setAmount(value)
-        }}
-        balance={enrichedAsset.balance.amount}
-        showMaxButton
-        onMaxClick={() => setAmount(Math.floor(enrichedAsset.balance.amount))}
-      />}
+      {enrichedAsset && (
+        <Input
+          icon={enrichedAsset.display.symbolIcon}
+          label="Amount"
+          type="number"
+          step="0.000001"
+          min="0"
+          value={amount}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            const value = e.target.value === "" ? 0 : parseFloat(e.target.value)
+            setAmount(value)
+          }}
+          balance={enrichedAsset.balance.amount}
+          showMaxButton
+          onMaxClick={() => setAmount(Math.floor(enrichedAsset.balance.amount))}
+        />
+      )}
 
       <Message
         icon="hugeicons:alert-02"
@@ -98,8 +106,8 @@ export const ModalUnstake = ({ title, validatorAddress, delegatedAssets, open, s
         title="Unbonding Period"
         className={s.message}
       >
-        Your assets will be locked for 14 days during the unbonding period. You will not
-        earn any rewards during this period.
+        Your assets will be locked for 14 days during the unbonding period. You
+        will not earn any rewards during this period.
       </Message>
 
       <div className={s.group}>

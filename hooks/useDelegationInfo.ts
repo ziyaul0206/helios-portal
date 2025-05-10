@@ -4,7 +4,7 @@ import { getDelegations, getValidator } from "@/helpers/rpc-calls"
 import { useTokenRegistry } from "./useTokenRegistry"
 import { TokenExtended } from "@/types/token"
 import { ethers } from "ethers"
-import { HELIOS_NETWORK_ID } from "@/config/app"
+import { HELIOS_NETWORK_ID, HELIOS_TOKEN_ADDRESS } from "@/config/app"
 
 export const useDelegationInfo = () => {
   const { address } = useAccount()
@@ -47,6 +47,8 @@ export const useDelegationInfo = () => {
         apr: number
         totalUSD: number
         tokens: TokenExtended[]
+        rewards: number
+        rewardsPrice: number
       }> = []
 
       for (const delegation of qDelegations.data!) {
@@ -75,6 +77,14 @@ export const useDelegationInfo = () => {
           })
         }
 
+        const rewards = parseFloat(
+          ethers.formatUnits(delegation.rewards.amount, 18)
+        )
+        const rewardsToken = await getTokenByAddress(
+          HELIOS_TOKEN_ADDRESS,
+          HELIOS_NETWORK_ID
+        )
+
         results.push({
           validatorAddress: delegation.validatorAddress,
           commission: parseFloat(validator.commission.commission_rates.rate),
@@ -84,7 +94,9 @@ export const useDelegationInfo = () => {
           totalUSD: enrichedTokens.reduce(
             (sum, t) => sum + t.balance.totalPrice,
             0
-          )
+          ),
+          rewards,
+          rewardsPrice: rewards * (rewardsToken?.price.usd ?? 0)
         })
       }
 
@@ -102,27 +114,43 @@ export const useDelegationInfo = () => {
       ? averageApr / enrichedDelegationsQuery.data.length
       : 0
 
-  const totalRewards =
-    qDelegations.data?.reduce((sum, v) => {
-      return sum + parseFloat(ethers.formatUnits(v.rewards.amount, 18))
-    }, 0) ?? 0
+  const enrichedRewardsQuery = useQuery({
+    queryKey: ["rewardsEnriched", qDelegations.data],
+    enabled: !!qDelegations.data,
+    queryFn: async () => {
+      const rewardsToken = await getTokenByAddress(
+        HELIOS_TOKEN_ADDRESS,
+        HELIOS_NETWORK_ID
+      )
+      const rewardsTokenPrice = rewardsToken?.price?.usd ?? 0
 
-  const totalRewardsUSD =
-    totalRewards *
-    (enrichedDelegationsQuery.data?.[0]?.tokens[0]?.price?.usd ?? 0)
+      const totalRewards =
+        qDelegations.data?.reduce((sum, v) => {
+          return sum + parseFloat(ethers.formatUnits(v.rewards.amount, 18))
+        }, 0) ?? 0
+
+      return {
+        amount: totalRewards,
+        price: totalRewards * rewardsTokenPrice
+      }
+    }
+  })
 
   return {
     totalDelegatedUSD,
     averageApr: finalApr,
     validatorsCount: enrichedDelegationsQuery.data?.length || 0,
     delegationsByValidator: enrichedDelegationsQuery.data || [],
-    totalRewards,
-    totalRewardsUSD,
+    totalRewards: enrichedRewardsQuery.data ?? null,
     isLoading:
       qDelegations.isLoading ||
       qValidators.isLoading ||
-      enrichedDelegationsQuery.isLoading,
+      enrichedDelegationsQuery.isLoading ||
+      enrichedRewardsQuery.isLoading,
     error:
-      qDelegations.error || qValidators.error || enrichedDelegationsQuery.error
+      qDelegations.error ||
+      qValidators.error ||
+      enrichedDelegationsQuery.error ||
+      enrichedRewardsQuery.error
   }
 }

@@ -88,8 +88,20 @@ $responsive: 700px;
     }
   }
   &Amount {
+    align-items: center;
     width: 110px;
     text-align: right;
+
+    strong {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      svg {
+        width: 20px;
+        height: auto;
+      }
+    }
 
     @include min($responsive) {
       .small {

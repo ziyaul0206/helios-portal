@@ -32,13 +32,24 @@ export const Top = () => {
   ]
 
   return (
-    <Card auto>
-      <Heading icon="hugeicons:laurel-wreath-01" title="My Delegations" />
-      <div className={s.content}>
-        <Blocks items={blocks} className={s.blocks} />
-        {/* <Blocks items={blocks} className={s.blocks} vertical /> */}
-        <Claim />
-      </div>
-    </Card>
+    <div className={s.content}>
+      <Card auto>
+        <Heading icon="hugeicons:laurel-wreath-01" title="My Delegations" />
+        <div className={s.content}>
+          <Blocks items={blocks} className={s.blocks} />
+          {/* <Blocks items={blocks} className={s.blocks} vertical /> */}
+          {/* <Claim /> */}
+        </div>
+      </Card>
+
+      <Card auto>
+        <Heading icon="helios" title="My Rewards" />
+        <div className={s.content}>
+          {/* <Blocks items={blocks} className={s.blocks} /> */}
+          {/* <Blocks items={blocks} className={s.blocks} vertical /> */}
+          <Claim />
+        </div>
+      </Card>
+    </div>
   )
 }

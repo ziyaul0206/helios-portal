@@ -14,14 +14,14 @@ export default function Page() {
     <>
       <div className={s.delegations}>
         <Top />
+        <Active />
         <div className={s.middle}>
           <Distribution />
+          <Transactions />
           {/* <History /> */}
         </div>
-        <Active />
         {/* <Unbonding /> */}
         {/* <Projections /> */}
-        <Transactions />
       </div>
     </>
   )

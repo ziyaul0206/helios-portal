@@ -24,10 +24,11 @@
 
 .amount {
   display: flex;
-  align-content: center;
+  align-items: center;
   color: var(--primary-medium);
   font-weight: bold;
-  gap: 8px;
+  gap: 4px;
+
   svg {
     position: relative;
     width: 20px;

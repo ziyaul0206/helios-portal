@@ -1,6 +1,6 @@
 import { Badge } from "@/components/badge"
 import { Button } from "@/components/button"
-import { Icon } from "@/components/icon"
+import { Symbol } from "@/components/symbol"
 import { TableCell, TableRow } from "@/components/table"
 import { Variants } from "@/types/Variants"
 import s from "./transactions.module.scss"
@@ -58,6 +58,7 @@ interface TransactionRowProps {
   amount?: number
   symbol?: string
   symbolIcon?: string
+  color?: string
   explorer: string
   date?: string
   from?: string
@@ -69,6 +70,7 @@ export const Row = ({
   amount,
   symbol,
   symbolIcon,
+  color,
   explorer
 }: TransactionRowProps) => {
   const { label, variant, icon } = TRANSACTION_LABELS[type]
@@ -82,7 +84,7 @@ export const Row = ({
       </TableCell>
       <TableCell>
         <div className={s.amount}>
-          {symbolIcon && <Icon icon={symbolIcon} />}
+          {symbolIcon && <Symbol icon={symbolIcon} color={color} />}
           {formatNumber(amount || 0, 6)} {symbol?.toUpperCase()}
         </div>
       </TableCell>

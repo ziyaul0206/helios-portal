@@ -1,8 +1,9 @@
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useAccount } from "wagmi"
 import {
   REWARDS_CONTRACT_ADDRESS,
-  claimAllRewardsAbi
+  claimAllRewardsAbi,
+  withdrawDelegatorRewardsAbi
 } from "@/constant/helios-contracts"
 import { Feedback } from "@/types/feedback"
 import { useState } from "react"
@@ -10,6 +11,7 @@ import { useWeb3Provider } from "@/hooks/useWeb3Provider"
 import { getErrorMessage } from "@/utils/string"
 
 export const useRewards = () => {
+  const queryClient = useQueryClient()
   const { address } = useAccount()
   const web3Provider = useWeb3Provider()
   const [feedback, setFeedback] = useState<Feedback>({
@@ -78,7 +80,7 @@ export const useRewards = () => {
         })
 
         const contract = new web3Provider.eth.Contract(
-          claimAllRewardsAbi,
+          withdrawDelegatorRewardsAbi,
           REWARDS_CONTRACT_ADDRESS
         )
 
@@ -98,6 +100,8 @@ export const useRewards = () => {
         const receipt = await web3Provider.eth.getTransactionReceipt(
           tx.transactionHash
         )
+
+        await queryClient.refetchQueries({ queryKey: ["delegations", address] })
 
         setFeedback({
           status: "success",

@@ -10,7 +10,7 @@ export const Recents = () => {
   const { transactions } = useTransactionInfo(30)
 
   const filteredTransactions = transactions
-    .filter((tx) => tx.ParsedInfo.type !== "UNKNOWN")
+    .filter((tx) => tx.type !== "UNKNOWN")
     .slice(0, 3)
 
   console.log(filteredTransactions)

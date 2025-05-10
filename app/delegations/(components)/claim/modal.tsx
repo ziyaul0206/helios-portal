@@ -2,8 +2,6 @@
 
 import { Button } from "@/components/button"
 import { Icon } from "@/components/icon"
-import { Link } from "@/components/link"
-import { Message } from "@/components/message"
 import { Modal } from "@/components/modal"
 import clsx from "clsx"
 import { useState } from "react"
@@ -17,34 +15,34 @@ interface ModalClaimProps {
   open: boolean
   setOpen: (open: boolean) => void
   rewards: number
+  rewardsPrice: number
   setRewards: (rewards: number) => void
+  validatorAddress?: string
 }
 
 export const ModalClaim = ({
   title,
   open,
   setOpen,
-  rewards
+  rewards,
+  rewardsPrice,
+  validatorAddress
 }: // setRewards
 ModalClaimProps) => {
   const [loading, setLoading] = useState(false)
   const classes = clsx(s.claim, rewards > 0 && s.claimAvailable)
-  const { claimRewards } = useRewards()
+  const { claimRewards, claimValidatorRewards } = useRewards()
 
   const handleClaim = async () => {
     setLoading(true)
-    await claimRewards()
-    console.log("next")
+    if (validatorAddress) {
+      await claimValidatorRewards(validatorAddress)
+    } else {
+      await claimRewards()
+    }
     setOpen(false)
     setLoading(false)
-    toast.success(
-      <>
-        Rewards claimed successfully!
-        <Link href="https://explorer.helios.network/tx/" className={s.link}>
-          View on Helios Explorer
-        </Link>
-      </>
-    )
+    toast.success("Rewards claimed successfully!")
   }
 
   return (
@@ -60,7 +58,7 @@ ModalClaimProps) => {
         <div className={s.available}>
           {formatNumber(rewards)} <Icon icon="helios" />
         </div>
-        <div className={s.price}>≈$TODO</div>
+        <div className={s.price}>≈${formatNumber(rewardsPrice)}</div>
       </div>
       <Button
         icon={loading ? "svg-spinners:6-dots-rotate" : "helios"}
@@ -70,14 +68,14 @@ ModalClaimProps) => {
       >
         {loading ? "Claiming..." : "Claim Rewards"}
       </Button>
-      <Message
+      {/* <Message
         icon="hugeicons:information-circle"
         title="About Claiming Rewards"
         className={s.message}
       >
         Your rewards have been claimed successfully. You can now see your
         rewards in your wallet.
-      </Message>
+      </Message> */}
     </Modal>
   )
 }

@@ -9,14 +9,16 @@ import { useDelegationInfo } from "@/hooks/useDelegationInfo"
 
 export const Active = () => {
   const { delegationsByValidator } = useDelegationInfo()
-  
+
   const validators: ValidatorRow[] = delegationsByValidator.map(
     (validator) => ({
       address: validator.validatorAddress,
       name: validator.moniker,
       commission: validator.commission,
       apy: validator.apr,
-      assets: validator.tokens
+      assets: validator.tokens,
+      rewards: validator.rewards,
+      rewardsPrice: validator.rewardsPrice
     })
   )
 
@@ -26,7 +28,7 @@ export const Active = () => {
       <Table>
         <thead>
           <TableRow>
-            <TableCell colSpan={2}>Validator</TableCell>
+            <TableCell>Validator</TableCell>
             <TableCell>Staked Assets</TableCell>
             <TableCell>APY</TableCell>
             {/* <TableCell>Pending Rewards</TableCell>

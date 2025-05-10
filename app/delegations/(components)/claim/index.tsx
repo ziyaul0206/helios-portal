@@ -20,9 +20,11 @@ export const Claim = () => {
       <div className={classes}>
         <h3>Rewards Available</h3>
         <div className={s.available}>
-          {formatNumber(totalRewards)} <Icon icon="helios" />
+          {formatNumber(totalRewards?.amount || 0)} <Icon icon="helios" />
         </div>
-        <div className={s.price}>≈$TODO</div>
+        {totalRewards && (
+          <div className={s.price}>≈${formatNumber(totalRewards.price)}</div>
+        )}
         <Button
           icon="helios"
           onClick={() => setOpen(true)}
@@ -35,7 +37,8 @@ export const Claim = () => {
         title="Claim Staking Rewards"
         open={open}
         setOpen={setOpen}
-        rewards={totalRewards}
+        rewards={totalRewards?.amount || 0}
+        rewardsPrice={totalRewards?.price || 0}
         setRewards={setRewards}
       />
     </>
