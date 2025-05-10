@@ -35,7 +35,9 @@ export const TVL = () => {
               >
                 <div className={s.hover}>
                   <strong>{token.enriched.display.name}</strong>
-                  <span>{formatCurrency(token.tvlUSD)}</span>
+                  {token.tvlUSD !== 0 && (
+                    <span>{formatCurrency(token.tvlUSD)}</span>
+                  )}
                 </div>
               </div>
             </div>

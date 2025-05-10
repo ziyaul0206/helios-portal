@@ -18,3 +18,5 @@ export const RPC_URL = "https://testnet1.helioschainlabs.org"
 export const RPC_URL_OLD = "https://helios.ethereum.rpc.sotatek.works"
 export const CDN_URL = "http://testnet1.helioschainlabs.org:8547"
 export const EXPLORER_URL = "https://explorer.helioschainlabs.org"
+
+export const HELIOS_TOKEN_ADDRESS = "0xD4949664cD82660AaE99bEdc034a0deA8A0bd517"

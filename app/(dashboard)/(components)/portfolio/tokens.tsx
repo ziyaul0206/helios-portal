@@ -29,7 +29,7 @@ const Line = ({ name, symbol, symbolIcon, price, amount }: LineProps) => {
       </div>
       <div className={s.right}>
         {amountFixed && <div className={s.top}>{amountFixed}</div>}
-        <div className={s.bottom}>{formatCurrency(price)}</div>
+        {price !== 0 && <div className={s.bottom}>{formatCurrency(price)}</div>}
         {/* <div className={s.bottom}>{percent.toFixed(2)}%</div> */}
       </div>
     </li>

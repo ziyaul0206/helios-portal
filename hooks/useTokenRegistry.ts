@@ -19,18 +19,25 @@ export const useTokenRegistry = () => {
     tempChainId?: number
   ): Promise<TokenExtended | null> => {
     const chainId = tempChainId || currentChainId
-    // const existing = tokens.find(
-    //   (t) =>
-    //     t.functionnal.address.toLowerCase() === tokenAddress.toLowerCase() &&
-    //     t.functionnal.chainId === chainId
-    // )
-    // if (existing) return existing
 
     try {
-      const data = await getTokenDetail(tokenAddress);
-      if (!data) {throw new Error("Token not found")}
-
+      const existing = tokens.find(
+        (t) =>
+          t.functionnal.address.toLowerCase() === tokenAddress.toLowerCase() &&
+          t.functionnal.chainId === chainId
+      )
       const info = await fetchTokenInfo(tokenAddress, chainId, userAddress)
+      if (existing) {
+        existing.balance.amount = info.readableBalance
+        existing.balance.totalPrice = info.readableBalance * existing.price.usd
+        return existing
+      }
+
+      const data = await getTokenDetail(tokenAddress)
+      if (!data) {
+        throw new Error("Token not found")
+      }
+
       const symbol = data.metadata.symbol.toLowerCase()
       const cgData = await fetchCGTokenData([symbol])
       const cgToken = cgData[symbol]

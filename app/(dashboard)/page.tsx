@@ -3,7 +3,6 @@
 import { Area, Grid } from "@/components/grid"
 import routes from "@/config/routes"
 import { useBlockInfo } from "@/hooks/useBlockInfo"
-import { formatNumber } from "@/lib/utils/number"
 import { Discover } from "./(components)/discover"
 import { Linker } from "./(components)/linker"
 import { Portfolio } from "./(components)/portfolio"
@@ -26,7 +25,9 @@ export default function Page() {
           <Stat
             icon="hugeicons:blockchain-02"
             label="Block Height"
-            value={formatNumber(lastBlockNumber)}
+            value={lastBlockNumber.toLocaleString("en-US", {
+              useGrouping: true
+            })}
             left="#"
           />
         </Area>
@@ -61,9 +62,9 @@ export default function Page() {
         </Area>
         <Area area="h">
           <Linker
-            icon="hugeicons:bitcoin-withdraw"
-            href={routes.governance}
-            text="Governance Vote"
+            icon="hugeicons:exchange-02"
+            href={routes.bridge}
+            text="Bridge assets"
           />
         </Area>
         <Area area="i">

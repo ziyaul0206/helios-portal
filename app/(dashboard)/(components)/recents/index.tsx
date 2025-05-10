@@ -13,6 +13,8 @@ export const Recents = () => {
     .filter((tx) => tx.ParsedInfo.type !== "UNKNOWN")
     .slice(0, 3)
 
+  console.log(filteredTransactions)
+
   return (
     <Card>
       <Heading icon="hugeicons:blockchain-05" title="Recent Transactions">
