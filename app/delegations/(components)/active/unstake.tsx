@@ -95,7 +95,11 @@ export const ModalUnstake = ({
           }}
           balance={enrichedAsset.balance.amount}
           showMaxButton
-          onMaxClick={() => setAmount(Math.floor(enrichedAsset.balance.amount))}
+          onMaxClick={() => {
+            const roundedAmount =
+              Math.floor(enrichedAsset.balance.amount * 1000000) / 1000000
+            setAmount(roundedAmount)
+          }}
         />
       )}
 

@@ -168,7 +168,15 @@ export const useBridge = () => {
 
           setFeedback({
             status: "primary",
-            message: `Tokens approved. Tx: <a href="${explorerLink}" target="_blank"><strong>${approveTx.transactionHash}</strong></a>.`
+            message: (
+              <>
+                Tokens approved. Tx:{" "}
+                <a href={explorerLink} target="_blank">
+                  <strong>{approveTx.transactionHash}</strong>
+                </a>
+                .
+              </>
+            )
           })
         } else {
           setFeedback({
@@ -215,7 +223,11 @@ export const useBridge = () => {
 
         setFeedback({
           status: "success",
-          message: `Transaction confirmed in block <strong>#${receipt.blockNumber}</strong>. It will be available in a few minutes.`
+          message: (
+            <>
+              Transaction confirmed in block <strong>#{receipt.blockNumber}</strong>. It will be available in a few minutes.
+            </>
+          )
         })
 
         return receipt
@@ -298,7 +310,18 @@ export const useBridge = () => {
 
           setFeedback({
             status: "primary",
-            message: `Tokens approved. Tx: <a href="${explorerLink}" target="_blank"><strong>${approveTx.transactionHash}</strong></a>.`
+            message: (
+              <>
+                Tokens approved. Tx:{" "}
+                <a
+                  href={explorerLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <strong>{approveTx.transactionHash}</strong>
+                </a>
+              </>
+            )
           })
         } else {
           setFeedback({
@@ -336,7 +359,13 @@ export const useBridge = () => {
 
         setFeedback({
           status: "success",
-          message: `Tokens sent to Helios in block <strong>#${receipt.blockNumber}</strong>. It will be available in a few minutes.`
+          message: (
+            <>
+              Tokens sent to Helios in block{" "}
+              <strong>#{receipt.blockNumber}</strong>. It will be available in a
+              few minutes.
+            </>
+          )
         })
 
         return receipt

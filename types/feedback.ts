@@ -6,5 +6,5 @@ export type Variants =
   | "success"
 export interface Feedback {
   status: Variants
-  message: string
+  message: React.ReactNode
 }

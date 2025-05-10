@@ -91,7 +91,6 @@ export const useDelegate = () => {
       decimals: number
     }) => {
       if (!web3Provider) throw new Error("No wallet connected")
-
       try {
         const undelegateAmount = ethers.parseUnits(amount, decimals)
 
@@ -104,7 +103,6 @@ export const useDelegate = () => {
           delegateAbi,
           DELEGATE_CONTRACT_ADDRESS
         )
-
         await contract.methods
           .undelegate(address, validatorAddress, undelegateAmount, symbol)
           .call({
