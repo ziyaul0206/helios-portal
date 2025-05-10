@@ -8,6 +8,7 @@ import s from "./transactions.module.scss"
 import { useAccountLastTransactions } from "@/hooks/useAccountLastTransactions"
 // import { takeCoverage } from "v8"
 import { EXPLORER_URL } from "@/config/app"
+import { Message } from "@/components/message"
 
 export const Transactions = () => {
   // const transactions = generateTransactionsDelegations(
@@ -26,29 +27,39 @@ export const Transactions = () => {
       color: tx.token?.display.color || ""
     }))
 
+  if (transactions.length === 0) {
+    return
+  }
+
   return (
     <Card className={s.transactions} auto>
       <Heading
         icon="hugeicons:arrow-data-transfer-vertical"
         title="Transactions History"
       />
-      <Table>
-        <thead>
-          <TableRow>
-            <TableCell>Type</TableCell>
-            {/* <TableCell>Validator</TableCell> */}
-            <TableCell>Amount</TableCell>
-            {/* <TableCell>Status</TableCell> */}
-            {/* <TableCell>Date</TableCell> */}
-            <TableCell align="right">Explorer</TableCell>
-          </TableRow>
-        </thead>
-        <tbody>
-          {formattedTxs.map((transaction, index) => (
-            <Row key={index} {...transaction} />
-          ))}
-        </tbody>
-      </Table>
+      {formattedTxs.length === 0 ? (
+        <Message title="Transactions informations" variant="primary">
+          No recent transactions.
+        </Message>
+      ) : (
+        <Table>
+          <thead>
+            <TableRow>
+              <TableCell>Type</TableCell>
+              {/* <TableCell>Validator</TableCell> */}
+              <TableCell>Amount</TableCell>
+              {/* <TableCell>Status</TableCell> */}
+              {/* <TableCell>Date</TableCell> */}
+              <TableCell align="right">Explorer</TableCell>
+            </TableRow>
+          </thead>
+          <tbody>
+            {formattedTxs.map((transaction, index) => (
+              <Row key={index} {...transaction} />
+            ))}
+          </tbody>
+        </Table>
+      )}
     </Card>
   )
 }

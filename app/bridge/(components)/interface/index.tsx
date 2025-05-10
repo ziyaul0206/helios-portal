@@ -22,7 +22,7 @@ import { useQuery } from "@tanstack/react-query"
 import { toHex } from "viem"
 import { getTokensByChainIdAndPageAndSize } from "@/helpers/rpc-calls"
 import { useTokenRegistry } from "@/hooks/useTokenRegistry"
-import { Alert } from "@/app/(components)/alert"
+import { Message } from "@/components/message"
 
 type BridgeForm = {
   asset: string | null
@@ -37,7 +37,7 @@ export const Interface = () => {
   const {
     chains,
     heliosChainIndex,
-    // txInProgress,
+    txInProgress,
     sendToChain,
     sendToHelios,
     feedback: bridgeFeedback,
@@ -464,13 +464,15 @@ export const Interface = () => {
           </Button>
 
           {bridgeFeedback && bridgeFeedback.message !== "" && (
-            <Alert type={bridgeFeedback.status}>{bridgeFeedback.message}</Alert>
+            <Message title="Bridge feedback" variant={bridgeFeedback.status}>
+              {bridgeFeedback.message}
+            </Message>
           )}
-          {/* {txInProgress && txInProgress.receivedToken.contract && (
-            <Alert type="success">
+          {txInProgress && txInProgress.receivedToken.contract && (
+            <Message title="New token transfered" variant="success">
               {`Token contract in new chain is  ${txInProgress.receivedToken.contract}`}
-            </Alert>
-          )} */}
+            </Message>
+          )}
         </div>
       </Card>
       {/* <Modal

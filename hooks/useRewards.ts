@@ -15,7 +15,7 @@ export const useRewards = () => {
   const { address } = useAccount()
   const web3Provider = useWeb3Provider()
   const [feedback, setFeedback] = useState<Feedback>({
-    status: "idle",
+    status: "primary",
     message: ""
   })
 
@@ -24,7 +24,7 @@ export const useRewards = () => {
       if (!web3Provider || !address) throw new Error("No wallet connected")
       try {
         setFeedback({
-          status: "loading",
+          status: "primary",
           message: "Transaction in progress..."
         })
 
@@ -43,7 +43,7 @@ export const useRewards = () => {
         console.log("claimAll")
 
         setFeedback({
-          status: "loading",
+          status: "primary",
           message: `Transaction sent (hash: ${tx.transactionHash}), waiting for confirmation...`
         })
 
@@ -59,7 +59,7 @@ export const useRewards = () => {
       } catch (error: any) {
         console.error(error)
         setFeedback({
-          status: "error",
+          status: "danger",
           message: getErrorMessage(error) || "Error during rewards withdrawal"
         })
         throw error
@@ -72,7 +72,7 @@ export const useRewards = () => {
       if (!web3Provider) throw new Error("No wallet connected")
       try {
         setFeedback({
-          status: "loading",
+          status: "primary",
           message: "Transaction in progress..."
         })
 
@@ -90,7 +90,7 @@ export const useRewards = () => {
           .send({ from: address, gas: "500000" })
 
         setFeedback({
-          status: "loading",
+          status: "primary",
           message: `Transaction sent (hash: ${tx.transactionHash}), waiting for confirmation...`
         })
 
@@ -107,7 +107,7 @@ export const useRewards = () => {
         return receipt
       } catch (error: any) {
         setFeedback({
-          status: "error",
+          status: "danger",
           message: getErrorMessage(error) || "Error during rewards withdrawal"
         })
         throw error

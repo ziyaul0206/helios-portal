@@ -17,6 +17,7 @@ export const Item = ({
   // description,
   apr,
   status,
+  delegationAuthorization,
   commission
 }: Validator) => {
   // const [favorite, setFavorite] = useState(false)
@@ -35,6 +36,7 @@ export const Item = ({
   const { delegation } = useValidatorDetail(validatorAddress)
 
   const isActive = status === 3
+  const enableDelegation = delegationAuthorization
   const formattedApr = parseFloat(apr).toFixed(2) + "%"
   const formattedCommission =
     parseFloat(commission.commission_rates.rate) * 100 + "%"
@@ -165,7 +167,12 @@ export const Item = ({
       )}
 
       <div className={s.buttons}>
-        <Button className={s.stake} border onClick={handleOpenStake}>
+        <Button
+          className={s.stake}
+          border
+          onClick={handleOpenStake}
+          disabled={!enableDelegation}
+        >
           Stake Now
         </Button>
         <ModalStake

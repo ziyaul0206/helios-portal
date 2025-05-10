@@ -1,13 +1,13 @@
 "use client"
 
 import { Sizes } from "@/types/Sizes"
-import { Variants } from "@/types/Variants"
 import clsx from "clsx"
 import { ReactNode } from "react"
 import { Icon } from "../icon"
 import { Link } from "../link"
 import { Logotype } from "../logotype"
 import s from "./button.module.scss"
+import { Variants } from "@/types/feedback"
 
 export interface ButtonProps {
   children?: ReactNode

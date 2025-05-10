@@ -18,11 +18,11 @@ import {
 } from "@/helpers/rpc-calls"
 import { toHex } from "viem"
 import { secondsToMilliseconds } from "date-fns"
-import { AlertType } from "@/app/(components)/alert"
 import { explorerByChain } from "./useTokenInfo"
 import { getBestGasPrice } from "@/lib/utils/gas"
 import { useTokenRegistry } from "./useTokenRegistry"
 import { TransactionLight } from "@/types/transaction"
+import { Feedback } from "@/types/feedback"
 
 export const useBridge = () => {
   const { address } = useAccount()
@@ -82,13 +82,13 @@ export const useBridge = () => {
     refetchInterval: secondsToMilliseconds(10)
   })
 
-  const [feedback, setFeedback] = useState({
-    status: "idle" as AlertType,
+  const [feedback, setFeedback] = useState<Feedback>({
+    status: "primary",
     message: ""
   })
   const resetFeedback = () => {
     setFeedback({
-      status: "idle",
+      status: "primary",
       message: ""
     })
     setTxHashInProgress("")

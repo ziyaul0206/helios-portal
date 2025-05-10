@@ -2,10 +2,10 @@ import { Badge } from "@/components/badge"
 import { Button } from "@/components/button"
 import { Symbol } from "@/components/symbol"
 import { TableCell, TableRow } from "@/components/table"
-import { Variants } from "@/types/Variants"
 import s from "./transactions.module.scss"
 import { TransactionLastType } from "@/types/transaction"
 import { formatNumber } from "@/lib/utils/number"
+import { Variants } from "@/types/feedback"
 
 const TRANSACTION_LABELS: Record<
   TransactionLastType,

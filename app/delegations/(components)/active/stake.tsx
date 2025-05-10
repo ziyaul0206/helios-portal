@@ -10,7 +10,7 @@ import { toast } from "sonner"
 import s from "./active.module.scss"
 import { useAssetsInfo } from "@/hooks/useAssetsInfo"
 import { useDelegate } from "@/hooks/useDelegate"
-import { Alert } from "@/app/(components)/alert"
+import { Message } from "@/components/message"
 
 interface ModalStakeProps {
   title: string
@@ -122,7 +122,9 @@ export const ModalStake = ({
         </Button>
       </div>
       {feedback && feedback.message !== "" && (
-        <Alert type={feedback.status}>{feedback.message}</Alert>
+        <Message title="Staking feedback" variant={feedback.status}>
+          {feedback.message}
+        </Message>
       )}
     </Modal>
   )

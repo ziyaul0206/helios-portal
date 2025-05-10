@@ -1,9 +1,9 @@
 "use client"
 
-import { Variants } from "@/types/Variants"
 import clsx from "clsx"
 import { Icon } from "../icon"
 import s from "./badge.module.scss"
+import { Variants } from "@/types/feedback"
 
 interface BadgeProps {
   children: React.ReactNode

@@ -2,7 +2,6 @@
 
 import { Icon } from "@/components/icon"
 import { formatNumber } from "@/lib/utils/number"
-import { Variants } from "@/types/Variants"
 import { clsx } from "clsx"
 import {
   forwardRef,
@@ -12,6 +11,7 @@ import {
 } from "react"
 import { Button } from "../button"
 import s from "./input.module.scss"
+import { Variants } from "@/types/feedback"
 
 interface BaseInputProps {
   label?: string

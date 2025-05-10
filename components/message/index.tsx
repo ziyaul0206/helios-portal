@@ -1,7 +1,7 @@
-import { type Variants } from "@/types/Variants"
 import clsx from "clsx"
 import { Icon } from "../icon"
 import s from "./message.module.scss"
+import { Variants } from "@/types/feedback"
 
 interface MessageProps extends React.HTMLAttributes<HTMLDivElement> {
   icon?: string

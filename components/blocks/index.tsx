@@ -1,6 +1,6 @@
-import { type Variants } from "@/types/Variants"
 import clsx from "clsx"
 import s from "./blocks.module.scss"
+import { Variants } from "@/types/feedback"
 
 interface BlocksProps {
   className?: string

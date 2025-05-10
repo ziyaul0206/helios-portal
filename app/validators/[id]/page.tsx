@@ -10,7 +10,7 @@ import { Top } from "./(components)/top"
 import s from "./page.module.scss"
 import { useValidatorDetail } from "@/hooks/useValidatorDetail"
 import { useParams, useRouter } from "next/navigation"
-import { Alert } from "@/app/(components)/alert"
+import { Message } from "@/components/message"
 
 export default function Page() {
   const params = useParams()
@@ -20,11 +20,19 @@ export default function Page() {
 
   if (!isLoading && !validator) {
     router.push("/validators")
-    return <Alert type="danger">Error retrieving validator details...</Alert>
+    return (
+      <Message title="Validator data" variant="danger">
+        Error retrieving validator details...
+      </Message>
+    )
   }
 
   if (isLoading) {
-    return <Alert type="primary">Loading validator details...</Alert>
+    return (
+      <Message title="Validator data" variant="primary">
+        Loading validator details...
+      </Message>
+    )
   }
 
   return (

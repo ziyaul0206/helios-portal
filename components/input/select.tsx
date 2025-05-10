@@ -1,10 +1,10 @@
 "use client"
 
 import { Icon } from "@/components/icon"
-import { Variants } from "@/types/Variants"
 import { clsx } from "clsx"
 import { forwardRef, ReactNode, SelectHTMLAttributes } from "react"
 import s from "./input.module.scss"
+import { Variants } from "@/types/feedback"
 
 interface SelectProps
   extends Omit<SelectHTMLAttributes<HTMLSelectElement>, "className"> {
@@ -47,7 +47,11 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           {icon && <Icon icon={icon} className={s.icon} />}
           {startAdornment}
           <select ref={ref} className={s.value} {...props}>
-            {placeholder && <option value="" disabled>{placeholder}</option>}
+            {placeholder && (
+              <option value="" disabled>
+                {placeholder}
+              </option>
+            )}
             {options.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}

@@ -8,18 +8,18 @@ import { useState } from "react"
 import { useWeb3Provider } from "./useWeb3Provider"
 import { ethers } from "ethers"
 import { getErrorMessage } from "@/utils/string"
-import { AlertType } from "@/app/(components)/alert"
+import { Feedback } from "@/types/feedback"
 
 export const useDelegate = () => {
   const { address } = useAccount()
   const web3Provider = useWeb3Provider()
   const queryClient = useQueryClient()
-  const [feedback, setFeedback] = useState({
-    status: "idle" as AlertType,
+  const [feedback, setFeedback] = useState<Feedback>({
+    status: "primary",
     message: ""
   })
   const resetFeedback = () => {
-    setFeedback({ status: "idle", message: "" })
+    setFeedback({ status: "primary", message: "" })
   }
 
   const delegateMutation = useMutation({

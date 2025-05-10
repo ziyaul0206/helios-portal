@@ -1,7 +1,7 @@
 import { TransactionLight } from "@/types/transaction"
 import { Table } from "../table"
 import { TransactionsLine } from "./line"
-import { Alert } from "@/app/(components)/alert"
+import { Message } from "../message"
 
 type TransactionsProps = {
   transactions: TransactionLight[]
@@ -9,7 +9,11 @@ type TransactionsProps = {
 
 export const Transactions = ({ transactions }: TransactionsProps) => {
   if (transactions.length === 0) {
-    return <Alert type="primary">No recent transactions.</Alert>
+    return (
+      <Message title="Transactions informations" variant="primary">
+        No recent transactions.
+      </Message>
+    )
   }
 
   return (

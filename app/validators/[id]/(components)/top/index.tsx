@@ -13,6 +13,7 @@ import { useChainId, useSwitchChain } from "wagmi"
 import { HELIOS_NETWORK_ID } from "@/config/app"
 import { useState } from "react"
 import { ModalStake } from "@/app/delegations/(components)/active/stake"
+import { Message } from "@/components/message"
 
 export const Top = () => {
   const params = useParams()
@@ -44,6 +45,7 @@ export const Top = () => {
   // ]
 
   const isActive = validator.status === 3
+  const enableDelegation = validator.delegationAuthorization
   const formattedApr = parseFloat(validator.apr).toFixed(2) + "%"
   const formattedCommission =
     parseFloat(validator.commission.commission_rates.rate) * 100 + "%"
@@ -85,6 +87,7 @@ export const Top = () => {
             <Button
               icon="hugeicons:download-03"
               onClick={() => handleOpenStake()}
+              disabled={!enableDelegation}
             >
               Stake now
             </Button>
@@ -95,6 +98,17 @@ export const Top = () => {
               setOpen={setOpenStake}
             />
           </Heading>
+          {enableDelegation ? (
+            <Message title="Delegation enabled" variant="success">
+              This validator is actively accepting delegations. You can safely
+              stake your tokens.
+            </Message>
+          ) : (
+            <Message title="Delegation disabled" variant="warning">
+              This validator is not accepting new delegations at the moment.
+              Please choose another validator to stake your tokens.
+            </Message>
+          )}
           {/* <div className={s.description}>
             <p>
               Helios Guardian is a professional validator service with 99.98%

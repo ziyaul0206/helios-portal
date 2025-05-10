@@ -9,7 +9,6 @@ import { ChangeEvent, useState } from "react"
 import { toast } from "sonner"
 import s from "./active.module.scss"
 import { useDelegate } from "@/hooks/useDelegate"
-import { Alert } from "@/app/(components)/alert"
 import { TokenExtended } from "@/types/token"
 
 interface ModalUnstakeProps {
@@ -129,7 +128,9 @@ export const ModalUnstake = ({
         </Button>
       </div>
       {feedback && feedback.message !== "" && (
-        <Alert type={feedback.status}>{feedback.message}</Alert>
+        <Message title="Unstaking feedback" variant={feedback.status}>
+          {feedback.message}
+        </Message>
       )}
     </Modal>
   )

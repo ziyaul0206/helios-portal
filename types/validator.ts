@@ -52,6 +52,7 @@ export interface Validator {
   unbondingOnHoldRefCount: number
   unbondingTime: string
   validatorAddress: string
+  delegationAuthorization: boolean
 }
 
 export interface ValidatorWithDelegationCommission {
