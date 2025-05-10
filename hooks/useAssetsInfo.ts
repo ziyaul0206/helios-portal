@@ -35,7 +35,8 @@ export const useAssetsInfo = () => {
             ...asset,
             tokenAmount: tokenAmountFormatted,
             tvlUSD,
-            enriched
+            enriched,
+            holders: enriched.stats.holdersCount
           }
         })
       )
@@ -46,12 +47,14 @@ export const useAssetsInfo = () => {
 
   const totalTVL =
     qFilteredAssets.data?.reduce((sum, asset) => sum + asset.tvlUSD, 0) || 0
+  const totalHolders =
+    qFilteredAssets.data?.reduce((sum, asset) => sum + asset.holders, 0) || 0
 
   return {
     forceRefresh: qAssets.refetch,
     assets: qFilteredAssets.data || [],
     totalTVL,
-    holders: 0, // @TODO
+    totalHolders,
     isLoading: qAssets.isLoading || qFilteredAssets.isLoading,
     error: qAssets.error || qFilteredAssets.error
   }

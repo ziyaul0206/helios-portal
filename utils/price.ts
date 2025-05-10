@@ -36,7 +36,6 @@ export const fetchCGTokenData = async (
 //       `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&symbols=${ids}&order=market_cap_desc&per_page=100&page=1&sparkline=false`
 //     )
 //     const data: CGToken[] = await res.json()
-//     console.log(data, symbols)
 
 //     if (data.length === 0 && symbols.includes("hls")) {
 //       return {

@@ -66,6 +66,10 @@ export const useTokenRegistry = () => {
           chainId: chainId,
           denom: data.metadata.base,
           decimals: data.metadata.decimals
+        },
+        stats: {
+          holdersCount: data.holdersCount,
+          totalSupply: data.total_supply
         }
       }
 

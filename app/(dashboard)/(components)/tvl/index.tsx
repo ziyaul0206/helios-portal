@@ -1,12 +1,12 @@
 import { Card } from "@/components/card"
 import { Heading } from "@/components/heading"
 import { Symbol } from "@/components/symbol"
-import { formatCurrency, formatNumber } from "@/lib/utils/number"
+import { formatBigNumber, formatCurrency } from "@/lib/utils/number"
 import s from "./tvl.module.scss"
 import { useAssetsInfo } from "@/hooks/useAssetsInfo"
 
 export const TVL = () => {
-  const { assets, holders, totalTVL } = useAssetsInfo()
+  const { assets, totalHolders, totalTVL } = useAssetsInfo()
   const filteredAssets = assets.filter((asset) => asset.totalShares !== "0")
 
   return (
@@ -19,7 +19,9 @@ export const TVL = () => {
       >
         <div className={s.right}>
           <div className={s.total}>{formatCurrency(totalTVL)}</div>
-          <div className={s.holder}>{formatNumber(holders)} Holders</div>
+          <div className={s.holder}>
+            {formatBigNumber(totalHolders, 0)} Holders
+          </div>
         </div>
       </Heading>
       <div className={s.list}>

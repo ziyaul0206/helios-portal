@@ -32,17 +32,15 @@ export const useRewards = () => {
           claimAllRewardsAbi,
           REWARDS_CONTRACT_ADDRESS
         )
-        console.log("0")
 
         // Read call to verify transaction will pass
         // await contract.methods.claimRewards(address, 10).call({ from: address })
-        console.log("1")
         // Send actual transaction
         const tx = await contract.methods
           .claimRewards(address, 10)
           .send({ from: address, gas: "500000" })
 
-        console.log("2")
+        console.log("claimAll")
 
         setFeedback({
           status: "loading",
@@ -52,7 +50,6 @@ export const useRewards = () => {
         const receipt = await web3Provider.eth.getTransactionReceipt(
           tx.transactionHash
         )
-        console.log("3")
 
         setFeedback({
           status: "success",

@@ -21,7 +21,6 @@ export const usePortfolioInfo = () => {
     queryKey: ["enrichedPortfolio", address, qTokenBalances.data],
     enabled: !!qTokenBalances.data,
     queryFn: async (): Promise<TokenExtended[]> => {
-      console.log(qTokenBalances.data)
       const results = await Promise.all(
         qTokenBalances.data!.Balances.map(async (token) => {
           const enriched = await getTokenByAddress(

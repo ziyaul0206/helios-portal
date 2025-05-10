@@ -15,14 +15,16 @@ export const Transactions = () => {
   // ) as TransactionDelegation[]
   const { transactions } = useAccountLastTransactions()
 
-  const formattedTxs: TransactionDelegation[] = transactions.map((tx) => ({
-    type: tx.type,
-    amount: tx.amount || 0,
-    explorer: `${EXPLORER_URL}/tx/${tx.hash}`,
-    symbol: tx.token?.display.symbol || "",
-    symbolIcon: tx.token?.display.symbolIcon || "",
-    color: tx.token?.display.color || ""
-  }))
+  const formattedTxs: TransactionDelegation[] = transactions
+    .filter((tx) => tx.type !== "UNKNOWN")
+    .map((tx) => ({
+      type: tx.type,
+      amount: tx.amount || 0,
+      explorer: `${EXPLORER_URL}/tx/${tx.hash}`,
+      symbol: tx.token?.display.symbol || "",
+      symbolIcon: tx.token?.display.symbolIcon || "",
+      color: tx.token?.display.color || ""
+    }))
 
   return (
     <Card className={s.transactions} auto>

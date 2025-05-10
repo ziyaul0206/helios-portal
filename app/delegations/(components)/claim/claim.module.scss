@@ -25,7 +25,7 @@
   }
 
   @include min(750px) {
-    padding: var(--padding) calc(var(--padding) * 2);
+    padding: var(--padding);
   }
 
   .available {

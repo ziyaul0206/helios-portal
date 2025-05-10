@@ -53,6 +53,10 @@ export interface TokenExtended {
     denom: string
     decimals: number
   }
+  stats: {
+    holdersCount: number
+    totalSupply: string
+  }
 }
 
 export interface TokenMetadataResponse {
