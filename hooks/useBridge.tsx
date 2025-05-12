@@ -225,7 +225,9 @@ export const useBridge = () => {
           status: "success",
           message: (
             <>
-              Transaction confirmed in block <strong>#{receipt.blockNumber}</strong>. It will be available in a few minutes.
+              Transaction confirmed in block{" "}
+              <strong>#{receipt.blockNumber}</strong>. It will be available in a
+              few minutes.
             </>
           )
         })

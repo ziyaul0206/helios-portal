@@ -30,6 +30,7 @@ type BridgeForm = {
   to: HyperionChain | null
   amount: number
   address: string
+  inProgress: boolean
 }
 
 export const Interface = () => {
@@ -44,9 +45,7 @@ export const Interface = () => {
     resetFeedback
   } = useBridge()
   const { switchChain } = useSwitchChain()
-
   const { address } = useAccount()
-  // const [openToken, setOpenToken] = useState(false)
   const [openChain, setOpenChain] = useState(false)
   const [chainType, setChainType] = useState<"from" | "to">("from")
   const [form, setForm] = useState<BridgeForm>({
@@ -54,9 +53,9 @@ export const Interface = () => {
     from: null,
     to: null,
     amount: 0,
-    address: address || ""
+    address: address || "",
+    inProgress: false
   })
-
   const tokenInfo = useTokenInfo(form.asset)
   const { getTokenByAddress } = useTokenRegistry()
 
@@ -82,7 +81,6 @@ export const Interface = () => {
   })
 
   const tokensByChain = qEnrichedTokensByChain.data || []
-
   const estimatedFees = form.amount / 100
   const isDeposit = heliosChainIndex
     ? form.to?.chainId === chains[heliosChainIndex].chainId
@@ -93,6 +91,14 @@ export const Interface = () => {
   //   setOpenToken(false)
   // }
 
+  const lightResetForm = () => {
+    setForm({
+      ...form,
+      asset: null,
+      amount: 0
+    })
+  }
+
   const handleOpenChain = (type: "from" | "to") => {
     setChainType(type)
     setOpenChain(true)
@@ -100,11 +106,11 @@ export const Interface = () => {
 
   const handleChangeChain = (chain: HyperionChain) => {
     if (chainType === "from" && chain.chainId === form.to?.chainId) {
-      setForm({ ...form, from: chain, to: form.from })
+      setForm({ ...form, from: chain, to: form.from, amount: 0, asset: null })
     } else if (chainType === "to" && chain.chainId === form.from?.chainId) {
-      setForm({ ...form, to: chain, from: form.to })
+      setForm({ ...form, to: chain, from: form.to, amount: 0, asset: null })
     } else {
-      setForm({ ...form, [chainType]: chain })
+      setForm({ ...form, [chainType]: chain, amount: 0, asset: null })
     }
     setOpenChain(false)
   }
@@ -162,6 +168,8 @@ export const Interface = () => {
       return
     }
 
+    setForm({ ...form, inProgress: true })
+
     const toastId = toast.loading("Sending cross-chain transaction...")
     try {
       const decimals = tokenInfo.data.decimals
@@ -189,15 +197,19 @@ export const Interface = () => {
       toast.success("Bridge transaction sent successfully!", {
         id: toastId
       })
+
+      lightResetForm()
     } catch (err: any) {
       toast.error(err?.message || "Failed to send bridge transaction.", {
         id: toastId
       })
     }
+    setForm({ ...form, inProgress: false })
   }
 
   useEffect(() => {
     if (chains.length < 2) return
+    lightResetForm()
 
     const currentChainIndex = chains.findIndex(
       (chain) => chain.chainId === chainId
@@ -214,9 +226,7 @@ export const Interface = () => {
     setForm((prevForm) => ({
       ...prevForm,
       from: prevForm.from ?? from,
-      to: prevForm.to ?? to,
-      asset: null,
-      amount: 0
+      to: prevForm.to ?? to
     }))
 
     resetFeedback()
@@ -229,6 +239,7 @@ export const Interface = () => {
   }, [form.from])
 
   const isDisabled =
+    form.inProgress ||
     !tokenInfo.data ||
     form.amount === 0 ||
     !form.address ||
@@ -469,8 +480,9 @@ export const Interface = () => {
             </Message>
           )}
           {txInProgress && txInProgress.receivedToken.contract && (
-            <Message title="New token transfered" variant="success">
-              {`Token contract in new chain is  ${txInProgress.receivedToken.contract}`}
+            <Message title="New token transfered" variant="secondary">
+              {`Token contract in new chain is`}{" "}
+              <b>{txInProgress.receivedToken.contract}</b>.
             </Message>
           )}
         </div>
