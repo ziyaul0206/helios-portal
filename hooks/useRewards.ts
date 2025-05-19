@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { useAccount } from "wagmi"
+import { useAccount, useSwitchChain } from "wagmi"
 import {
   REWARDS_CONTRACT_ADDRESS,
   claimAllRewardsAbi,
@@ -9,10 +9,12 @@ import { Feedback } from "@/types/feedback"
 import { useState } from "react"
 import { useWeb3Provider } from "@/hooks/useWeb3Provider"
 import { getErrorMessage } from "@/utils/string"
+import { HELIOS_NETWORK_ID } from "@/config/app"
 
 export const useRewards = () => {
   const queryClient = useQueryClient()
-  const { address } = useAccount()
+  const { chainId, address } = useAccount()
+  const { switchChain } = useSwitchChain()
   const web3Provider = useWeb3Provider()
   const [feedback, setFeedback] = useState<Feedback>({
     status: "primary",
@@ -22,6 +24,11 @@ export const useRewards = () => {
   const qWithdrawRewards = useMutation({
     mutationFn: async () => {
       if (!web3Provider || !address) throw new Error("No wallet connected")
+
+      if (chainId !== HELIOS_NETWORK_ID) {
+        switchChain({ chainId: HELIOS_NETWORK_ID })
+      }
+
       try {
         setFeedback({
           status: "primary",
@@ -34,13 +41,13 @@ export const useRewards = () => {
         )
 
         // Read call to verify transaction will pass
-        // await contract.methods.claimRewards(address, 10).call({ from: address })
+        await contract.methods.claimRewards(address, 10).call({ from: address })
         // Send actual transaction
         const tx = await contract.methods
           .claimRewards(address, 10)
           .send({ from: address, gas: "500000" })
 
-        console.log("claimAll")
+        // console.log("claimAll")
 
         setFeedback({
           status: "primary",
@@ -50,6 +57,8 @@ export const useRewards = () => {
         const receipt = await web3Provider.eth.getTransactionReceipt(
           tx.transactionHash
         )
+
+        await queryClient.refetchQueries({ queryKey: ["delegations", address] })
 
         setFeedback({
           status: "success",
@@ -70,6 +79,11 @@ export const useRewards = () => {
   const qWithdrawDelegatorRewards = useMutation({
     mutationFn: async (validatorAddress: string) => {
       if (!web3Provider) throw new Error("No wallet connected")
+        
+        if (chainId !== HELIOS_NETWORK_ID) {
+          switchChain({ chainId: HELIOS_NETWORK_ID })
+        }
+
       try {
         setFeedback({
           status: "primary",
