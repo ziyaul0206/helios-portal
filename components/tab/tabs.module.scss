@@ -1,0 +1,38 @@
+.tabSelector {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem;
+  background-color: white;
+  border: 1px solid #e5e7eb; // Tailwind's gray-200
+  border-radius: 9999px; // Full-rounded
+}
+
+.tabWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.tabButton {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem; // text-sm
+  font-weight: 600;
+  transition: all 0.3s ease;
+  color: #6b7280; // Tailwind's gray-500
+  background-color: transparent;
+  margin-right: 0.5rem; // 👈 spacing between tabs
+
+  &:last-child {
+    margin-right: 0; // prevent margin on last tab
+  }
+
+  &:hover {
+    color: #000000;
+  }
+
+  &.active {
+    background-color: #000000;
+    color: #ffffff;
+  }
+}
