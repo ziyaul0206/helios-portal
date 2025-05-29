@@ -32,10 +32,10 @@ const Category = ({ type }: CategoryProps) => {
   return (
     <div className={s.type}>
       <div className={s.icon}>
-        <Icon icon={config.icon} className={s.iconSvg} />
+        <Icon icon={config?.icon} className={s.iconSvg} />
         {/* <Status status={status} /> */}
       </div>
-      <strong className={s.stronger}>{config.name}</strong>
+      <strong className={s.stronger}>{config?.name}</strong>
     </div>
   )
 }
