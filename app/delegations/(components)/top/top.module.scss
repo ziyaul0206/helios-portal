@@ -1,0 +1,14 @@
+@use "styles/mixins" as *;
+
+.content {
+  display: flex;
+  gap: calc(var(--card-padding) * 0.5);
+
+  @include max(750px) {
+    flex-direction: column;
+  }
+
+  > * {
+    flex: 1;
+  }
+}

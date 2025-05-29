@@ -44,18 +44,26 @@ export interface TableCellProps
   children: React.ReactNode
   className?: string
   align?: "left" | "right" | "center"
+  top?: boolean
+  colSpan?: number
 }
 
 export const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>(
-  ({ children, className, align, ...props }, ref) => {
+  ({ children, className, align, top, colSpan, ...props }, ref) => {
     return (
       <td
         ref={ref}
         className={clsx(s.cell, className)}
         data-align={align}
+        colSpan={colSpan}
         {...props}
       >
-        {children}
+        {top && (
+          <div className={s.top} data-top>
+            {children}
+          </div>
+        )}
+        {!top && children}
       </td>
     )
   }

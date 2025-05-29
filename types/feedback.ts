@@ -1,4 +1,10 @@
+export type Variants =
+  | "primary"
+  | "secondary"
+  | "danger"
+  | "warning"
+  | "success"
 export interface Feedback {
-  status: "idle" | "loading" | "success" | "error";
-  message: string;
+  status: Variants
+  message: React.ReactNode
 }

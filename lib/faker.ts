@@ -1,49 +1,47 @@
-import { getAllTokens, getToken } from "@/config/tokens"
+import { getToken } from "@/config/tokens"
+import { ValidatorProps, VoteProps, VoteVote } from "@/types/faker"
 import { Token } from "@/types/Tokens"
-import {
-  Transaction,
-  TransactionStatus,
-  TransactionType
-} from "@/types/Transactions"
+// import { TransactionDelegation } from "@/types/TransactionDelegation"
+// import { Transaction, TransactionStatus } from "@/types/Transactions"
 import { faker } from "@faker-js/faker"
 
 faker.seed(6)
 
-export const generateRandomTransactions = (count: number): Transaction[] => {
-  const transactions: Transaction[] = []
+// export const generateRandomTransactions = (count: number): Transaction[] => {
+//   const transactions: Transaction[] = []
 
-  const transactionTypes: TransactionType[] = [
-    "bridge-out",
-    "bridge-in",
-    "governance-vote",
-    "stake-in",
-    "stake-out",
-    "deposit",
-    "withdraw"
-  ]
+//   const transactionTypes: Transa[] = [
+//     "bridge-out",
+//     "bridge-in",
+//     "governance-vote",
+//     "stake-in",
+//     "stake-out",
+//     "deposit",
+//     "withdraw"
+//   ]
 
-  const statuses: TransactionStatus[] = ["pending", "completed", "failed"]
-  const availableTokens = getAllTokens()
+//   const statuses: TransactionStatus[] = ["pending", "completed", "failed"]
+//   const availableTokens = getAllTokens()
 
-  for (let i = 0; i < count; i++) {
-    const token = faker.helpers.arrayElement(availableTokens)
+//   for (let i = 0; i < count; i++) {
+//     const token = faker.helpers.arrayElement(availableTokens)
 
-    const transaction: Transaction = {
-      id: faker.string.uuid(),
-      type: faker.helpers.arrayElement(transactionTypes),
-      token,
-      amount: Number(faker.finance.amount({ min: 0.1, max: 1000, dec: 4 })),
-      date: faker.date.recent({ days: 30 }).toISOString(),
-      status: faker.helpers.arrayElement(statuses)
-    }
+//     const transaction: Transaction = {
+//       id: faker.string.uuid(),
+//       type: faker.helpers.arrayElement(transactionTypes),
+//       token,
+//       amount: Number(faker.finance.amount({ min: 0.1, max: 1000, dec: 4 })),
+//       date: faker.date.recent({ days: 30 }).toISOString(),
+//       status: faker.helpers.arrayElement(statuses)
+//     }
 
-    transactions.push(transaction)
-  }
+//     transactions.push(transaction)
+//   }
 
-  return transactions.sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  )
-}
+//   return transactions.sort(
+//     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+//   )
+// }
 
 export interface TvlData {
   token: Token
@@ -73,4 +71,112 @@ export const generateRandomTvl = (): TvlData[] => {
   })
 
   return tvlData
+}
+
+export const generateRandomValidators = (count: number): ValidatorProps[] => {
+  const validators: ValidatorProps[] = []
+
+  for (let i = 0; i < count; i++) {
+    const validator: ValidatorProps = {
+      name: faker.company.name(),
+      description: faker.lorem.sentence(),
+      image: faker.image.url(),
+      apyBoost: faker.number.int({ min: 1, max: 2 }),
+      reputation: faker.number.int({ min: 90, max: 100 }),
+      uptime: faker.number.int({ min: 1, max: 100 }),
+      commission: faker.number.int({ min: 1, max: 100 })
+    }
+
+    validators.push(validator)
+  }
+
+  return validators
+}
+
+export const generateGovernanceData = () => {
+  const proposals = [
+    "Increase validator set",
+    "Reduce transaction fees",
+    "Add new bridge assets",
+    "Modify staking rewards",
+    "Update governance parameters",
+    "Implement new consensus mechanism",
+    "Adjust block rewards",
+    "Enhance network security",
+    "Optimize gas fees",
+    "Upgrade smart contracts"
+  ]
+
+  return Array.from({ length: 5 }, (_, i) => {
+    const proposal = faker.helpers.arrayElement(proposals)
+    const result = faker.helpers.arrayElement(["Passed", "Failed"])
+    const vote = result === "Passed" ? "For" : "Against"
+    const hipNumber = 23 - i
+
+    return {
+      id: `HIP-${hipNumber}`,
+      title: proposal,
+      result,
+      vote,
+      date: faker.date.recent({ days: 30 }).toISOString().split("T")[0],
+      votesFor: faker.number.int({ min: 1000000, max: 5000000 }),
+      votesAgainst: faker.number.int({ min: 100000, max: 1000000 }),
+      quorum: faker.number.int({ min: 40, max: 60 }),
+      turnout: faker.number.int({ min: 30, max: 80 })
+    }
+  })
+}
+
+export const generatePerformanceData = (days: number) => {
+  return Array.from({ length: days }, (_, i) => {
+    const date = new Date()
+    date.setDate(date.getDate() - (days - i))
+    return {
+      date: date.toISOString().split("T")[0],
+      value: faker.number.float({ min: 99.5, max: 100 })
+    }
+  })
+}
+
+// export const generateTransactionsDelegations = (
+//   number: number = 10
+// ): TransactionDelegation[] => {
+//   const types = [1, 2, 3]
+//   const status = [1, 2, 3]
+
+//   return Array.from({ length: number }, () => ({
+//     type: faker.helpers.arrayElement(types),
+//     validator: faker.helpers.arrayElement([
+//       "Helios Guardian",
+//       "Cosmic Validator",
+//       "Quantum Nodes",
+//       "Stellar Validator",
+//       "Nova Network"
+//     ]),
+//     amount: faker.number.int({ min: 50, max: 1000 }),
+//     status: faker.helpers.arrayElement(status),
+//     date: faker.date.recent({ days: 30 }).toLocaleDateString("en-US", {
+//       month: "short",
+//       day: "numeric",
+//       year: "numeric"
+//     }),
+//     explorer: `https://explorer.helios.network/tx/${faker.string.uuid()}`
+//   }))
+// }
+
+export const generateVotes = (count: number): VoteProps[] => {
+  faker.seed(10)
+
+  return Array.from({ length: count }, () => ({
+    status: faker.helpers.arrayElement(["active", "passed", "rejected"]),
+    name: faker.company.name(),
+    hip: faker.number.int({ min: 1, max: 100 }),
+    date: faker.date.recent({ days: 30 }).toISOString().split("T")[0],
+    vote: faker.helpers.arrayElement([
+      "yes",
+      "no",
+      "abstain",
+      "veto"
+    ]) as VoteVote
+  }))
 }

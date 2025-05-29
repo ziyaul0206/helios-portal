@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   gap: 0.75em;
-  max-width: 100%;
+  width: 100%;
 
   @include max($responsiveMobile) {
     font-size: var(--heading-size, var(--size-5));
@@ -20,6 +20,7 @@
   white-space: nowrap;
   flex: 1;
   overflow: hidden;
+  width: 0;
 }
 
 .title {
@@ -27,6 +28,14 @@
   letter-spacing: -0.015em;
   line-height: 1.2;
   @include ellipsis;
+
+  svg {
+    display: inline-block;
+    color: var(--primary-medium);
+    margin-left: 0.25em;
+    font-size: 0.85em;
+    vertical-align: middle;
+  }
 }
 
 .description {

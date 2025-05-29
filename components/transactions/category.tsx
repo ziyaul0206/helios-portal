@@ -1,33 +1,39 @@
-import { TransactionStatus, TransactionType } from "@/types/Transactions"
+import { TransactionLastType } from "@/types/transaction"
 import { Icon } from "../icon"
-import Status from "./status"
+// import Status from "./status"
 import s from "./transactions.module.scss"
-export const CategoryConfig = {
-  "bridge-in": { name: "Bridge in", icon: "hugeicons:arrow-down-left-01" },
-  "bridge-out": { name: "Bridge out", icon: "hugeicons:arrow-up-right-01" },
-  "governance-vote": {
+export const CategoryConfig: {
+  [key in TransactionLastType]: {
+    name: string
+    icon: string
+  }
+} = {
+  BRIDGE_IN: { name: "Bridge in", icon: "hugeicons:arrow-down-left-01" },
+  BRIDGE_OUT: { name: "Bridge out", icon: "hugeicons:arrow-up-right-01" },
+  GOVERNANCE_VOTE: {
     name: "Governance vote",
     icon: "hugeicons:bitcoin-withdraw"
   },
-  "stake-in": { name: "Stake in", icon: "hugeicons:square-lock-add-02" },
-  "stake-out": { name: "Stake out", icon: "hugeicons:square-lock-minus-02" },
-  deposit: { name: "Deposit", icon: "hugeicons:download-03" },
-  withdraw: { name: "Withdraw", icon: "hugeicons:upload-03" }
+  STAKE_IN: { name: "Stake in", icon: "hugeicons:square-lock-add-02" },
+  STAKE_OUT: { name: "Stake out", icon: "hugeicons:square-lock-minus-02" },
+  DEPOSIT: { name: "Deposit", icon: "hugeicons:download-03" },
+  WITHDRAW: { name: "Withdraw", icon: "hugeicons:upload-03" },
+  UNKNOWN: { name: "Unknown", icon: "hugeicons:help-circle" }
 }
 
 export interface CategoryProps {
-  type: TransactionType
-  status: TransactionStatus
+  type: TransactionLastType
+  // status: TransactionStatus
 }
 
-const Category = ({ type, status }: CategoryProps) => {
-  const config = CategoryConfig[type]
+const Category = ({ type }: CategoryProps) => {
+  const config = type ? CategoryConfig[type] : CategoryConfig.UNKNOWN
 
   return (
     <div className={s.type}>
       <div className={s.icon}>
         <Icon icon={config.icon} className={s.iconSvg} />
-        <Status status={status} />
+        {/* <Status status={status} /> */}
       </div>
       <strong className={s.stronger}>{config.name}</strong>
     </div>

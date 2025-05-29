@@ -1,0 +1,249 @@
+@use "styles/mixins" as *;
+
+.item {
+  --item-padding: var(--size-7);
+  --item-image: calc(56px + 8 * (100vw - 320px) / 1080);
+  --item-gap: calc(var(--item-padding) / 2);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--item-padding);
+  background-color: var(--background-low);
+  border-radius: var(--radius-m);
+  position: relative;
+  gap: var(--item-gap);
+}
+
+.top {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--item-gap);
+}
+
+.image {
+  font-size: var(--heading-icon, var(--size-13));
+  color: var(--primary-medium);
+  background-color: var(--background-high);
+  width: 1em;
+  min-width: 1em;
+  height: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--item-image);
+  height: var(--item-image);
+  border-radius: var(--radius-m);
+  background-color: var(--background-medium);
+  padding: 0.275em;
+
+  svg {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+.heading {
+  flex: 1;
+  line-height: 1.2;
+  @include ellipsis;
+
+  h3 {
+    @include ellipsis;
+    font-weight: bold;
+    font-size: var(--size-5);
+    margin-top: 0.15em;
+  }
+}
+
+.favorite {
+  position: absolute;
+  top: var(--item-gap);
+  right: var(--item-gap);
+}
+
+.stats {
+  --gap: calc(var(--item-gap) / 3);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+}
+
+.stat {
+  width: calc(50% - var(--gap));
+  background-color: var(--background-lower);
+  border-radius: var(--radius-m);
+  padding: var(--padding, 1.5em);
+  color: var(--color, var(--primary-medium));
+  position: relative;
+
+  span {
+    font-size: var(--size-3-5);
+    display: block;
+    color: var(--text-tertiary);
+    margin-bottom: 0.5em;
+  }
+
+  strong {
+    display: block;
+    color: var(--color);
+    line-height: 1;
+    margin-bottom: -0.05em;
+  }
+
+  small {
+    font-size: var(--size-3);
+    display: block;
+    color: var(--text-tertiary);
+    margin-top: 0.5em;
+    @include ellipsis;
+  }
+
+  .icon {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    font-size: 1.25em;
+  }
+
+  &[data-color="apy"] {
+    --color: var(--other-apy);
+  }
+
+  &[data-color="reputation"] {
+    --color: var(--other-reputation);
+  }
+
+  &[data-color="uptime"] {
+    --color: var(--other-uptime);
+  }
+
+  &[data-color="commission"] {
+    --color: var(--other-commission);
+  }
+}
+
+.buttons {
+  display: flex;
+  gap: calc(var(--item-gap) / 2);
+
+  .stake {
+    flex: 1;
+  }
+}
+
+.message {
+  font-size: var(--size-3-5);
+  position: relative;
+  padding: 0.8em 1em 0.75em;
+  margin-bottom: calc(var(--item-gap) * -0.33);
+
+  svg {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    z-index: 1;
+    margin-right: 0.5em;
+    transform: scale(1.25) translateY(-0.1em);
+  }
+
+  &::before {
+    pointer-events: none;
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: var(--color-medium);
+    border-radius: var(--radius-s);
+    opacity: 0.15;
+  }
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: flex-end;
+
+  span {
+    font-size: var(--size-3);
+    color: var(--text-tertiary);
+  }
+}
+
+.bars {
+  display: flex;
+  height: var(--size-1);
+  width: 100%;
+}
+
+.bar {
+  flex: 1;
+  flex-basis: var(--width);
+  height: 100%;
+  background-color: var(--color);
+  position: relative;
+  cursor: pointer;
+
+  &::before {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    inset: calc(var(--item-gap) * -1) 0 -5px;
+  }
+
+  & + & {
+    border-left: 2px solid var(--background-medium);
+  }
+
+  &:first-child {
+    border-radius: var(--radius-m) 0 0 var(--radius-m);
+  }
+
+  &:last-child {
+    border-radius: 0 var(--radius-m) var(--radius-m) 0;
+  }
+
+  @include is-hover {
+    .popover {
+      opacity: 1;
+    }
+  }
+}
+
+.popover {
+  --transition: 0.2s ease-in-out;
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  background-color: var(--background-lowest);
+  font-size: var(--size-2-5);
+  padding: 0.4em 0.75em;
+  border-radius: var(--radius-m);
+  white-space: nowrap;
+  gap: 1em;
+  display: flex;
+  align-items: center;
+  box-shadow: var(--shadow-m);
+  @include user-select;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition);
+
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 0.8em;
+    height: 0.8em;
+    background-color: var(--color);
+    border-radius: 50%;
+    margin-right: -0.5em;
+    position: relative;
+    top: 0.05em;
+  }
+
+  span {
+    color: var(--text-secondary);
+  }
+}

@@ -1,0 +1,22 @@
+@use "styles/mixins" as *;
+
+.tooltip {
+  font-size: var(--size-3);
+  background-color: var(--background-lowest);
+  border-radius: 1em;
+  padding: 1.5em;
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-1);
+  box-shadow: var(--shadow-m);
+
+  strong {
+    color: var(--text-primary);
+    font-size: var(--size-3-5);
+  }
+
+  span {
+    color: var(--text-secondary);
+    font-size: var(--size-3);
+  }
+}

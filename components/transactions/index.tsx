@@ -1,29 +1,29 @@
-import { Transaction } from "@/types/transaction"
-import { Table, TableCell, TableRow } from "../table"
+import { TransactionLight } from "@/types/transaction"
+import { Table } from "../table"
 import { TransactionsLine } from "./line"
-import s from "./transactions.module.scss"
-import { TransactionsLineFake } from "./line-fake"
+import { Message } from "../message"
 
-interface TransactionsProps {
-  transactions: Transaction[]
+type TransactionsProps = {
+  transactions: TransactionLight[]
 }
 
 export const Transactions = ({ transactions }: TransactionsProps) => {
+  if (transactions.length === 0) {
+    return (
+      <Message title="Transactions informations" variant="primary">
+        No recent transactions.
+      </Message>
+    )
+  }
+
   return (
     <Table>
-      <thead>
-        <TableRow>
-          <TableCell>Tx Hash</TableCell>
-          <TableCell className={s.cellFrom}>From</TableCell>
-          <TableCell className={s.cellTo}>To</TableCell>
-          <TableCell className={s.cellAmount}>Value</TableCell>
-        </TableRow>
-      </thead>
       <tbody>
-        {transactions.length === 0 &&
-          [...Array(3)].map((_, index) => <TransactionsLineFake key={index} />)}
         {transactions.map((transaction) => (
-          <TransactionsLine key={transaction.hash} {...transaction} />
+          <TransactionsLine
+            key={"transactions-" + transaction.hash}
+            {...transaction}
+          />
         ))}
       </tbody>
     </Table>

@@ -1,57 +1,45 @@
 import { fromWeiToEther } from "@/utils/number"
 import { TableCell, TableRow } from "../table"
 import s from "./transactions.module.scss"
-import { Transaction } from "@/types/transaction"
-import { formatHash } from "@/utils/string"
+import { TransactionLight } from "@/types/transaction"
 import { EXPLORER_URL } from "@/config/app"
+import Category from "./category"
+import { Button } from "../button"
+import { Symbol } from "@/components/symbol"
 
-export const TransactionsLine = (transaction: Transaction) => {
-  // const price = (
-  //   <small className={s.small}>
-  //     {formatCurrency(transaction.token.pricePerToken * transaction.amount)}
-  //   </small>
-  // )
+export const TransactionsLine = (transaction: TransactionLight) => {
+  const explorerLink = EXPLORER_URL + "/tx/" + transaction.hash
 
   return (
     <TableRow>
       <TableCell>
-        {/* <Category type={transaction.type} status={transaction.status} /> */}
-        <a
-          href={`${EXPLORER_URL}/tx/${transaction.hash}`}
-          target="_blank"
-          className={s.small}
-        >
-          {formatHash(transaction.hash)}
-        </a>
+        <Category type={transaction.type} />
       </TableCell>
-      <TableCell className={s.cellFrom}>
-        <a
-          href={`${EXPLORER_URL}/tx/${transaction.from}`}
-          target="_blank"
-          className={s.small}
-        >
-          {transaction.from ? formatHash(transaction.from) : "0x0000...0000"}
-        </a>
-      </TableCell>
-      <TableCell className={s.cellTo}>
-        <a
-          href={`${EXPLORER_URL}/tx/${transaction.to}`}
-          target="_blank"
-          className={s.small}
-        >
-          {transaction.to ? formatHash(transaction.to) : "0x0000...0000"}
-        </a>
-      </TableCell>
+
       <TableCell className={s.cellAmount}>
-        <strong className={s.stronger}>
-          {fromWeiToEther(transaction.value)} HELIOS
-        </strong>
+        {transaction.amount && (
+          <>
+            <strong className={s.stronger}>
+              {transaction.token && (
+                <Symbol
+                  icon={transaction.token.display.symbolIcon}
+                  color={transaction.token.display.color}
+                />
+              )}
+              {fromWeiToEther(transaction.amount)}{" "}
+              {transaction.token?.display.symbol.toUpperCase()}
+            </strong>
+          </>
+        )}
       </TableCell>
-      {/* <TableCell>
-        <small className={s.small}>
-          {formatTimestamp(transaction.createdAt)}
-        </small>
-      </TableCell> */}
+      <TableCell align="right" className={s.cellRight}>
+        <Button
+          icon="hugeicons:link-square-02"
+          variant="secondary"
+          border
+          href={explorerLink}
+        />
+      </TableCell>
     </TableRow>
   )
 }

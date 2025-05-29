@@ -1,0 +1,80 @@
+@use "styles/mixins" as *;
+
+.pattern {
+  .bar {
+    width: 100%;
+    height: var(--size-8);
+    background-color: var(--color-primary);
+    display: flex;
+    align-items: center;
+
+    & > * {
+      --radius: var(--radius-rounded);
+      height: var(--size-2);
+      background: linear-gradient(
+        var(--direction, to left),
+        var(--color-medium),
+        var(--color-lowest)
+      );
+
+      &:first-child {
+        border-radius: var(--radius) 0 0 var(--radius);
+      }
+
+      &:last-child {
+        --direction: to right;
+        border-radius: 0 var(--radius) var(--radius) 0;
+        border-left: 1px solid var(--background-lower);
+      }
+    }
+  }
+
+  .percent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: var(--size-3);
+    color: var(--text-tertiary);
+  }
+}
+
+.recents {
+  @include block;
+
+  .item {
+    --padding: var(--size-5);
+    position: relative;
+    padding: var(--padding);
+    display: flex;
+    justify-content: space-between;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      border-radius: var(--radius-s);
+      background-color: var(--color-medium);
+      opacity: 0.05;
+      pointer-events: none;
+    }
+  }
+
+  .title {
+    font-weight: bold;
+    color: var(--text-secondary);
+
+    .id {
+      color: var(--color-medium);
+    }
+  }
+
+  .result {
+    color: var(--text-tertiary);
+    font-size: var(--size-3-5);
+  }
+
+  .vote {
+    font-size: var(--size-2-5);
+  }
+}

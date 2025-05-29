@@ -1,9 +1,9 @@
 import { usePathname } from "next/navigation"
 
 export const useActive = (href?: string): boolean => {
-  if (!href) return false
-
   const pathname = usePathname()
+
+  if (!href) return false
 
   if (href === "/" && pathname === "/") {
     return true

@@ -120,8 +120,9 @@
 .tokens {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  // flex: 1;
   gap: calc(var(--card-padding) / 2);
+  width: calc(55% - var(--card-padding));
 
   li {
     --symbol-size: 2.5em;
@@ -140,8 +141,16 @@
     text-align: right;
   }
 
+  .info {
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
   .top {
     font-weight: bold;
+    overflow: hidden;
+    width: 100%;
+    text-overflow: ellipsis;
   }
 
   .bottom {
@@ -149,6 +158,9 @@
     font-size: 0.75em;
     font-weight: 600;
     margin-top: 0.35em;
+    overflow: hidden;
+    width: 100%;
+    text-overflow: ellipsis;
   }
 
   small {

@@ -1,13 +1,13 @@
 "use client"
 
 import { Sizes } from "@/types/Sizes"
-import { Variants } from "@/types/Variants"
 import clsx from "clsx"
 import { ReactNode } from "react"
 import { Icon } from "../icon"
 import { Link } from "../link"
 import { Logotype } from "../logotype"
 import s from "./button.module.scss"
+import { Variants } from "@/types/feedback"
 
 export interface ButtonProps {
   children?: ReactNode
@@ -48,22 +48,32 @@ export const Button = ({
   ...props
 }: ButtonProps) => {
   const classIcon = clsx(s.icon, classNameIcon)
-  const IconRender =
-    iconRight === "logo" || iconLeft === "logo" || icon === "logo" ? (
-      <Logotype className={classIcon} data-icon />
-    ) : iconRight ? (
-      <Icon icon={iconRight} className={classIcon} data-icon data-icon-right />
-    ) : iconLeft ? (
+  const IconLeft =
+    iconLeft &&
+    (iconLeft === "logo" ? (
+      <Logotype className={classIcon} data-icon data-icon-left />
+    ) : (
       <Icon icon={iconLeft} className={classIcon} data-icon data-icon-left />
-    ) : icon ? (
-      <Icon icon={icon} className={classIcon} data-icon data-icon-right />
-    ) : null
+    ))
+
+  const IconRight =
+    (iconRight || icon) &&
+    (iconRight === "logo" || icon === "logo" ? (
+      <Logotype className={classIcon} data-icon data-icon-right />
+    ) : (
+      <Icon
+        icon={iconRight || icon || ""}
+        className={classIcon}
+        data-icon
+        data-icon-right
+      />
+    ))
 
   const Content = (
     <>
-      {iconLeft && IconRender}
-      {children && children}
-      {(iconRight || icon) && IconRender}
+      {IconLeft}
+      {children}
+      {IconRight}
     </>
   )
 

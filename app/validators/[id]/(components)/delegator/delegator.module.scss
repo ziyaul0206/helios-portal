@@ -1,0 +1,25 @@
+@use "styles/mixins" as *;
+
+.chart {
+  @include block(
+    $direction: row,
+    $gap: calc(var(--padding) / 2) var(--padding)
+  );
+  align-items: flex-start;
+  white-space: nowrap;
+
+  .pie {
+    width: calc(120px + 24 * (100vw - 320px) / 1080);
+    margin: auto;
+  }
+}
+
+.number {
+  font-size: var(--size-5);
+  font-weight: bold;
+  position: absolute;
+  top: var(--message-padding);
+  right: var(--message-padding);
+  line-height: 1;
+  text-align: right;
+}

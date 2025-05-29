@@ -1,0 +1,42 @@
+@use "styles/mixins" as *;
+
+.validators {
+  --list-columns: 4;
+  --grid-template-columns: 3fr 1fr;
+  grid-template-areas: "a b";
+
+  @include max(2000px) {
+    --list-columns: 3;
+  }
+
+  @include max(1600px) {
+    --list-columns: 2;
+  }
+
+  @include max(1320px) {
+    --list-columns: 3;
+    --grid-template-columns: 1fr;
+    grid-template-areas: "a" "b";
+
+    @include min(820px) {
+      .right {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--grid-gap);
+
+        & > * {
+          flex: 1;
+          margin-top: 0;
+        }
+      }
+    }
+  }
+
+  @include max(1084px) {
+    --list-columns: 2;
+  }
+
+  @include max(585px) {
+    --list-columns: 1;
+  }
+}

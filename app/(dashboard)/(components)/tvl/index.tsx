@@ -1,16 +1,13 @@
 import { Card } from "@/components/card"
 import { Heading } from "@/components/heading"
 import { Symbol } from "@/components/symbol"
-import {
-  formatBigNumber,
-  formatCurrency,
-  formatNumber
-} from "@/lib/utils/number"
+import { formatBigNumber, formatCurrency } from "@/lib/utils/number"
 import s from "./tvl.module.scss"
 import { useAssetsInfo } from "@/hooks/useAssetsInfo"
 
 export const TVL = () => {
-  const { assets, holders, totalTVL } = useAssetsInfo()
+  const { assets, totalHolders, totalTVL } = useAssetsInfo()
+  const filteredAssets = assets.filter((asset) => asset.totalShares !== "0")
 
   return (
     <Card className={s.tvl}>
@@ -22,36 +19,40 @@ export const TVL = () => {
       >
         <div className={s.right}>
           <div className={s.total}>{formatCurrency(totalTVL)}</div>
-          <div className={s.holder}>{formatNumber(holders)} Holders</div>
+          <div className={s.holder}>
+            {formatBigNumber(totalHolders, 0)} Holders
+          </div>
         </div>
       </Heading>
       <div className={s.list}>
-        {assets.map((token) => (
-          <div className={s.item} key={`token-${token.id}`}>
+        {filteredAssets.map((token) => (
+          <div className={s.item} key={`tvl-${token.contractAddress}`}>
             <div className={s.bar}>
               <div
                 style={
                   {
-                    "--color": token.color,
+                    "--color": token.enriched.display.color,
                     height: `${(token.tvlUSD / totalTVL) * 100}%`
                   } as React.CSSProperties
                 }
               >
                 <div className={s.hover}>
-                  <strong>{token.name}</strong>
-                  <span>{formatCurrency(token.tvlUSD)}</span>
+                  <strong>{token.enriched.display.name}</strong>
+                  {token.tvlUSD !== 0 && (
+                    <span>{formatCurrency(token.tvlUSD)}</span>
+                  )}
                 </div>
               </div>
             </div>
             <Symbol
-              icon={token.symbolIcon}
-              color={token.color}
+              icon={token.enriched.display.symbolIcon}
+              color={token.enriched.display.color}
               className={s.symbol}
             />
-            <div className={s.name}>{token.symbol}</div>
-            <div className={s.price}>
-              {token.tokenAmount} (${formatBigNumber(token.tvlUSD)})
+            <div className={s.name}>
+              {token.enriched.display.symbol.toUpperCase()}
             </div>
+            <div className={s.price}>{token.tokenAmount}</div>
           </div>
         ))}
       </div>

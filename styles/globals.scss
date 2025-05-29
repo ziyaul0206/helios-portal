@@ -49,3 +49,74 @@ svg {
   opacity: 0.5;
   filter: grayscale(1);
 }
+
+/* Loading */
+
+[data-loading] {
+  --color-1: var(--background-highest);
+  --color-2: var(--background-high);
+  display: inline-block;
+  color: transparent !important;
+  pointer-events: none;
+  position: relative;
+  @include user-select;
+  border-radius: inherit;
+
+  * {
+    color: transparent !important;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    z-index: 50;
+    inset: var(--inset, 1px);
+    border-radius: var(--radius-2xs);
+    background: linear-gradient(
+      -45deg,
+      var(--color-1) 10%,
+      var(--color-2),
+      var(--color-1) 90%
+    );
+    background-size: 400% 400%;
+    animation: lazyBg 1s ease infinite;
+  }
+
+  &[data-loading-min] {
+    --inset: 5px;
+  }
+}
+
+[data-loading-img] {
+  background: linear-gradient(
+    -45deg,
+    var(--color-1) 10%,
+    var(--color-2),
+    var(--color-1) 90%
+  );
+  background-size: 400% 400%;
+  animation: lazyBg 1s ease infinite;
+}
+
+@keyframes lazyBg {
+  0% {
+    background-position: 0 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  to {
+    background-position: 0 50%;
+  }
+}
+
+/* Recharts */
+
+.recharts-sector {
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.5;
+  }
+}

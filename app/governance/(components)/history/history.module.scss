@@ -1,0 +1,58 @@
+@use "styles/mixins" as *;
+
+.history {
+  --card-padding: var(--size-7);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--card-padding) * 0.35);
+}
+
+.item {
+  @include block($padding: var(--size-5));
+
+  h3 {
+    font-size: var(--size-4);
+  }
+}
+
+.top {
+  font-size: var(--size-3-5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+}
+
+.hip {
+  color: var(--text-secondary);
+}
+
+.date {
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  color: var(--text-secondary);
+
+  svg {
+    color: var(--text-tertiary);
+  }
+}
+
+.vote {
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+
+  svg {
+    color: var(--color-medium, var(--text-tertiary));
+
+    * {
+      stroke-width: 1.75;
+    }
+  }
+}

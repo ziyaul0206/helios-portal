@@ -5,10 +5,11 @@ import s from "./heading.module.scss"
 interface HeadingProps {
   icon?: string
   title?: string
-  description?: string
+  description?: string | React.ReactNode
   className?: string
   rightClassName?: string
   children?: React.ReactNode
+  verified?: boolean
 }
 
 export const Heading = ({
@@ -17,7 +18,8 @@ export const Heading = ({
   description,
   className,
   rightClassName,
-  children
+  children,
+  verified
 }: HeadingProps) => {
   return (
     <div className={clsx(s.heading, className)}>
@@ -28,8 +30,13 @@ export const Heading = ({
       )}
       {(title || description) && (
         <div className={s.content}>
-          {title && <h2 className={s.title}>{title}</h2>}
-          {description && <p className={s.description}>{description}</p>}
+          {title && (
+            <h2 className={s.title}>
+              {title}
+              {verified && <Icon icon="hugeicons:checkmark-badge-02" />}
+            </h2>
+          )}
+          {description && <div className={s.description}>{description}</div>}
         </div>
       )}
       <div className={clsx(s.right, rightClassName)}>{children}</div>

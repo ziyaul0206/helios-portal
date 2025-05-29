@@ -1,3 +1,5 @@
+@use "sass:map";
+
 $primitive: (
   blue: (
     50: oklch(92.99% 0.033 272.79),
@@ -123,7 +125,20 @@ $colors: (
     primary: var(--color-dark-600),
     secondary: var(--color-dark-50),
     tertiary: #828db3
+  ),
+  other: (
+    apy: var(--color-blue-500),
+    reputation: #00aaff,
+    uptime: #7733ff,
+    commission: #ac09ed
   )
+);
+
+$status-colors: (
+  "danger": map.get($colors, "danger"),
+  "success": map.get($colors, "success"),
+  "warning": map.get($colors, "warning"),
+  "primary": map.get($colors, "primary")
 );
 
 :root {
@@ -142,5 +157,16 @@ $colors: (
     @each $shade, $color in $shades {
       --#{"" + $name}-#{$shade}: #{$color};
     }
+  }
+}
+
+@each $name, $shades in $status-colors {
+  [data-color="#{$name}"],
+  [data-status="#{$name}"] {
+    @each $shade, $color in $shades {
+      --color-#{$shade}: #{$color};
+    }
+
+    color: var(--color-medium);
   }
 }

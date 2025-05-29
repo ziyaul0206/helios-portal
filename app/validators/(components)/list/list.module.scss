@@ -1,0 +1,102 @@
+@use "styles/mixins" as *;
+
+.search {
+  --padding: var(--size-3);
+  background-color: var(--background-medium);
+  border-radius: var(--radius-m);
+  display: flex;
+  align-items: center;
+  padding: var(--padding);
+  gap: var(--size-4);
+  cursor: text;
+  min-height: var(--button-large-height);
+
+  &Icon {
+    width: 1.5em;
+    margin-left: var(--padding);
+  }
+
+  &Input {
+    flex: 1;
+
+    &:focus {
+      color: var(--primary-medium);
+    }
+
+    &::placeholder {
+      color: var(--text-tertiary);
+    }
+  }
+
+  &Actions {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--padding) / 2);
+
+    strong {
+      margin-left: 0.5em;
+      display: inline-block;
+      color: var(--primary-medium);
+    }
+
+    button:hover strong {
+      color: inherit;
+    }
+
+    @include max(1250px) {
+      button {
+        span {
+          display: none;
+        }
+
+        [data-icon-left] {
+          transform: scale(1.5);
+        }
+      }
+    }
+  }
+}
+
+.information {
+  --modal-width: calc(300px + 100 * (100vw - 320px) / 1080);
+  line-height: 1.5;
+
+  p {
+    color: var(--text-secondary);
+  }
+
+  strong {
+    color: var(--success-medium);
+  }
+}
+
+.list {
+  --list-gap: var(--grid-gap);
+  margin-top: var(--grid-gap);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: var(--list-gap);
+
+  & > * {
+    width: calc(
+      (100% - (var(--list-columns) - 1) * var(--list-gap)) / var(--list-columns)
+    );
+  }
+}
+
+.empty {
+  --card-padding: var(--size-10);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--card-padding) / 2);
+  flex: 1;
+  text-align: center;
+}
+
+.sad {
+  font-size: var(--size-8);
+  color: var(--primary-medium);
+}

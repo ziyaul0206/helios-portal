@@ -4,7 +4,10 @@
   --grid-gap: calc(var(--main-padding) / 1.75);
 
   display: grid;
-  grid-template-columns: repeat(var(--grid-columns, 12), 1fr);
+  grid-template-columns: var(
+    --grid-template-columns,
+    repeat(var(--grid-columns, 12), 1fr)
+  );
   grid-template-rows: min content;
   grid-gap: var(--grid-gap);
 }

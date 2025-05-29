@@ -1,0 +1,22 @@
+@use "styles/mixins" as *;
+
+.progress {
+  background-color: var(--background-higher);
+  width: 100%;
+  border-radius: var(--radius-rounded);
+  overflow: hidden;
+  min-height: var(--size-1);
+  margin-top: var(--size-1-5);
+  position: relative;
+
+  &Bar {
+    height: 100%;
+    position: absolute;
+    border-radius: inherit;
+    background: linear-gradient(
+      to right,
+      var(--background-higher),
+      var(--progress-color, var(--color-medium, var(--success-low)))
+    );
+  }
+}

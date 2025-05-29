@@ -37,6 +37,11 @@
   position: relative;
   @include user-select;
 
+  &[disabled] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
   &:hover,
   &.hovering {
     color: var(--btn-hover-color, var(--btn-base-hover-color));
@@ -195,5 +200,11 @@
   .icon {
     transform: scale(1.25);
     overflow: visible;
+  }
+
+  &[disabled] {
+    opacity: 0.4;
+    filter: grayscale(1);
+    cursor: not-allowed;
   }
 }

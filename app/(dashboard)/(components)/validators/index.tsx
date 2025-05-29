@@ -1,11 +1,12 @@
 import { Card } from "@/components/card"
-import s from "./validators.module.scss"
-import { useValidatorInfos } from "@/hooks/useValidatorInfo"
+import { Progress } from "@/components/progress"
 import { useProposalInfo } from "@/hooks/useProposalInfo"
+import { useValidatorInfo } from "@/hooks/useValidatorInfo"
 import { formatDate } from "@/lib/utils/date"
+import s from "./validators.module.scss"
 
 export const Validators = () => {
-  const { activeValidators, maxValidators } = useValidatorInfos()
+  const { activeValidators, maxValidators } = useValidatorInfo()
   const { lastProposal } = useProposalInfo()
 
   return (
@@ -16,12 +17,11 @@ export const Validators = () => {
           <strong>{activeValidators}</strong> / {maxValidators}
         </span>
       </div>
-      <div className={s.progress}>
-        <div
-          className={s.progressBar}
-          style={{ width: `${(activeValidators / maxValidators) * 100}%` }}
-        />
-      </div>
+      <Progress
+        value={activeValidators}
+        max={maxValidators}
+        className={s.progress}
+      />
       {lastProposal ? (
         <div className={s.latest}>
           <div className={s.latestTop}>

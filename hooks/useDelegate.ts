@@ -1,22 +1,26 @@
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useAccount } from "wagmi"
 import {
   DELEGATE_CONTRACT_ADDRESS,
   delegateAbi
-} from "@/constant/helios-contracts" // Remplace avec l'ABI du contrat de délégation et de désengagement
-import { Feedback } from "@/types/feedback"
+} from "@/constant/helios-contracts"
 import { useState } from "react"
 import { useWeb3Provider } from "./useWeb3Provider"
 import { ethers } from "ethers"
 import { getErrorMessage } from "@/utils/string"
+import { Feedback } from "@/types/feedback"
 
 export const useDelegate = () => {
   const { address } = useAccount()
   const web3Provider = useWeb3Provider()
+  const queryClient = useQueryClient()
   const [feedback, setFeedback] = useState<Feedback>({
-    status: "idle",
+    status: "primary",
     message: ""
   })
+  const resetFeedback = () => {
+    setFeedback({ status: "primary", message: "" })
+  }
 
   const delegateMutation = useMutation({
     mutationFn: async ({
@@ -31,12 +35,10 @@ export const useDelegate = () => {
       decimals: number
     }) => {
       if (!web3Provider) throw new Error("No wallet connected")
-
       try {
         const delegateAmount = ethers.parseUnits(amount, decimals)
 
-        setFeedback({ status: "loading", message: "Delegation in progress..." })
-
+        setFeedback({ status: "primary", message: "Delegation in progress..." })
         const contract = new web3Provider.eth.Contract(
           delegateAbi,
           DELEGATE_CONTRACT_ADDRESS
@@ -57,23 +59,18 @@ export const useDelegate = () => {
           })
 
         setFeedback({
-          status: "loading",
-          message: `Transaction sent (hash: ${tx.transactionHash}), waiting for confirmation...`
+          status: "primary",
+          message: `Transaction sent, waiting for confirmation...`
         })
 
         const receipt = await web3Provider.eth.getTransactionReceipt(
           tx.transactionHash
         )
 
-        setFeedback({
-          status: "success",
-          message: `Delegation successful, confirmed in block ${receipt.blockNumber}`
-        })
-
         return receipt
       } catch (error: any) {
         setFeedback({
-          status: "error",
+          status: "danger",
           message: getErrorMessage(error) || "Error during delegation"
         })
         throw error
@@ -94,12 +91,11 @@ export const useDelegate = () => {
       decimals: number
     }) => {
       if (!web3Provider) throw new Error("No wallet connected")
-
       try {
         const undelegateAmount = ethers.parseUnits(amount, decimals)
 
         setFeedback({
-          status: "loading",
+          status: "primary",
           message: "Undelegation in progress..."
         })
 
@@ -107,7 +103,6 @@ export const useDelegate = () => {
           delegateAbi,
           DELEGATE_CONTRACT_ADDRESS
         )
-
         await contract.methods
           .undelegate(address, validatorAddress, undelegateAmount, symbol)
           .call({
@@ -123,23 +118,18 @@ export const useDelegate = () => {
           })
 
         setFeedback({
-          status: "loading",
-          message: `Transaction sent (hash: ${tx.transactionHash}), waiting for confirmation...`
+          status: "primary",
+          message: `Transaction sent, waiting for confirmation...`
         })
 
         const receipt = await web3Provider.eth.getTransactionReceipt(
           tx.transactionHash
         )
 
-        setFeedback({
-          status: "success",
-          message: `Undelegation successful, confirmed in block ${receipt.blockNumber}`
-        })
-
         return receipt
       } catch (error: any) {
         setFeedback({
-          status: "error",
+          status: "danger",
           message: getErrorMessage(error) || "Error during undelegation"
         })
         throw error
@@ -159,6 +149,15 @@ export const useDelegate = () => {
       symbol,
       decimals
     })
+
+    setFeedback({
+      status: "success",
+      message: `Delegation successful ! Refreshing your delegations...`
+    })
+
+    await queryClient.refetchQueries({ queryKey: ["delegations", address] })
+    await queryClient.refetchQueries({ queryKey: ["accountLastTxs", address] })
+    await queryClient.refetchQueries({ queryKey: ["whitelistedAssets"] })
   }
 
   const undelegate = async (
@@ -167,18 +166,28 @@ export const useDelegate = () => {
     symbol: string,
     decimals: number
   ) => {
-    await undelegateMutation.mutate({
+    await undelegateMutation.mutateAsync({
       validatorAddress,
       amount,
       symbol,
       decimals
     })
+
+    setFeedback({
+      status: "success",
+      message: `Undelegation successful! Refreshing your delegations...`
+    })
+
+    await queryClient.refetchQueries({ queryKey: ["delegations", address] })
+    await queryClient.refetchQueries({ queryKey: ["accountLastTxs", address] })
+    await queryClient.refetchQueries({ queryKey: ["whitelistedAssets"] })
   }
 
   return {
     delegate,
     undelegate,
     feedback,
+    resetFeedback,
     isLoading: delegateMutation.isPending || undelegateMutation.isPending
   }
 }

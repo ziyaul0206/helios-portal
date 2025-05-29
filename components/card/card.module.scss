@@ -1,5 +1,34 @@
 @use "styles/mixins" as *;
 
 .card {
-  @include card;
+  @include card(var(--size-7));
+
+  &.auto {
+    min-height: 0;
+  }
+}
+
+.top {
+  --skeleton-size: var(--size-12);
+  display: flex;
+  align-items: stretch;
+  gap: var(--size-2);
+  height: var(--skeleton-size);
+}
+
+.icon {
+  min-width: var(--skeleton-size);
+  border-radius: var(--radius-m);
+}
+
+.heading {
+  flex: 1;
+  border-radius: var(--radius-m);
+}
+
+.content {
+  width: 100%;
+  border-radius: var(--radius-m);
+  flex: 1;
+  min-height: var(--size-28);
 }
