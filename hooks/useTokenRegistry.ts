@@ -26,8 +26,8 @@ export const useTokenRegistry = () => {
           t.functionnal.address.toLowerCase() === tokenAddress.toLowerCase() &&
           t.functionnal.chainId === chainId
       )
-      const info = await fetchTokenInfo(tokenAddress, chainId, userAddress)
       if (existing) {
+        const info = await fetchTokenInfo(tokenAddress, chainId, userAddress)
         existing.balance.amount = info.readableBalance
         existing.balance.totalPrice = info.readableBalance * existing.price.usd
         return existing
@@ -38,6 +38,7 @@ export const useTokenRegistry = () => {
         throw new Error("Token not found")
       }
 
+      const info = await fetchTokenInfo(tokenAddress, chainId, userAddress)
       const symbol = data.metadata.symbol.toLowerCase()
       const cgData = await fetchCGTokenData([symbol])
       const cgToken = cgData[symbol]
