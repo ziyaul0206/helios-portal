@@ -25,10 +25,18 @@ interface TokenData {
 //   }, {})
 // }
 
+const tempHLS = {
+  hls: {
+    price: 0.05,
+    logo: `${CDN_URL}/token/${HELIOS_TOKEN_ADDRESS}`
+  }
+}
+
 export const fetchCGTokenData = async (
   symbols: string[]
 ): Promise<Record<string, TokenData>> => {
   if (symbols.length === 0) return {}
+  if (symbols.length === 1 && symbols[0] === "hls") return tempHLS
   const ids = symbols.join(",")
 
   try {
@@ -36,15 +44,6 @@ export const fetchCGTokenData = async (
       `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&symbols=${ids}&order=market_cap_desc&per_page=100&page=1&sparkline=false`
     )
     const data: CGToken[] = await res.json()
-
-    if (data.length === 0 && symbols.includes("hls")) {
-      return {
-        hls: {
-          price: 1,
-          logo: `${CDN_URL}/token/${HELIOS_TOKEN_ADDRESS}`
-        }
-      }
-    }
 
     return data.reduce<Record<string, TokenData>>((acc, token) => {
       acc[token.symbol] = { price: token.current_price, logo: token.image }
@@ -55,12 +54,7 @@ export const fetchCGTokenData = async (
 
     // If HLS is in the list, return at least its default price
     if (symbols.includes("hls")) {
-      return {
-        hls: {
-          price: 0.05,
-          logo: `${CDN_URL}/token/${HELIOS_TOKEN_ADDRESS}`
-        }
-      }
+      return tempHLS
     }
 
     // For other cases, return an empty object

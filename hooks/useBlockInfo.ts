@@ -39,7 +39,8 @@ export const useBlockInfo = () => {
 
   const qHeliosPrice = useQuery({
     queryKey: ["tokenData", ["hls"]],
-    queryFn: () => fetchCGTokenData(["hls"])
+    queryFn: () => fetchCGTokenData(["hls"]),
+    retry: false
   })
 
   const qGasPrice = useQuery({
