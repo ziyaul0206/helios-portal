@@ -12,10 +12,17 @@ export const Validators = () => {
   return (
     <Card className={s.validators}>
       <div className={s.top}>
-        <span>Active Validators</span>
-        <span>
-          <strong>{activeValidators}</strong> / {maxValidators}
+        <span className={s.title}>
+          <strong>Selected Validators</strong>
         </span>
+        <span className={s.subtitle}>
+          <strong>{activeValidators}</strong>
+        </span>
+      </div>
+
+      <div className={s.top}>
+        <span className={s.title}>from last epoch</span>
+        <span className={s.title}>max {maxValidators}</span>
       </div>
       <Progress
         value={activeValidators}
@@ -27,7 +34,12 @@ export const Validators = () => {
           <div className={s.latestTop}>
             <div className={s.left}>Latest Governance Proposal</div>
             <div className={s.right}>
-              <div className={s.badge}>{lastProposal.status}</div>
+              <div
+                className={s.badge}
+                data-status-code={lastProposal.statusCode}
+              >
+                {lastProposal.status}
+              </div>
             </div>
           </div>
           <div className={s.latestBottom}>

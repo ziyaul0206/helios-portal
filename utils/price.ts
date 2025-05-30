@@ -57,7 +57,7 @@ export const fetchCGTokenData = async (
     if (symbols.includes("hls")) {
       return {
         hls: {
-          price: 0.5,
+          price: 0.05,
           logo: `${CDN_URL}/token/${HELIOS_TOKEN_ADDRESS}`
         }
       }
