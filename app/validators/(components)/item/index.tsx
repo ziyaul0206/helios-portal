@@ -14,6 +14,7 @@ import { HELIOS_NETWORK_ID } from "@/config/app"
 export const Item = ({
   moniker,
   validatorAddress,
+  totalBoost,
   // description,
   apr,
   status,
@@ -40,6 +41,7 @@ export const Item = ({
   const formattedApr = parseFloat(apr).toFixed(2) + "%"
   const formattedCommission =
     parseFloat(commission.commission_rates.rate) * 100 + "%"
+  const formattedBoost = parseFloat(totalBoost) * 100 + "%"
 
   // const tokens = [
   //   {
@@ -115,13 +117,13 @@ export const Item = ({
           value={`${reputation}/100`}
           color="reputation"
           icon="hugeicons:percent-circle"
-        />
-        <StatItem
-          label="Uptime"
-          value={`${uptime}%`}
-          color="uptime"
-          icon="hugeicons:award-04"
         /> */}
+        <StatItem
+          label="Boost"
+          value={formattedBoost}
+          color="uptime"
+          icon="hugeicons:rocket-01"
+        />
         <StatItem
           label="Commission"
           value={formattedCommission}

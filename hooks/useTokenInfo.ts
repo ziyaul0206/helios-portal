@@ -61,7 +61,7 @@ export const fetchTokenInfo = async (
       ]
     )
 
-    const decimalsInt = parseInt(decimals);
+    const decimalsInt = parseInt(decimals)
     const readableBalance = parseFloat(
       ethers.formatUnits(balanceRaw.toString(), decimalsInt)
     )
@@ -72,9 +72,10 @@ export const fetchTokenInfo = async (
       decimals: decimalsInt,
       totalSupply: totalSupply.toString(),
       balance: balanceRaw.toString(),
-      readableBalance,
+      readableBalance
     }
-  } catch {
+  } catch (e) {
+    console.error("Error fetching token info:", e)
     throw new Error("Token not found")
   }
 }
