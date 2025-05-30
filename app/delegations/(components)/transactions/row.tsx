@@ -73,6 +73,10 @@ export const Row = ({
   color,
   explorer
 }: TransactionRowProps) => {
+  if (!TRANSACTION_LABELS[type]) {
+    type = "UNKNOWN"
+  }
+
   const { label, variant, icon } = TRANSACTION_LABELS[type]
 
   return (
