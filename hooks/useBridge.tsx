@@ -107,12 +107,12 @@ export const useBridge = () => {
     chainId: number,
     receiverAddress: string,
     tokenAddress: string,
-    readableAmount: number,
-    readableFees: number,
+    readableAmount: string,
+    readableFees: string,
     decimals: number
   ) => {
-    const amount = ethers.parseUnits(readableAmount.toString(), decimals)
-    const fees = ethers.parseUnits(readableFees.toString(), decimals)
+    const amount = ethers.parseUnits(readableAmount, decimals)
+    const fees = ethers.parseUnits(readableFees, decimals)
     return sendToChainMutation.mutateAsync({
       chainId,
       receiverAddress,
@@ -248,12 +248,12 @@ export const useBridge = () => {
     fromChainId: number,
     receiverAddress: string,
     tokenAddress: string,
-    readableAmount: number,
-    readableFees: number,
+    readableAmount: string,
+    readableFees: string,
     decimals: number
   ) => {
-    const amount = ethers.parseUnits(readableAmount.toString(), decimals)
-    // const fees = ethers.parseUnits(readableFees.toString(), decimals)
+    const amount = ethers.parseUnits(readableAmount, decimals)
+    // const fees = ethers.parseUnits(readableFees, decimals)
     // const amountWithFees = amount + fees
 
     return sendToHeliosMutation.mutateAsync({

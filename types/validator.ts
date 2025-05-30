@@ -53,6 +53,7 @@ export interface Validator {
   unbondingTime: string
   validatorAddress: string
   delegationAuthorization: boolean
+  totalBoost: string
 }
 
 export interface ValidatorWithDelegationCommission {

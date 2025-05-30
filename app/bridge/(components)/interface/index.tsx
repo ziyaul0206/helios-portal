@@ -28,7 +28,7 @@ type BridgeForm = {
   asset: string | null
   from: HyperionChain | null
   to: HyperionChain | null
-  amount: number
+  amount: string
   address: string
   inProgress: boolean
 }
@@ -52,7 +52,7 @@ export const Interface = () => {
     asset: null,
     from: null,
     to: null,
-    amount: 0,
+    amount: "0",
     address: address || "",
     inProgress: false
   })
@@ -81,7 +81,7 @@ export const Interface = () => {
   })
 
   const tokensByChain = qEnrichedTokensByChain.data || []
-  const estimatedFees = form.amount / 100
+  const estimatedFees = (parseFloat(form.amount) / 100).toString()
   const isDeposit = heliosChainIndex
     ? form.to?.chainId === chains[heliosChainIndex].chainId
     : false
@@ -95,7 +95,7 @@ export const Interface = () => {
     setForm({
       ...form,
       asset: null,
-      amount: 0
+      amount: "0"
     })
   }
 
@@ -106,11 +106,11 @@ export const Interface = () => {
 
   const handleChangeChain = (chain: HyperionChain) => {
     if (chainType === "from" && chain.chainId === form.to?.chainId) {
-      setForm({ ...form, from: chain, to: form.from, amount: 0, asset: null })
+      setForm({ ...form, from: chain, to: form.from, amount: "0", asset: null })
     } else if (chainType === "to" && chain.chainId === form.from?.chainId) {
-      setForm({ ...form, to: chain, from: form.to, amount: 0, asset: null })
+      setForm({ ...form, to: chain, from: form.to, amount: "0", asset: null })
     } else {
-      setForm({ ...form, [chainType]: chain, amount: 0, asset: null })
+      setForm({ ...form, [chainType]: chain, amount: "0", asset: null })
     }
     setOpenChain(false)
   }
@@ -126,7 +126,10 @@ export const Interface = () => {
   }
 
   const handleMaxAmount = () => {
-    setForm({ ...form, amount: tokenInfo.data?.readableBalance || 0 })
+    setForm({
+      ...form,
+      amount: tokenInfo.data?.readableBalance.toString() || "0"
+    })
   }
 
   const handleCopyAddress = () => {
@@ -136,15 +139,23 @@ export const Interface = () => {
 
   const handleTokenSearchChange = (e: { target: { value: string } }) => {
     const value = e.target.value
-    setForm({ ...form, asset: value, amount: 0 })
+    setForm({ ...form, asset: value, amount: "0" })
   }
 
   const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value === "" ? 0 : parseFloat(e.target.value)
-    if (tokenInfo.data && value > tokenInfo.data.readableBalance) {
-      value = tokenInfo.data.readableBalance
+    const inputValue = e.target.value
+    const normalizedValue = inputValue.replace(",", ".")
+
+    if (!/^[0-9.,]*$/.test(normalizedValue)) return
+
+    if (normalizedValue === "0." || normalizedValue === "0,") {
+      setForm({ ...form, amount: "0." })
+      return
     }
-    setForm({ ...form, amount: value })
+
+    const cleaned = normalizedValue.replace(/^0+(?=\d)/, "")
+
+    setForm({ ...form, amount: cleaned === "" ? "0" : cleaned })
   }
 
   const handleSubmit = async () => {
@@ -158,7 +169,7 @@ export const Interface = () => {
       return
     }
 
-    if (form.amount <= 0) {
+    if (parseFloat(form.amount) <= 0) {
       toast.error("Amount must be greater than zero.")
       return
     }
@@ -238,10 +249,12 @@ export const Interface = () => {
     }
   }, [form.from])
 
+  const amountNb = parseFloat(form.amount)
   const isDisabled =
     form.inProgress ||
     !tokenInfo.data ||
-    form.amount === 0 ||
+    amountNb === 0 ||
+    (tokenInfo.data && amountNb > tokenInfo.data.readableBalance) ||
     !form.address ||
     form.from?.chainId === form.to?.chainId
 
@@ -392,9 +405,7 @@ export const Interface = () => {
               <input
                 id="amount"
                 className={s.value}
-                type="number"
-                step="0.000001"
-                min="0"
+                type="text"
                 value={form.amount}
                 onChange={handleAmountChange}
               />
@@ -402,7 +413,7 @@ export const Interface = () => {
                 Amount
                 {tokenInfo.data && (
                   <small>
-                    Balance: {formatNumber(tokenInfo.data?.readableBalance)}{" "}
+                    Balance: {formatNumber(tokenInfo.data?.readableBalance, 6)}{" "}
                     {tokenInfo.data.symbol}
                   </small>
                 )}

@@ -65,5 +65,26 @@
     text-transform: uppercase;
     border-radius: var(--radius-m);
     padding: 0.35em 0.75em;
+
+    &[data-status-code="4"] {
+      background-color: var(--danger-low);
+    }
+  }
+}
+
+.title,
+.subtitle {
+  font-size: 0.6em;
+  color: var(--text-tertiary);
+  line-height: 1.2;
+
+  & + & {
+    margin-top: 4px;
+  }
+
+  strong {
+    font-size: 16px;
+    color: var(--text-primary);
+    margin-right: 4px;
   }
 }

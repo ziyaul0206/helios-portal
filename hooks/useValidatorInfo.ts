@@ -51,6 +51,7 @@ export const useValidatorInfo = () => {
   const networkSecurity = getNetworkSecurity(activeValidators)
 
   return {
+    validators: qValidators.data || [],
     activeValidators,
     maxValidators: size,
     avgApr,

@@ -26,7 +26,7 @@ export const ModalUnstake = ({
   open,
   setOpen
 }: ModalUnstakeProps) => {
-  const [amount, setAmount] = useState(0)
+  const [amount, setAmount] = useState("0")
   const [selectedAsset, setSelectedAsset] = useState("")
   const { undelegate, isLoading, feedback } = useDelegate()
 
@@ -60,6 +60,29 @@ export const ModalUnstake = ({
     }
   }
 
+  const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value
+    const normalizedValue = inputValue.replace(",", ".")
+
+    if (!/^[0-9.,]*$/.test(normalizedValue)) return
+
+    if (normalizedValue === "0." || normalizedValue === "0,") {
+      setAmount("0.")
+      return
+    }
+
+    const cleaned = normalizedValue.replace(/^0+(?=\d)/, "")
+
+    setAmount(cleaned === "" ? "0" : cleaned)
+  }
+
+  const amountNb = parseFloat(amount)
+  const isDisabled =
+    isLoading ||
+    !selectedAsset ||
+    amountNb <= 0 ||
+    (enrichedAsset && amountNb >= enrichedAsset.balance.amount)
+
   return (
     <Modal
       title={title}
@@ -85,21 +108,14 @@ export const ModalUnstake = ({
         <Input
           icon={enrichedAsset.display.symbolIcon}
           label="Amount"
-          type="number"
-          step="0.000001"
-          min="0"
+          type="text"
           value={amount}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            const value = e.target.value === "" ? 0 : parseFloat(e.target.value)
-            setAmount(value)
-          }}
+          onChange={handleAmountChange}
           balance={enrichedAsset.balance.amount}
           showMaxButton
-          onMaxClick={() => {
-            const roundedAmount =
-              Math.floor(enrichedAsset.balance.amount * 1000000) / 1000000
-            setAmount(roundedAmount)
-          }}
+          onMaxClick={() =>
+            setAmount(Math.floor(enrichedAsset.balance.amount).toString())
+          }
         />
       )}
 
@@ -126,7 +142,7 @@ export const ModalUnstake = ({
           className={s.confirm}
           onClick={handleUnstake}
           variant="warning"
-          disabled={!selectedAsset || amount <= 0 || isLoading}
+          disabled={isDisabled}
         >
           Confirm Unstake
         </Button>

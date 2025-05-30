@@ -16,7 +16,8 @@ export const Stats = () => {
   return (
     <Card className={s.stats} auto>
       <Stat
-        title="Active Validators"
+        title="Selected Validators"
+        subtitle="from last epoch, max 100"
         icon="hugeicons:checkmark-square-01"
         bottom={
           <Progress
@@ -26,8 +27,7 @@ export const Stats = () => {
           />
         }
       >
-        <strong>{activeValidators}</strong>
-        <span>/{maxValidators}</span>
+        <strong>{activeValidators} validators</strong>
       </Stat>
       <Stat title="Average APY" icon="hugeicons:percent-square">
         <strong>{avgApr.toFixed(2)}</strong>

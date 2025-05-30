@@ -26,7 +26,7 @@ export const ModalStake = ({
   setOpen
 }: ModalStakeProps) => {
   const router = useRouter()
-  const [amount, setAmount] = useState(0)
+  const [amount, setAmount] = useState("0")
   const [selectedAsset, setSelectedAsset] = useState("")
   const { assets } = useAssetsInfo()
   const { delegate, isLoading, feedback, resetFeedback } = useDelegate()
@@ -45,7 +45,7 @@ export const ModalStake = ({
     try {
       await delegate(
         validatorAddress,
-        amount.toString(),
+        amount,
         enrichedAsset.enriched.functionnal.denom,
         enrichedAsset.enriched.functionnal.decimals
       )
@@ -63,6 +63,29 @@ export const ModalStake = ({
       })
     }
   }
+
+  const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value
+    const normalizedValue = inputValue.replace(",", ".")
+
+    if (!/^[0-9.,]*$/.test(normalizedValue)) return
+
+    if (normalizedValue === "0." || normalizedValue === "0,") {
+      setAmount("0.")
+      return
+    }
+
+    const cleaned = normalizedValue.replace(/^0+(?=\d)/, "")
+
+    setAmount(cleaned === "" ? "0" : cleaned)
+  }
+
+  const amountNb = parseFloat(amount)
+  const isDisabled =
+    isLoading ||
+    !selectedAsset ||
+    amountNb <= 0 ||
+    (enrichedAsset && amountNb >= enrichedAsset.enriched.balance.amount)
 
   return (
     <Modal
@@ -89,18 +112,15 @@ export const ModalStake = ({
         <Input
           icon={enrichedAsset.enriched.display.symbolIcon}
           label="Amount"
-          type="number"
-          step="0.000001"
-          min="0"
+          type="text"
           value={amount}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            const value = e.target.value === "" ? 0 : parseFloat(e.target.value)
-            setAmount(value)
-          }}
+          onChange={handleAmountChange}
           balance={enrichedAsset.enriched.balance.amount}
           showMaxButton
           onMaxClick={() =>
-            setAmount(Math.floor(enrichedAsset.enriched.balance.amount))
+            setAmount(
+              Math.floor(enrichedAsset.enriched.balance.amount).toString()
+            )
           }
         />
       )}
@@ -116,7 +136,7 @@ export const ModalStake = ({
           icon="hugeicons:add-circle"
           className={s.confirm}
           onClick={handleStake}
-          disabled={!selectedAsset || amount <= 0 || isLoading}
+          disabled={isDisabled}
         >
           Confirm Stake
         </Button>

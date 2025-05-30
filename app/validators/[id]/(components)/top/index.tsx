@@ -49,6 +49,7 @@ export const Top = () => {
   const formattedApr = parseFloat(validator.apr).toFixed(2) + "%"
   const formattedCommission =
     parseFloat(validator.commission.commission_rates.rate) * 100 + "%"
+  const formattedBoost = parseFloat(validator.totalBoost) * 100 + "%"
   const tokens = delegation.assets
 
   const totalDelegated = tokens.reduce(
@@ -152,15 +153,14 @@ export const Top = () => {
             color="reputation"
             icon="hugeicons:percent-circle"
             bottom="Based on historical performance"
-          />
+          /> */}
           <StatItem
             className={s.stat}
-            label="Uptime"
-            value="98.9%"
+            label="Boost"
+            value={formattedBoost}
             color="uptime"
-            icon="hugeicons:award-04"
-            bottom="Last 30 days"
-          /> */}
+            icon="hugeicons:rocket-01"
+          />
           <StatItem
             className={s.stat}
             label="Commission"
