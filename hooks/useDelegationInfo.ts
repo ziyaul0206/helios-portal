@@ -50,12 +50,19 @@ export const useDelegationInfo = () => {
         rewards: number
         rewardsPrice: number
       }> = []
-
       for (const delegation of qDelegations.data!) {
         const validator = validatorsMap.get(delegation.validatorAddress)
         if (!validator) continue
 
         const enrichedTokens: TokenExtended[] = []
+
+        delegation.assets.push({
+          denom: "helios",
+          baseAmount: "",
+          amount: delegation.totalBoost,
+          weightedAmount: "",
+          contractAddress: HELIOS_TOKEN_ADDRESS
+        })
 
         for (const asset of delegation.assets) {
           const token = await getTokenByAddress(

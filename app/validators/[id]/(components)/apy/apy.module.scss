@@ -74,3 +74,32 @@
     margin: auto;
   }
 }
+
+.block {
+  @include block;
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--padding) * 0.5);
+
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+}
+
+.details {
+  .label {
+    color: var(--text-tertiary);
+  }
+
+  .value {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+  }
+}

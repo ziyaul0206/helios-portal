@@ -41,7 +41,7 @@ export const Item = ({
   const formattedApr = parseFloat(apr).toFixed(2) + "%"
   const formattedCommission =
     parseFloat(commission.commission_rates.rate) * 100 + "%"
-  const formattedBoost = parseFloat(totalBoost) * 100 + "%"
+  const formattedBoost = parseFloat(totalBoost) * 100 + "%" // TEMP
 
   // const tokens = [
   //   {

@@ -14,11 +14,11 @@ export interface HyperionBridgeTx {
   sender: string
   destAddress: string
   receivedToken: {
-    contract: string
+    contract?: string
     amount: string
   }
   sentToken: {
-    contract: string
+    contract?: string
     amount: string
   }
   receivedFee: {
