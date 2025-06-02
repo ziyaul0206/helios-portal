@@ -9,16 +9,18 @@ import { StatItem } from "../../../(components)/item/stat"
 import s from "./top.module.scss"
 import { useParams } from "next/navigation"
 import { useValidatorDetail } from "@/hooks/useValidatorDetail"
-import { useChainId, useSwitchChain } from "wagmi"
+import { useAccount, useChainId, useSwitchChain } from "wagmi"
 import { HELIOS_NETWORK_ID } from "@/config/app"
 import { useState } from "react"
 import { ModalStake } from "@/app/delegations/(components)/active/stake"
 import { Message } from "@/components/message"
 
 export const Top = () => {
+  const { isConnected } = useAccount()
   const params = useParams()
   const validatorId = params.id as string
-  const { validator, delegation } = useValidatorDetail(validatorId)
+  const { validator, delegation, userHasDelegated } =
+    useValidatorDetail(validatorId)
   const chainId = useChainId()
   const { switchChain } = useSwitchChain()
   const [openStake, setOpenStake] = useState(false)
@@ -45,12 +47,13 @@ export const Top = () => {
   // ]
 
   const isActive = validator.status === 3
-  const enableDelegation = validator.delegationAuthorization
+  const enableDelegation = validator.delegationAuthorization && isConnected
   const formattedApr = parseFloat(validator.apr).toFixed(2) + "%"
   const formattedCommission =
     parseFloat(validator.commission.commission_rates.rate) * 100 + "%"
   const formattedBoost = parseFloat(validator.totalBoost) * 100 + "%"
   const tokens = delegation.assets
+  const minDelegation = validator.minDelegation
 
   const totalDelegated = tokens.reduce(
     (acc, token) => acc + token.balance.totalPrice,
@@ -95,6 +98,8 @@ export const Top = () => {
             <ModalStake
               title={`Stake on ${validator.moniker}`}
               validatorAddress={validator.validatorAddress}
+              minDelegation={minDelegation}
+              hasAlreadyDelegated={userHasDelegated}
               open={openStake}
               setOpen={setOpenStake}
             />
