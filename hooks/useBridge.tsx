@@ -44,7 +44,7 @@ export const useBridge = () => {
     queryKey: ["allHyperionTxs"],
     queryFn: async () => {
       const res = await getAllHyperionTransferTxs()
-      if (res) return res.slice(0, 5)
+      if (res) return res.sort((a, b) => b.id - a.id).slice(0, 5)
       return []
     }
   })
