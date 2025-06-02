@@ -23,6 +23,7 @@ import { getBestGasPrice } from "@/lib/utils/gas"
 import { useTokenRegistry } from "./useTokenRegistry"
 import { TransactionLight } from "@/types/transaction"
 import { Feedback } from "@/types/feedback"
+import { HELIOS_NETWORK_ID } from "@/config/app"
 
 export const useBridge = () => {
   const { address } = useAccount()
@@ -41,7 +42,11 @@ export const useBridge = () => {
 
   const qAllHyperionTxs = useQuery({
     queryKey: ["allHyperionTxs"],
-    queryFn: () => getAllHyperionTransferTxs(toHex(5))
+    queryFn: async () => {
+      const res = await getAllHyperionTransferTxs()
+      if (res) return res.sort((a, b) => b.id - a.id).slice(0, 5)
+      return []
+    }
   })
 
   const enrichedHyperionTxs = useQuery({
@@ -54,7 +59,9 @@ export const useBridge = () => {
             tx.direction === "IN"
               ? tx.receivedToken.contract
               : tx.sentToken.contract
-          const token = await getTokenByAddress(contractAddress, tx.chainId)
+          const token = contractAddress
+            ? await getTokenByAddress(contractAddress, HELIOS_NETWORK_ID)
+            : null
 
           return {
             type: tx.direction === "IN" ? "BRIDGE_IN" : "BRIDGE_OUT",

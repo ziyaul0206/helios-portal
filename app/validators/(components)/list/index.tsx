@@ -23,8 +23,6 @@ export const List = () => {
     validator.moniker.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
-  console.log(filteredValidators)
-
   return (
     <>
       <Card auto>

@@ -47,8 +47,6 @@ export const useRewards = () => {
           .claimRewards(address, 10)
           .send({ from: address, gas: "500000" })
 
-        // console.log("claimAll")
-
         setFeedback({
           status: "primary",
           message: `Transaction sent (hash: ${tx.transactionHash}), waiting for confirmation...`
@@ -79,10 +77,10 @@ export const useRewards = () => {
   const qWithdrawDelegatorRewards = useMutation({
     mutationFn: async (validatorAddress: string) => {
       if (!web3Provider) throw new Error("No wallet connected")
-        
-        if (chainId !== HELIOS_NETWORK_ID) {
-          switchChain({ chainId: HELIOS_NETWORK_ID })
-        }
+
+      if (chainId !== HELIOS_NETWORK_ID) {
+        switchChain({ chainId: HELIOS_NETWORK_ID })
+      }
 
       try {
         setFeedback({

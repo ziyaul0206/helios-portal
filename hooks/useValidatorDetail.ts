@@ -1,17 +1,28 @@
 import { useQuery } from "@tanstack/react-query"
-import { getValidatorWithHisDelegationAndCommission } from "@/helpers/rpc-calls"
+import {
+  getDelegation,
+  getValidatorWithHisDelegationAndCommission
+} from "@/helpers/rpc-calls"
 import { useTokenRegistry } from "@/hooks/useTokenRegistry"
 import { ethers } from "ethers"
 import { TokenExtended } from "@/types/token"
 import { HELIOS_NETWORK_ID } from "@/config/app"
+import { useAccount } from "wagmi"
 
 export const useValidatorDetail = (address: string) => {
+  const { address: userAddress } = useAccount()
   const { getTokenByAddress } = useTokenRegistry()
 
   const qValidatorDetail = useQuery({
     queryKey: ["validatorDetail", address],
     queryFn: () => getValidatorWithHisDelegationAndCommission(address),
     enabled: !!address
+  })
+
+  const qDelegationDetail = useQuery({
+    queryKey: ["delegationDetail", userAddress, address],
+    queryFn: () => getDelegation(userAddress!, address),
+    enabled: !!address && !!userAddress
   })
 
   const enrichedAssetsQuery = useQuery({
@@ -59,6 +70,7 @@ export const useValidatorDetail = (address: string) => {
       assets: enrichedAssetsQuery.data || []
     },
     commission: qValidatorDetail.data?.commission,
+    userHasDelegated: !!qDelegationDetail.data,
     isLoading: qValidatorDetail.isLoading || enrichedAssetsQuery.isLoading,
     error: qValidatorDetail.error || enrichedAssetsQuery.error
   }

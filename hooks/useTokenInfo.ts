@@ -42,9 +42,10 @@ export const fetchTokenInfo = async (
   try {
     const web3 = new Web3(rpcUrl)
 
-    const code = await web3.eth.getCode(tokenAddress)
-    if (code === "0x") {
-      throw new Error("Address is not a contract")
+    if (!tokenAddress.startsWith("0x")) {
+      throw new Error(
+        "Address is not a contract : " + tokenAddress + " , " + chainId
+      )
     }
 
     const contract = new web3.eth.Contract(erc20Abi, tokenAddress)
@@ -75,7 +76,7 @@ export const fetchTokenInfo = async (
       readableBalance
     }
   } catch (e) {
-    console.error("Error fetching token info:", e)
+    console.error("Error fetching token info:", e, tokenAddress, chainId)
     throw new Error("Token not found")
   }
 }

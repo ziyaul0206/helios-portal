@@ -8,6 +8,7 @@ import { Validator, ValidatorWithDelegationCommission } from "@/types/validator"
 import { WhitelistedAsset } from "@/types/whitelistedAsset"
 import { HyperionBridgeTx, HyperionChain } from "@/types/hyperion"
 import { TokenDenom } from "@/types/denom"
+import { toHex } from "viem"
 
 export const getTokenBalance = (
   address: string,
@@ -132,5 +133,5 @@ export const getLastTransactions = (size: string) =>
 export const getAccountLastTransactions = (address: string) =>
   request<TransactionLast[]>("eth_getAccountLastTransactionsInfo", [address])
 
-export const getAllHyperionTransferTxs = async (size: string) =>
-  request<HyperionBridgeTx[]>("eth_getAllHyperionTransferTxs", [size])
+export const getAllHyperionTransferTxs = async () =>
+  request<HyperionBridgeTx[]>("eth_getAllHyperionTransferTxs", [toHex(1)])

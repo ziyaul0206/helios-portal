@@ -1,4 +1,3 @@
-import { fromWeiToEther } from "@/utils/number"
 import { TableCell, TableRow } from "../table"
 import s from "./transactions.module.scss"
 import { TransactionLight } from "@/types/transaction"
@@ -6,6 +5,7 @@ import { EXPLORER_URL } from "@/config/app"
 import Category from "./category"
 import { Button } from "../button"
 import { Symbol } from "@/components/symbol"
+import { ethers } from "ethers"
 
 export const TransactionsLine = (transaction: TransactionLight) => {
   const explorerLink = EXPLORER_URL + "/tx/" + transaction.hash
@@ -26,7 +26,10 @@ export const TransactionsLine = (transaction: TransactionLight) => {
                   color={transaction.token.display.color}
                 />
               )}
-              {fromWeiToEther(transaction.amount)}{" "}
+              {ethers.formatUnits(
+                transaction.amount,
+                transaction.token?.functionnal.decimals
+              )}{" "}
               {transaction.token?.display.symbol.toUpperCase()}
             </strong>
           </>

@@ -8,6 +8,9 @@ import { RechartsPie, RechartsPieLegend } from "@/components/recharts/pie"
 import s from "./apy.module.scss"
 import { useParams } from "next/navigation"
 import { useValidatorDetail } from "@/hooks/useValidatorDetail"
+import { ethers } from "ethers"
+import { Symbol } from "@/components/symbol"
+import { TOKEN_COLORS } from "@/config/constants"
 
 export const Apy = () => {
   const params = useParams()
@@ -59,6 +62,8 @@ export const Apy = () => {
   //   { name: "BNB", value: 250000, percentage: 10, color: TOKEN_COLORS.bnb }
   // ]
 
+  const formattedBoost = ethers.formatEther(validator.totalBoost.split(".")[0])
+
   return (
     <Card auto>
       <Heading icon="hugeicons:shield-energy" title="APY Breakdown & Boost" />
@@ -95,6 +100,18 @@ export const Apy = () => {
         <h3>Asset Distribution & Delegation Breakdown</h3>
         <RechartsPie data={data} className={s.pie} />
         <RechartsPieLegend data={data} />
+      </div>
+      <div className={s.block}>
+        <h3>Boost Details</h3>
+        <ul className={s.details}>
+          <li>
+            <span className={s.label}>Total Boost</span>
+            <span className={s.value}>
+              <Symbol icon={"helios"} color={TOKEN_COLORS["hls"]} />
+              {formattedBoost} HLS
+            </span>
+          </li>
+        </ul>
       </div>
     </Card>
   )

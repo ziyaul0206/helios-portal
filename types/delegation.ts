@@ -17,4 +17,5 @@ export interface Delegation {
   shares: string
   assets: DelegationAsset[]
   rewards: DelegationReward
+  totalBoost: string
 }
