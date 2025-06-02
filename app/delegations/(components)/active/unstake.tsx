@@ -93,7 +93,10 @@ export const ModalUnstake = ({
     >
       <Select
         value={selectedAsset}
-        onChange={(evt) => setSelectedAsset(evt.target.value)}
+        onChange={(evt) => {
+          setSelectedAsset(evt.target.value)
+          setAmount("0")
+        }}
         placeholder="Please select an asset"
         options={
           delegatedAssets?.map((asset) => ({
@@ -113,9 +116,7 @@ export const ModalUnstake = ({
           onChange={handleAmountChange}
           balance={enrichedAsset.balance.amount}
           showMaxButton
-          onMaxClick={() =>
-            setAmount(Math.floor(enrichedAsset.balance.amount).toString())
-          }
+          onMaxClick={() => setAmount(enrichedAsset.balance.amount.toString())}
         />
       )}
 

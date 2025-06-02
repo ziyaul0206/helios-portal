@@ -11,10 +11,14 @@ import s from "./active.module.scss"
 import { useAssetsInfo } from "@/hooks/useAssetsInfo"
 import { useDelegate } from "@/hooks/useDelegate"
 import { Message } from "@/components/message"
+import { HELIOS_TOKEN_ADDRESS } from "@/config/app"
+import { ethers } from "ethers"
 
 interface ModalStakeProps {
   title: string
   validatorAddress: string
+  minDelegation: string
+  hasAlreadyDelegated: boolean
   open: boolean
   setOpen: (open: boolean) => void
 }
@@ -22,6 +26,8 @@ interface ModalStakeProps {
 export const ModalStake = ({
   title,
   validatorAddress,
+  minDelegation,
+  hasAlreadyDelegated,
   open,
   setOpen
 }: ModalStakeProps) => {
@@ -30,10 +36,13 @@ export const ModalStake = ({
   const [selectedAsset, setSelectedAsset] = useState("")
   const { assets } = useAssetsInfo()
   const { delegate, isLoading, feedback, resetFeedback } = useDelegate()
+  const formattedMinDelegation = parseFloat(ethers.formatEther(minDelegation))
 
   const enrichedAsset = assets?.find(
     (asset) => asset.enriched.functionnal.address === selectedAsset
   )
+  const assetIsHLS =
+    enrichedAsset?.enriched.functionnal.address === HELIOS_TOKEN_ADDRESS
 
   const handleStake = async () => {
     if (!enrichedAsset) {
@@ -85,7 +94,8 @@ export const ModalStake = ({
     isLoading ||
     !selectedAsset ||
     amountNb <= 0 ||
-    (enrichedAsset && amountNb >= enrichedAsset.enriched.balance.amount)
+    (enrichedAsset && amountNb > enrichedAsset.enriched.balance.amount) ||
+    (!hasAlreadyDelegated && parseFloat(amount) < formattedMinDelegation)
 
   return (
     <Modal
@@ -97,7 +107,10 @@ export const ModalStake = ({
     >
       <Select
         value={selectedAsset}
-        onChange={(evt) => setSelectedAsset(evt.target.value)}
+        onChange={(evt) => {
+          setSelectedAsset(evt.target.value)
+          setAmount("0")
+        }}
         placeholder="Please select an asset"
         options={
           assets?.map((asset) => ({
@@ -108,21 +121,34 @@ export const ModalStake = ({
         label="Choose an asset"
       />
 
-      {enrichedAsset && (
-        <Input
-          icon={enrichedAsset.enriched.display.symbolIcon}
-          label="Amount"
-          type="text"
-          value={amount}
-          onChange={handleAmountChange}
-          balance={enrichedAsset.enriched.balance.amount}
-          showMaxButton
-          onMaxClick={() =>
-            setAmount(
-              Math.floor(enrichedAsset.enriched.balance.amount).toString()
-            )
-          }
-        />
+      {assetIsHLS && (
+        <Message title="About HLS for boosting purpose" variant="warning">
+          {`You will need to unstake all other assets to withdraw them, it's a way to secure the network and validators as they also take the risk of accepting your assets.`}
+        </Message>
+      )}
+
+      {enrichedAsset &&
+        ((formattedMinDelegation > 0 && !hasAlreadyDelegated && assetIsHLS) ||
+          formattedMinDelegation === 0) && (
+          <Input
+            icon={enrichedAsset.enriched.display.symbolIcon}
+            label="Amount"
+            type="text"
+            value={amount}
+            onChange={handleAmountChange}
+            balance={enrichedAsset.enriched.balance.amount}
+            showMaxButton
+            onMaxClick={() =>
+              setAmount(enrichedAsset.enriched.balance.amount.toString())
+            }
+          />
+        )}
+
+      {formattedMinDelegation > 0 && !hasAlreadyDelegated && (
+        <Message
+          title="Minimum delegation"
+          variant="warning"
+        >{`The minimum delegation is ${formattedMinDelegation} HLS`}</Message>
       )}
       <div className={s.group}>
         <Button
@@ -141,6 +167,7 @@ export const ModalStake = ({
           Confirm Stake
         </Button>
       </div>
+
       {feedback && feedback.message !== "" && (
         <Message title="Staking feedback" variant={feedback.status}>
           {feedback.message}

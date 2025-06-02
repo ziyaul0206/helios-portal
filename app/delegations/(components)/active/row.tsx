@@ -11,7 +11,7 @@ import s from "./active.module.scss"
 import { ModalStake } from "./stake"
 import { ModalUnstake } from "./unstake"
 import { useChainId, useSwitchChain } from "wagmi"
-import { HELIOS_NETWORK_ID } from "@/config/app"
+import { HELIOS_NETWORK_ID, HELIOS_TOKEN_ADDRESS } from "@/config/app"
 import { ModalClaim } from "../claim/modal"
 
 export const Row = ({
@@ -59,7 +59,10 @@ ValidatorRow) => {
                   icon={asset.display.symbolIcon}
                   color={asset.display.color}
                 />
-                {asset.display.name}
+                {asset.display.name}{" "}
+                {asset.functionnal.address === HELIOS_TOKEN_ADDRESS
+                  ? "Boost"
+                  : ""}
               </div>
               <div className={s.amount}>{asset.balance.amount}</div>
             </li>
@@ -108,6 +111,8 @@ ValidatorRow) => {
           />
           <ModalStake
             title={`Stake on ${name}`}
+            minDelegation={"0"}
+            hasAlreadyDelegated={true}
             validatorAddress={address}
             open={openStake}
             setOpen={setOpenStake}

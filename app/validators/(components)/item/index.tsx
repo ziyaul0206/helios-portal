@@ -8,7 +8,7 @@ import { StatItem } from "./stat"
 import { useValidatorDetail } from "@/hooks/useValidatorDetail"
 import { useState } from "react"
 import { ModalStake } from "@/app/delegations/(components)/active/stake"
-import { useChainId, useSwitchChain } from "wagmi"
+import { useAccount, useChainId, useSwitchChain } from "wagmi"
 import { HELIOS_NETWORK_ID } from "@/config/app"
 
 export const Item = ({
@@ -19,7 +19,8 @@ export const Item = ({
   apr,
   status,
   delegationAuthorization,
-  commission
+  commission,
+  minDelegation
 }: Validator) => {
   // const [favorite, setFavorite] = useState(false)
 
@@ -33,35 +34,16 @@ export const Item = ({
   // }
   const [openStake, setOpenStake] = useState(false)
   const chainId = useChainId()
+  const { isConnected } = useAccount()
   const { switchChain } = useSwitchChain()
-  const { delegation } = useValidatorDetail(validatorAddress)
+  const { delegation, userHasDelegated } = useValidatorDetail(validatorAddress)
 
   const isActive = status === 3
-  const enableDelegation = delegationAuthorization
+  const enableDelegation = delegationAuthorization && isConnected
   const formattedApr = parseFloat(apr).toFixed(2) + "%"
   const formattedCommission =
     parseFloat(commission.commission_rates.rate) * 100 + "%"
   const formattedBoost = parseFloat(totalBoost) * 100 + "%" // TEMP
-
-  // const tokens = [
-  //   {
-  //     ...getToken("usdt"),
-  //     amount: 1000000
-  //   },
-  //   {
-  //     ...getToken("hls"),
-  //     amount: 1000000
-  //   },
-  //   {
-  //     ...getToken("eth"),
-  //     amount: 300000
-  //   },
-  //   {
-  //     ...getToken("bnb"),
-  //     amount: 200000
-  //   }
-  // ]
-
   const tokens = delegation.assets
 
   const totalDelegated = tokens.reduce(
@@ -112,23 +94,23 @@ export const Item = ({
           color="apy"
           icon="hugeicons:shield-energy"
         />
-        {/* <StatItem
-          label="Reputation"
-          value={`${reputation}/100`}
-          color="reputation"
-          icon="hugeicons:percent-circle"
-        /> */}
-        <StatItem
-          label="Boost"
-          value={formattedBoost}
-          color="uptime"
-          icon="hugeicons:rocket-01"
-        />
         <StatItem
           label="Commission"
           value={formattedCommission}
           color="commission"
           icon="hugeicons:clock-01"
+        />
+        <StatItem
+          label="Min Delegation"
+          value={`${minDelegation} HLS`}
+          color="reputation"
+          icon="hugeicons:balance-scale"
+        />
+        <StatItem
+          label="Boost Share"
+          value={formattedBoost}
+          color="uptime"
+          icon="hugeicons:rocket-01"
         />
       </div>
       {tokens.length > 0 && (
@@ -180,6 +162,8 @@ export const Item = ({
         <ModalStake
           title={`Stake on ${moniker}`}
           validatorAddress={validatorAddress}
+          minDelegation={minDelegation}
+          hasAlreadyDelegated={userHasDelegated}
           open={openStake}
           setOpen={setOpenStake}
         />

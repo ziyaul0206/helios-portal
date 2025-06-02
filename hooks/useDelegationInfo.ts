@@ -54,17 +54,21 @@ export const useDelegationInfo = () => {
         const validator = validatorsMap.get(delegation.validatorAddress)
         if (!validator) continue
 
-        const enrichedTokens: TokenExtended[] = []
+        const enrichedTokens: (TokenExtended & { isBoost?: boolean })[] = []
 
-        delegation.assets.push({
-          denom: "helios",
-          baseAmount: "",
-          amount: delegation.totalBoost,
-          weightedAmount: "",
-          contractAddress: HELIOS_TOKEN_ADDRESS
-        })
+        const assets = [
+          ...delegation.assets,
+          {
+            denom: "helios",
+            baseAmount: "",
+            amount: delegation.totalBoost,
+            weightedAmount: "",
+            contractAddress: HELIOS_TOKEN_ADDRESS
+          }
+        ]
 
-        for (const asset of delegation.assets) {
+        // Utilisez 'assets' au lieu de 'delegation.assets' dans la suite du code
+        for (const asset of assets) {
           const token = await getTokenByAddress(
             asset.contractAddress,
             HELIOS_NETWORK_ID
