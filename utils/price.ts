@@ -11,53 +11,78 @@ interface TokenData {
   logo: string
 }
 
-// export const fetchCGTokenData = async (
-//   symbols: string[]
-// ): Promise<Record<string, TokenData>> => {
-//   if (symbols.length === 0) return {}
-
-//   return symbols.reduce<Record<string, TokenData>>((acc, symbol) => {
-//     acc[symbol.toLowerCase()] = {
-//       price: (Math.random() * 10000) / 10000,
-//       logo: `https://via.placeholder.com/32?text=${symbol[0].toUpperCase()}`
-//     }
-//     return acc
-//   }, {})
-// }
-
-const tempHLS = {
+const tempHLS: Record<string, TokenData> = {
   hls: {
     price: 0.05,
     logo: `${CDN_URL}/token/${HELIOS_TOKEN_ADDRESS}`
   }
 }
 
+const cgCache = new Map<string, TokenData>()
+const inFlightCGRequests = new Map<string, Promise<Record<string, TokenData>>>()
+
 export const fetchCGTokenData = async (
   symbols: string[]
 ): Promise<Record<string, TokenData>> => {
   if (symbols.length === 0) return {}
-  if (symbols.length === 1 && symbols[0] === "hls") return tempHLS
-  const ids = symbols.join(",")
 
-  try {
-    const res = await fetch(
-      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&symbols=${ids}&order=market_cap_desc&per_page=100&page=1&sparkline=false`
-    )
-    const data: CGToken[] = await res.json()
+  const result: Record<string, TokenData> = {}
+  const toFetch: string[] = []
 
-    return data.reduce<Record<string, TokenData>>((acc, token) => {
-      acc[token.symbol] = { price: token.current_price, logo: token.image }
-      return acc
-    }, {})
-  } catch (error) {
-    console.error("Error while fetching prices:", error)
-
-    // If HLS is in the list, return at least its default price
-    if (symbols.includes("hls")) {
-      return tempHLS
+  for (const symbol of symbols.map((s) => s.toLowerCase())) {
+    if (symbol === "hls") {
+      result[symbol] = tempHLS[symbol]
+    } else if (cgCache.has(symbol)) {
+      result[symbol] = cgCache.get(symbol)!
+    } else {
+      toFetch.push(symbol)
     }
-
-    // For other cases, return an empty object
-    return {}
   }
+
+  if (toFetch.length === 0) return result
+
+  const key = toFetch.sort().join(",")
+
+  if (inFlightCGRequests.has(key)) {
+    const pending = await inFlightCGRequests.get(key)!
+    return { ...result, ...pending }
+  }
+
+  const promise = (async () => {
+    try {
+      const res = await fetch(
+        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&symbols=${toFetch.join(
+          ","
+        )}&order=market_cap_desc&per_page=100&page=1&sparkline=false`
+      )
+
+      if (!res.ok) throw new Error(`CoinGecko error: ${res.status}`)
+
+      const data: CGToken[] = await res.json()
+
+      const fetched: Record<string, TokenData> = {}
+
+      for (const token of data) {
+        const symbol = token.symbol.toLowerCase()
+        const tokenData = {
+          price: token.current_price,
+          logo: token.image
+        }
+        fetched[symbol] = tokenData
+        cgCache.set(symbol, tokenData)
+      }
+
+      return fetched
+    } catch (err) {
+      console.error("Error while fetching CG token data:", err)
+      return {}
+    } finally {
+      inFlightCGRequests.delete(key)
+    }
+  })()
+
+  inFlightCGRequests.set(key, promise)
+
+  const fetched = await promise
+  return { ...result, ...fetched }
 }
