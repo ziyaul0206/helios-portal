@@ -23,7 +23,7 @@ export interface ButtonProps {
   variant?: Variants
   size?: Sizes
   hovering?: boolean
-  onClick?: (e: Event) => void
+  onClick?: React.MouseEventHandler<HTMLElement>
   isActive?: boolean
   isNav?: boolean
 }
