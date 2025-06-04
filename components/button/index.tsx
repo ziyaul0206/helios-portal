@@ -23,7 +23,7 @@ export interface ButtonProps {
   variant?: Variants
   size?: Sizes
   hovering?: boolean
-  onClick?: () => void
+  onClick?: (e: Event) => void
   isActive?: boolean
   isNav?: boolean
 }

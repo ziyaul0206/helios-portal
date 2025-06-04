@@ -1,4 +1,3 @@
-import { Badge } from "@/components/badge"
 import { Button } from "@/components/button"
 import { Card } from "@/components/card"
 import { Area, Grid } from "@/components/grid"
@@ -10,7 +9,7 @@ import s from "./top.module.scss"
 import { useParams } from "next/navigation"
 import { useValidatorDetail } from "@/hooks/useValidatorDetail"
 import { useAccount, useChainId, useSwitchChain } from "wagmi"
-import { HELIOS_NETWORK_ID } from "@/config/app"
+import { EXPLORER_URL, HELIOS_NETWORK_ID } from "@/config/app"
 import { useState } from "react"
 import { ModalStake } from "@/app/delegations/(components)/active/stake"
 import { Message } from "@/components/message"
@@ -72,17 +71,23 @@ export const Top = () => {
     setOpenStake(true)
   }
 
+  const explorerLink = EXPLORER_URL + "/address/" + validator.validatorAddress
+
   return (
     <Grid className={s.top}>
       <Area area="a">
         <Card className={s.infos}>
           <Heading
             title={validator.moniker}
+            isActive={isActive}
             // verified
             description={
               <>
                 <div className={s.bottom}>
-                  {isActive && <Badge status="success">Active</Badge>}
+                  <a href={explorerLink} target="_blank">
+                    {validator.validatorAddress}
+                    <Icon icon="hugeicons:link-circle-02" />
+                  </a>
                   {/* <time>Join April 10, 2025</time> */}
                 </div>
               </>
@@ -144,35 +149,28 @@ export const Top = () => {
       <Area area="b">
         <Card className={s.stats}>
           <StatItem
-            className={s.stat}
             label="APY"
             value={formattedApr}
             color="apy"
             icon="hugeicons:shield-energy"
-            // bottom="Base: 100% + Boost: 1154.55%"
-          />
-          {/* <StatItem
-            className={s.stat}
-            label="Reputation"
-            value="98/100"
-            color="reputation"
-            icon="hugeicons:percent-circle"
-            bottom="Based on historical performance"
-          /> */}
-          <StatItem
-            className={s.stat}
-            label="Boost"
-            value={formattedBoost}
-            color="uptime"
-            icon="hugeicons:rocket-01"
           />
           <StatItem
-            className={s.stat}
             label="Commission"
             value={formattedCommission}
             color="commission"
             icon="hugeicons:clock-01"
-            // bottom="Of staking rewards"
+          />
+          <StatItem
+            label="Min Delegation"
+            value={`${minDelegation} HLS`}
+            color="reputation"
+            icon="hugeicons:balance-scale"
+          />
+          <StatItem
+            label="Boost Share"
+            value={formattedBoost}
+            color="uptime"
+            icon="hugeicons:rocket-01"
           />
           <div
             className={s.message}

@@ -1,10 +1,12 @@
 import clsx from "clsx"
 import { Icon } from "../icon"
 import s from "./heading.module.scss"
+import { Badge } from "../badge"
 
 interface HeadingProps {
   icon?: string
   title?: string
+  isActive?: boolean
   description?: string | React.ReactNode
   className?: string
   rightClassName?: string
@@ -15,6 +17,7 @@ interface HeadingProps {
 export const Heading = ({
   icon,
   title,
+  isActive,
   description,
   className,
   rightClassName,
@@ -34,6 +37,7 @@ export const Heading = ({
             <h2 className={s.title}>
               {title}
               {verified && <Icon icon="hugeicons:checkmark-badge-02" />}
+              {isActive && <Badge status="success">Active</Badge>}
             </h2>
           )}
           {description && <div className={s.description}>{description}</div>}
