@@ -10,6 +10,7 @@ import { useState } from "react"
 import { ModalStake } from "@/app/delegations/(components)/active/stake"
 import { useAccount, useChainId, useSwitchChain } from "wagmi"
 import { HELIOS_NETWORK_ID } from "@/config/app"
+import Link from "next/link"
 
 export const Item = ({
   moniker,
@@ -55,7 +56,9 @@ export const Item = ({
     (tokens.find((token) => token.display.symbol === "hls")?.balance
       .totalPrice || 0) >= totalDelegated
 
-  const handleOpenStake = () => {
+  const handleOpenStake = (e: any) => {
+    e.preventDefault()
+    e.stopPropagation()
     if (chainId !== HELIOS_NETWORK_ID) {
       switchChain({ chainId: HELIOS_NETWORK_ID })
     }
@@ -64,8 +67,9 @@ export const Item = ({
   }
 
   return (
-    <div className={s.item}>
-      {/* <Button
+    <>
+      <Link href={"/validators/" + validatorAddress} className={s.item}>
+        {/* <Button
         variant="secondary"
         border
         icon={
@@ -77,103 +81,102 @@ export const Item = ({
         className={s.favorite}
         size="xsmall"
       /> */}
-      <div className={s.top}>
-        <div className={s.image}>
-          <Icon icon="hugeicons:flowchart-01" />
-        </div>
-        <div className={s.heading}>
-          {isActive && <Badge status="success">Active</Badge>}
-          <h3>{moniker}</h3>
-          {/* {description.details && <h4>{description.details}</h4>} */}
-        </div>
-      </div>
-      <div className={s.stats}>
-        <StatItem
-          label="APY"
-          value={formattedApr}
-          color="apy"
-          icon="hugeicons:shield-energy"
-        />
-        <StatItem
-          label="Commission"
-          value={formattedCommission}
-          color="commission"
-          icon="hugeicons:clock-01"
-        />
-        <StatItem
-          label="Min Delegation"
-          value={`${minDelegation} HLS`}
-          color="reputation"
-          icon="hugeicons:balance-scale"
-        />
-        <StatItem
-          label="Boost Share"
-          value={formattedBoost}
-          color="uptime"
-          icon="hugeicons:rocket-01"
-        />
-      </div>
-      {tokens.length > 0 && (
-        <>
-          <div className={s.total}>
-            <span>Total Delegated</span>
-            <strong>${formatBigNumber(totalDelegated)}</strong>
+        <div className={s.top}>
+          <div className={s.image}>
+            <Icon icon="hugeicons:flowchart-01" />
           </div>
-          <div className={s.bars}>
-            {tokens.map((token) => (
-              <div
-                className={s.bar}
-                key={"validators-" + token.functionnal.address}
-                style={
-                  {
-                    "--width": `${
-                      (token.balance.totalPrice / totalDelegated) * 100
-                    }%`,
-                    "--color": token.display.color
-                  } as React.CSSProperties
-                }
-              >
-                <div className={s.popover}>
-                  <span>{token.display.symbol.toUpperCase()}</span>
-                  <strong>${formatBigNumber(token.balance.totalPrice)}</strong>
+          <div className={s.heading}>
+            {isActive && <Badge status="success">Active</Badge>}
+            <h3>{moniker}</h3>
+            {/* {description.details && <h4>{description.details}</h4>} */}
+          </div>
+        </div>
+        <div className={s.stats}>
+          <StatItem
+            label="APY"
+            value={formattedApr}
+            color="apy"
+            icon="hugeicons:shield-energy"
+          />
+          <StatItem
+            label="Commission"
+            value={formattedCommission}
+            color="commission"
+            icon="hugeicons:clock-01"
+          />
+          <StatItem
+            label="Min Delegation"
+            value={`${minDelegation} HLS`}
+            color="reputation"
+            icon="hugeicons:balance-scale"
+          />
+          <StatItem
+            label="Boost Share"
+            value={formattedBoost}
+            color="uptime"
+            icon="hugeicons:rocket-01"
+          />
+        </div>
+        {tokens.length > 0 && (
+          <>
+            <div className={s.total}>
+              <span>Total Delegated</span>
+              <strong>${formatBigNumber(totalDelegated)}</strong>
+            </div>
+            <div className={s.bars}>
+              {tokens.map((token) => (
+                <div
+                  className={s.bar}
+                  key={"validators-" + token.functionnal.address}
+                  style={
+                    {
+                      "--width": `${
+                        (token.balance.totalPrice / totalDelegated) * 100
+                      }%`,
+                      "--color": token.display.color
+                    } as React.CSSProperties
+                  }
+                >
+                  <div className={s.popover}>
+                    <span>{token.display.symbol.toUpperCase()}</span>
+                    <strong>
+                      ${formatBigNumber(token.balance.totalPrice)}
+                    </strong>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-          <div
-            className={s.message}
-            data-color={ratioOptimal ? "success" : "primary"}
-          >
-            <Icon icon="hugeicons:checkmark-circle-03" />
-            {ratioOptimal ? "Optimal Helios Ratio" : "Good Helios Ratio"}
-          </div>
-        </>
-      )}
+              ))}
+            </div>
+            <div
+              className={s.message}
+              data-color={ratioOptimal ? "success" : "primary"}
+            >
+              <Icon icon="hugeicons:checkmark-circle-03" />
+              {ratioOptimal ? "Optimal Helios Ratio" : "Good Helios Ratio"}
+            </div>
+          </>
+        )}
 
-      <div className={s.buttons}>
-        <Button
-          className={s.stake}
-          border
-          onClick={handleOpenStake}
-          disabled={!enableDelegation}
-        >
-          Stake Now
-        </Button>
-        <ModalStake
-          title={`Stake on ${moniker}`}
-          validatorAddress={validatorAddress}
-          minDelegation={minDelegation}
-          hasAlreadyDelegated={userHasDelegated}
-          open={openStake}
-          setOpen={setOpenStake}
-        />
-        <Button
-          href={"/validators/" + validatorAddress}
-          variant="secondary"
-          border
-          icon="hugeicons:link-square-02"
-        />
-      </div>
-    </div>
+        <div className={s.buttons}>
+          <Button
+            className={s.stake}
+            border
+            onClick={handleOpenStake}
+            disabled={!enableDelegation}
+          >
+            Stake Now
+          </Button>
+
+          <Button variant="secondary" border icon="hugeicons:link-square-02" />
+        </div>
+      </Link>
+      <ModalStake
+        title={`Stake on ${moniker}`}
+        validatorAddress={validatorAddress}
+        minDelegation={minDelegation}
+        hasAlreadyDelegated={userHasDelegated}
+        open={openStake}
+        setOpen={setOpenStake}
+      />
+    </>
   )
 }
