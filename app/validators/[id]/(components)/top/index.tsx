@@ -50,7 +50,7 @@ export const Top = () => {
   const formattedApr = parseFloat(validator.apr).toFixed(2) + "%"
   const formattedCommission =
     parseFloat(validator.commission.commission_rates.rate) * 100 + "%"
-  const formattedBoost = parseFloat(validator.totalBoost) * 100 + "%"
+  const formattedBoost = parseFloat(validator.boostPercentage) + "%"
   const tokens = delegation.assets
   const minDelegation = validator.minDelegation
 

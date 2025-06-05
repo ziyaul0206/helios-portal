@@ -11,6 +11,8 @@
   background-color: var(--background-lower);
   border-radius: var(--radius-m);
   cursor: grab;
+  width: 100%;
+  max-width: calc(100vw - (var(--main-padding) * 2) - (var(--size-8) * 2));
 
   &:active {
     cursor: grabbing;
