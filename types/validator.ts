@@ -54,6 +54,7 @@ export interface Validator {
   validatorAddress: string
   delegationAuthorization: boolean
   totalBoost: string
+  boostPercentage: string
 }
 
 export interface ValidatorWithDelegationCommission {

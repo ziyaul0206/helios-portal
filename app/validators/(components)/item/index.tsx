@@ -15,7 +15,7 @@ import Link from "next/link"
 export const Item = ({
   moniker,
   validatorAddress,
-  totalBoost,
+  boostPercentage,
   // description,
   apr,
   status,
@@ -44,7 +44,7 @@ export const Item = ({
   const formattedApr = parseFloat(apr).toFixed(2) + "%"
   const formattedCommission =
     parseFloat(commission.commission_rates.rate) * 100 + "%"
-  const formattedBoost = parseFloat(totalBoost) * 100 + "%" // TEMP
+  const formattedBoost = parseFloat(boostPercentage) + "%"
   const tokens = delegation.assets
 
   const totalDelegated = tokens.reduce(
