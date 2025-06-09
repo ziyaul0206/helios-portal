@@ -44,7 +44,8 @@ export const Item = ({
   const formattedApr = parseFloat(apr).toFixed(2) + "%"
   const formattedCommission =
     parseFloat(commission.commission_rates.rate) * 100 + "%"
-  const formattedBoost = parseFloat(boostPercentage) + "%"
+  const formattedBoost =
+    Math.min((parseFloat(boostPercentage) * 15) / 100, 15) + "%"
   const tokens = delegation.assets
 
   const totalDelegated = tokens.reduce(
