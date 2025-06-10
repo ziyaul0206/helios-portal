@@ -6,6 +6,7 @@ import Category from "./category"
 import { Button } from "../button"
 import { Symbol } from "@/components/symbol"
 import { ethers } from "ethers"
+import Image from "next/image"
 
 export const TransactionsLine = (transaction: TransactionLight) => {
   const explorerLink = EXPLORER_URL + "/tx/" + transaction.hash
@@ -20,7 +21,15 @@ export const TransactionsLine = (transaction: TransactionLight) => {
         {transaction.amount && (
           <>
             <strong className={s.stronger}>
-              {transaction.token && (
+              {transaction.token && transaction.token.display.logo !== "" && (
+                <Image
+                  src={transaction.token.display.logo}
+                  alt=""
+                  width={16}
+                  height={16}
+                />
+              )}
+              {transaction.token && transaction.token.display.logo === "" && (
                 <Symbol
                   icon={transaction.token.display.symbolIcon}
                   color={transaction.token.display.color}
