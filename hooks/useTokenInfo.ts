@@ -22,7 +22,7 @@ export const rpcByChain: Record<number, string> = {
   11155111: "https://sepolia.infura.io/v3/" + infuraId,
   80002: "https://rpc-amoy.polygon.technology",
   42000: "https://testnet1.helioschainlabs.org",
-  97: "https://rpc.therpc.io/bsc-testnet",
+  97: "https://bsc-testnet-rpc.publicnode.com",
   43113: "https://avalanche-fuji-c-chain-rpc.publicnode.com"
 }
 
