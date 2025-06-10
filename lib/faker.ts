@@ -1,4 +1,4 @@
-import { getToken } from "@/config/tokens"
+// import { getToken } from "@/config/tokens"
 import { ValidatorProps, VoteProps, VoteVote } from "@/types/faker"
 import { Token } from "@/types/Tokens"
 // import { TransactionDelegation } from "@/types/TransactionDelegation"
@@ -51,24 +51,24 @@ export interface TvlData {
 export const generateRandomTvl = (): TvlData[] => {
   const tvlData: TvlData[] = []
 
-  const nativeTokensConfig = [
-    { symbol: "hls", min: 50, max: 5000000 },
-    { symbol: "eth", min: 100, max: 80000000 },
-    { symbol: "matic", min: 30, max: 30000000 },
-    { symbol: "avax", min: 20, max: 25000000 },
-    { symbol: "bnb", min: 40, max: 40000000 },
-    { symbol: "sol", min: 10, max: 1000000 }
-  ]
+  //   const nativeTokensConfig = [
+  //     { symbol: "hls", min: 50, max: 5000000 },
+  //     { symbol: "eth", min: 100, max: 80000000 },
+  //     { symbol: "matic", min: 30, max: 30000000 },
+  //     { symbol: "avax", min: 20, max: 25000000 },
+  //     { symbol: "bnb", min: 40, max: 40000000 },
+  //     { symbol: "sol", min: 10, max: 1000000 }
+  //   ]
 
-  nativeTokensConfig.forEach(({ symbol, min, max }) => {
-    const token = getToken(symbol)
-    if (token) {
-      tvlData.push({
-        token,
-        amountLocked: Number(faker.finance.amount({ min, max, dec: 2 }))
-      })
-    }
-  })
+  //   nativeTokensConfig.forEach(({ symbol, min, max }) => {
+  //     const token = getToken(symbol)
+  //     if (token) {
+  //       tvlData.push({
+  //         token,
+  //         amountLocked: Number(faker.finance.amount({ min, max, dec: 2 }))
+  //       })
+  //     }
+  //   })
 
   return tvlData
 }
