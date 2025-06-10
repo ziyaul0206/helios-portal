@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import { useAccount } from "wagmi"
 import styles from "./page.module.scss"
+import { fetchProposals } from "../../utils/api"
 
 interface Proposal {
   id: string
@@ -10,6 +11,18 @@ interface Proposal {
   status: string
   type: string
   waitingFor: string
+}
+
+interface ProposalData {
+  id: string
+  meta: string
+  status: string
+  votes: string
+  title: string
+  result: string
+  resultClass: string
+  voteFor: string
+  voteAgainst: string
 }
 
 const MyProposals: React.FC<{ proposal: Proposal }> = ({ proposal }) => (
@@ -52,144 +65,10 @@ interface ProposalData {
   voteAgainst: string
 }
 
-const initialProposals: ProposalData[] = [
-  {
-    id: "1",
-    meta: "Standard Proposal by pgov.eth",
-    status: "Ended 7:13 am May 18, 2025",
-    votes: "24.65M For – 3.02K Against",
-    title: "Scaling V4 and Supporting Unichain",
-    result: "Defeated",
-    resultClass: styles.defeated,
-    voteFor: "89%",
-    voteAgainst: "11%"
-  },
-  {
-    id: "2",
-    meta: "Standard Proposal by pgov.eth",
-    status: "Executed May 10, 2025 at 12:47 PM",
-    votes: "43.67M For – 3K Against",
-    title: "UAC Renewal S4",
-    result: "Executed",
-    resultClass: styles.executed,
-    voteFor: "94%",
-    voteAgainst: "6%"
-  },
-  {
-    id: "2",
-    meta: "Standard Proposal by pgov.eth",
-    status: "Executed May 10, 2025 at 12:47 PM",
-    votes: "43.67M For – 3K Against",
-    title: "UAC Renewal S4",
-    result: "Executed",
-    resultClass: styles.executed,
-    voteFor: "94%",
-    voteAgainst: "6%"
-  },
-  {
-    id: "2",
-    meta: "Standard Proposal by pgov.eth",
-    status: "Executed May 10, 2025 at 12:47 PM",
-    votes: "43.67M For – 3K Against",
-    title: "UAC Renewal S4",
-    result: "Executed",
-    resultClass: styles.executed,
-    voteFor: "94%",
-    voteAgainst: "6%"
-  },
-  {
-    id: "2",
-    meta: "Standard Proposal by pgov.eth",
-    status: "Executed May 10, 2025 at 12:47 PM",
-    votes: "43.67M For – 3K Against",
-    title: "UAC Renewal S4",
-    result: "Executed",
-    resultClass: styles.executed,
-    voteFor: "94%",
-    voteAgainst: "6%"
-  },
-  {
-    id: "2",
-    meta: "Standard Proposal by pgov.eth",
-    status: "Executed May 10, 2025 at 12:47 PM",
-    votes: "43.67M For – 3K Against",
-    title: "UAC Renewal S4",
-    result: "Executed",
-    resultClass: styles.executed,
-    voteFor: "94%",
-    voteAgainst: "6%"
-  },
-  {
-    id: "2",
-    meta: "Standard Proposal by pgov.eth",
-    status: "Executed May 10, 2025 at 12:47 PM",
-    votes: "43.67M For – 3K Against",
-    title: "UAC Renewal S4",
-    result: "Executed",
-    resultClass: styles.executed,
-    voteFor: "94%",
-    voteAgainst: "6%"
-  },
-  {
-    id: "2",
-    meta: "Standard Proposal by pgov.eth",
-    status: "Executed May 10, 2025 at 12:47 PM",
-    votes: "43.67M For – 3K Against",
-    title: "UAC Renewal S4",
-    result: "Executed",
-    resultClass: styles.executed,
-    voteFor: "94%",
-    voteAgainst: "6%"
-  },
-  {
-    id: "2",
-    meta: "Standard Proposal by pgov.eth",
-    status: "Executed May 10, 2025 at 12:47 PM",
-    votes: "43.67M For – 3K Against",
-    title: "UAC Renewal S4",
-    result: "Executed",
-    resultClass: styles.executed,
-    voteFor: "94%",
-    voteAgainst: "6%"
-  },
-  {
-    id: "2",
-    meta: "Standard Proposal by pgov.eth",
-    status: "Executed May 10, 2025 at 12:47 PM",
-    votes: "43.67M For – 3K Against",
-    title: "UAC Renewal S4",
-    result: "Executed",
-    resultClass: styles.executed,
-    voteFor: "94%",
-    voteAgainst: "6%"
-  },
-  {
-    id: "2",
-    meta: "Standard Proposal by pgov.eth",
-    status: "Executed May 10, 2025 at 12:47 PM",
-    votes: "43.67M For – 3K Against",
-    title: "UAC Renewal S4",
-    result: "Executed",
-    resultClass: styles.executed,
-    voteFor: "94%",
-    voteAgainst: "6%"
-  },
-  {
-    id: "2",
-    meta: "Standard Proposal by pgov.eth",
-    status: "Executed May 10, 2025 at 12:47 PM",
-    votes: "43.67M For – 3K Against",
-    title: "UAC Renewal S4",
-    result: "Executed",
-    resultClass: styles.executed,
-    voteFor: "94%",
-    voteAgainst: "6%"
-  }
-]
-
 const AllProposals: React.FC = () => {
-  const [proposals, setProposals] = useState(initialProposals)
+  const [proposals, setProposals] = useState<ProposalData[]>([])
   const [loading, setLoading] = useState(false)
+  const pageRef = useRef(1)
   const loaderRef = useRef<HTMLDivElement | null>(null)
   const { isConnected } = useAccount()
   const [isLoading, setIsLoading] = useState(false)
@@ -203,30 +82,47 @@ const AllProposals: React.FC = () => {
     }, 1000)
   }
 
-  // Simulate loading more proposals
-  const loadMoreProposals = () => {
+  const loadMoreProposals = async () => {
     if (loading) return
+    const rawData = await fetchProposals(pageRef.current, 10)
+    setLoading(false)
+    if (!rawData || rawData.length === 0) {
+      console.log("No more proposals to load")
+      return
+    }
+    try {
+      const newProposals: ProposalData[] = rawData.map((item: any) => {
+        const yes = BigInt(item.finalTallyResult?.yes_count || "0")
+        const no = BigInt(item.finalTallyResult?.no_count || "0")
+        const total = yes + no || 1n
+        const voteForPercent = Number((yes * 100n) / total)
+        const voteAgainstPercent = 100 - voteForPercent
 
+        return {
+          id: item.id.toString(),
+          meta: `By ${item.proposer}`,
+          status: `Ends ${new Date(item.votingEndTime).toLocaleString()}`,
+          votes: `${(yes / 10n ** 18n).toString()} For – ${(
+            no /
+            10n ** 18n
+          ).toString()} Against`,
+          title: item.title,
+          result: item.status,
+          resultClass:
+            item.status === "PASSED" ? styles.executed : styles.defeated,
+          voteFor: `${voteForPercent}%`,
+          voteAgainst: `${voteAgainstPercent}%`
+        }
+      })
+
+      setProposals((prev) => [...prev, ...newProposals])
+      pageRef.current += 1
+    } catch (error) {
+      console.error("Failed to fetch proposals", error)
+    }
     setLoading(true)
-
-    setTimeout(() => {
-      const newProposal: ProposalData = {
-        id: Math.random().toString(),
-        meta: "Standard Proposal by anon.eth",
-        status: "Ended 8:00 am May 19, 2025",
-        votes: "30M For – 10K Against",
-        title: "New Feature X",
-        result: "Defeated",
-        resultClass: styles.defeated,
-        voteFor: "75%",
-        voteAgainst: "25%"
-      }
-
-      setProposals((prev) => [...prev, newProposal])
-      setLoading(false)
-    }, 1000) // Simulated 1-second loading delay
   }
-  // Infinite scroll observer
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -241,7 +137,7 @@ const AllProposals: React.FC = () => {
     return () => {
       if (current) observer.unobserve(current)
     }
-  }, [loading])
+  }, [])
 
   return (
     <>
