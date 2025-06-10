@@ -10,11 +10,14 @@ import "swiper/css"
 import "swiper/css/navigation"
 import { Swiper, SwiperRef, SwiperSlide } from "swiper/react"
 import s from "./supported.module.scss"
-import { useBridge } from "@/hooks/useBridge"
 import { getLogoByHash } from "@/utils/url"
+import { useChains } from "@/hooks/useChains"
+import { useSwitchChain } from "wagmi"
 
 export const Supported = () => {
-  const { chains } = useBridge()
+  const { chains } = useChains()
+  const { switchChain } = useSwitchChain()
+
   const sliderRef = useRef<SwiperRef>(null)
 
   const handlePrev = useCallback(() => {
@@ -26,6 +29,10 @@ export const Supported = () => {
     if (!sliderRef.current) return
     sliderRef.current.swiper.slideNext()
   }, [])
+
+  const handleSwitchNetwork = (chainId: number) => {
+    switchChain({ chainId })
+  }
 
   return (
     <Card className={s.supported}>
@@ -53,7 +60,10 @@ export const Supported = () => {
         >
           {chains.map((chain) => (
             <SwiperSlide key={chain.chainId} className={s.item}>
-              <div className={s.symbol}>
+              <div
+                className={s.symbol}
+                onClick={() => handleSwitchNetwork(chain.chainId)}
+              >
                 {chain.logo !== "" && (
                   <Image
                     src={getLogoByHash(chain.logo)}
