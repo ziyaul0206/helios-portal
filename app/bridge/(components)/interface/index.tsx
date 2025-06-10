@@ -86,10 +86,10 @@ export const Interface = () => {
     ? form.to?.chainId === chains[heliosChainIndex].chainId
     : false
 
-  // const handleChangeToken = (token: TokenDenom) => {
-  //   setForm({ ...form, asset: token })
-  //   setOpenToken(false)
-  // }
+  const displayedChains =
+    chainType === "to"
+      ? chains.filter((chain) => chain.chainId !== form.from?.chainId)
+      : chains
 
   const lightResetForm = () => {
     setForm({
@@ -105,13 +105,19 @@ export const Interface = () => {
   }
 
   const handleChangeChain = (chain: HyperionChain) => {
-    if (chainType === "from" && chain.chainId === form.to?.chainId) {
-      setForm({ ...form, from: chain, to: form.from, amount: "0", asset: null })
-    } else if (chainType === "to" && chain.chainId === form.from?.chainId) {
-      setForm({ ...form, to: chain, from: form.to, amount: "0", asset: null })
-    } else {
-      setForm({ ...form, [chainType]: chain, amount: "0", asset: null })
+    if (chainType === "from" && chain.chainId !== form.from?.chainId) {
+      switchChain({ chainId: chain.chainId })
+      setOpenChain(false)
+
+      return
     }
+
+    setForm({
+      ...form,
+      to: chain,
+      amount: "0",
+      asset: null
+    })
     setOpenChain(false)
   }
 
@@ -236,27 +242,25 @@ export const Interface = () => {
 
     setForm((prevForm) => ({
       ...prevForm,
-      from: prevForm.from ?? from,
-      to: prevForm.to ?? to
+      from,
+      to
     }))
 
     resetFeedback()
   }, [chains, heliosChainIndex, chainId])
 
-  useEffect(() => {
-    if (form.from && form.from?.chainId !== chainId) {
-      switchChain({ chainId: form.from.chainId })
-    }
-  }, [form.from])
-
   const amountNb = parseFloat(form.amount)
+  const heliosInOrOut =
+    form.from?.chainId === HELIOS_NETWORK_ID ||
+    form.to?.chainId === HELIOS_NETWORK_ID
   const isDisabled =
     form.inProgress ||
     !tokenInfo.data ||
     amountNb === 0 ||
     (tokenInfo.data && amountNb > tokenInfo.data.readableBalance) ||
     !form.address ||
-    form.from?.chainId === form.to?.chainId
+    form.from?.chainId === form.to?.chainId ||
+    !heliosInOrOut
 
   return (
     <>
@@ -397,6 +401,12 @@ export const Interface = () => {
                   />
                 </div>
               </div>
+            )}
+            {!heliosInOrOut && (
+              <Message title="Bridge warning" variant={"warning"}>
+                Helios Network needs to be selected as a bridge chain.
+                Cross-chain bridge is not yet available.
+              </Message>
             )}
             <div
               className={clsx(s.input, s.inputAmount)}
@@ -540,7 +550,7 @@ export const Interface = () => {
         responsiveBottom
       >
         <ul className={s.list}>
-          {chains.map((chain) => {
+          {displayedChains.map((chain) => {
             return (
               <li key={chain.chainId}>
                 <Button

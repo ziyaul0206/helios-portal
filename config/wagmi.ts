@@ -3,6 +3,8 @@ import {
   mainnet,
   sepolia,
   polygonAmoy,
+  bscTestnet,
+  avalancheFuji,
   AppKitNetwork
 } from "@reown/appkit/networks"
 import { cookieStorage, createStorage } from "@wagmi/core"
@@ -66,7 +68,9 @@ export const networks: AppKitNetwork[] = [
   toAppKitNetwork(heliosChain),
   toAppKitNetwork(mainnet),
   toAppKitNetwork(sepolia),
-  toAppKitNetwork(polygonAmoy)
+  toAppKitNetwork(polygonAmoy),
+  toAppKitNetwork(bscTestnet),
+  toAppKitNetwork(avalancheFuji)
 ]
 
 export const wagmiAdapter = new WagmiAdapter({
