@@ -6,7 +6,7 @@ import {
   toAppKitNetwork,
   wagmiAdapter
 } from "@/config/wagmi"
-import { mainnet, polygonAmoy, sepolia } from "@reown/appkit/networks"
+import { mainnet, polygonAmoy, sepolia, bscTestnet, avalancheFuji } from "@reown/appkit/networks"
 import { createAppKit, SIWXMessage, SIWXSession } from "@reown/appkit/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { useEffect, type ReactNode } from "react"
@@ -51,7 +51,9 @@ const modal = createAppKit({
     toAppKitNetwork(heliosChain),
     toAppKitNetwork(mainnet),
     toAppKitNetwork(sepolia),
-    toAppKitNetwork(polygonAmoy)
+    toAppKitNetwork(polygonAmoy),
+    toAppKitNetwork(bscTestnet),
+    toAppKitNetwork(avalancheFuji)
   ],
   defaultNetwork: toAppKitNetwork(heliosChain),
   metadata: metadata,
