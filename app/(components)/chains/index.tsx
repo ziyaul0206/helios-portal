@@ -7,13 +7,13 @@ import { useState } from "react"
 import { toast } from "sonner"
 import s from "./chains.module.scss"
 import { useChainId, useSwitchChain } from "wagmi"
-import { useBridge } from "@/hooks/useBridge"
 import { HyperionChain } from "@/types/hyperion"
 import { getLogoByHash } from "@/utils/url"
 import Image from "next/image"
+import { useChains } from "@/hooks/useChains"
 
 export const Chains = () => {
-  const { chains } = useBridge()
+  const { chains } = useChains()
   const chainId = useChainId()
   const { switchChain } = useSwitchChain()
   const [open, setOpen] = useState(false)

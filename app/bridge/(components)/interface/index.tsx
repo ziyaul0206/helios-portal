@@ -23,6 +23,7 @@ import { toHex } from "viem"
 import { getTokensByChainIdAndPageAndSize } from "@/helpers/rpc-calls"
 import { useTokenRegistry } from "@/hooks/useTokenRegistry"
 import { Message } from "@/components/message"
+import { useChains } from "@/hooks/useChains"
 
 type BridgeForm = {
   asset: string | null
@@ -35,9 +36,8 @@ type BridgeForm = {
 
 export const Interface = () => {
   const chainId = useChainId()
+  const { chains, heliosChainIndex } = useChains()
   const {
-    chains,
-    heliosChainIndex,
     txInProgress,
     sendToChain,
     sendToHelios,

@@ -10,11 +10,11 @@ import "swiper/css"
 import "swiper/css/navigation"
 import { Swiper, SwiperRef, SwiperSlide } from "swiper/react"
 import s from "./supported.module.scss"
-import { useBridge } from "@/hooks/useBridge"
 import { getLogoByHash } from "@/utils/url"
+import { useChains } from "@/hooks/useChains"
 
 export const Supported = () => {
-  const { chains } = useBridge()
+  const { chains } = useChains()
   const sliderRef = useRef<SwiperRef>(null)
 
   const handlePrev = useCallback(() => {

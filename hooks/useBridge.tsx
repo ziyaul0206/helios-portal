@@ -13,7 +13,6 @@ import {
 import {
   getAllHyperionTransferTxs,
   getHyperionAccountTransferTxsByPageAndSize,
-  getHyperionChains,
   getTokensByChainIdAndPageAndSize
 } from "@/helpers/rpc-calls"
 import { toHex } from "viem"
@@ -24,21 +23,18 @@ import { useTokenRegistry } from "./useTokenRegistry"
 import { TransactionLight } from "@/types/transaction"
 import { Feedback } from "@/types/feedback"
 import { HELIOS_NETWORK_ID } from "@/config/app"
+import { useChains } from "./useChains"
 
 export const useBridge = () => {
   const { address } = useAccount()
   const web3Provider = useWeb3Provider()
+  const { chains } = useChains()
   const chainId = useChainId()
   const queryClient = useQueryClient()
   const { getTokenByAddress } = useTokenRegistry()
 
   const [lastReceiverAddress, setLastReceiverAddress] = useState("")
   const [txHashInProgress, setTxHashInProgress] = useState("")
-
-  const qHyperionChains = useQuery({
-    queryKey: ["hyperionChains"],
-    queryFn: getHyperionChains
-  })
 
   const qAllHyperionTxs = useQuery({
     queryKey: ["allHyperionTxs"],
@@ -290,7 +286,7 @@ export const useBridge = () => {
           erc20Abi as any,
           tokenAddress
         )
-        const chainContractAddress = qHyperionChains.data?.find(
+        const chainContractAddress = chains.find(
           (chain) => chain.chainId === chainId
         )?.hyperionContractAddress
         if (!chainContractAddress) return
@@ -393,10 +389,6 @@ export const useBridge = () => {
   )
 
   return {
-    chains: qHyperionChains.data || [],
-    heliosChainIndex: qHyperionChains.data?.findIndex(
-      (chain) => chain.hyperionId === 0
-    ),
     lastBridgeTxs: enrichedHyperionTxs.data || [],
     txInProgress,
     sendToChain,
