@@ -22,8 +22,8 @@ export const rpcByChain: Record<number, string> = {
   1: "https://mainnet.infura.io/v3/" + infuraId,
   11155111: "https://sepolia.infura.io/v3/" + infuraId,
   80002: "https://rpc-amoy.polygon.technology",
-  97: "https://bsc-testnet-dataseed.bnbchain.org",
-  43113: "https://rpc.ankr.com/avalanche_fuji"
+  97: "https://bsc-testnet-rpc.publicnode.com",
+  43113: "https://avalanche-fuji-c-chain-rpc.publicnode.com"
 }
 
 export const explorerByChain: Record<number, string> = {
@@ -31,8 +31,8 @@ export const explorerByChain: Record<number, string> = {
   1: "https://etherscan.io",
   11155111: "https://sepolia.etherscan.io",
   80002: "https://web3.okx.com/fr/explorer/amoy",
-  97: "https://testnet.bscscan.com/",
-  43113: "https://subnets-test.avax.network/"
+  97: "https://testnet.bscscan.com",
+  43113: "https://testnet.snowtrace.io"
 }
 
 export const fetchTokenInfo = async (

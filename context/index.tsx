@@ -6,13 +6,7 @@ import {
   toAppKitNetwork,
   wagmiAdapter
 } from "@/config/wagmi"
-import {
-  avalancheFuji,
-  bscTestnet,
-  mainnet,
-  polygonAmoy,
-  sepolia
-} from "@reown/appkit/networks"
+import { mainnet, polygonAmoy, sepolia, bscTestnet, avalancheFuji } from "@reown/appkit/networks"
 import { createAppKit, SIWXMessage, SIWXSession } from "@reown/appkit/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { useEffect, type ReactNode } from "react"
