@@ -40,7 +40,7 @@ export const useBridge = () => {
     queryKey: ["allHyperionTxs"],
     queryFn: async () => {
       const res = await getAllHyperionTransferTxs()
-      if (res) return res.reverse().slice(0, 5)
+      if (res) return res.slice(0, 5)
       return []
     }
   })
@@ -67,7 +67,7 @@ export const useBridge = () => {
                 ? tx.receivedToken.amount
                 : tx.sentToken.amount,
             hash: tx.txHash,
-            status: tx.status === "BRIDGED" ? "completed" : (tx.status === "FAILED" || tx.status === "CANCELLED" ? "failed" : "pending"),
+            status: tx.status === "BRIDGED" ? "completed" : "pending",
             chainId: tx.chainId,
             chainName: chains.find((chain) => chain.chainId === tx.chainId)?.name,
             chainLogo: chains.find((chain) => chain.chainId === tx.chainId)?.logo,

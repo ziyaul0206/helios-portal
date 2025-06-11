@@ -134,4 +134,4 @@ export const getAccountLastTransactions = (address: string) =>
   request<TransactionLast[]>("eth_getAccountLastTransactionsInfo", [address])
 
 export const getAllHyperionTransferTxs = async () =>
-  request<HyperionBridgeTx[]>("eth_getAllHyperionTransferTxs", [toHex(1)])
+  request<HyperionBridgeTx[]>("eth_getAllHyperionTransferTxs", [toHex(10)])
