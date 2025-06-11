@@ -521,6 +521,11 @@ export const Interface = () => {
               </strong>
             </div>
           </div>
+          {bridgeFeedback && bridgeFeedback.message !== "" && (
+            <Message title="Bridge feedback" variant={bridgeFeedback.status}>
+              {bridgeFeedback.message}
+            </Message>
+          )}
           <Button
             disabled={isDisabled}
             className={s.deposit}
@@ -531,11 +536,6 @@ export const Interface = () => {
             {isDeposit ? "Deposit now" : "Withdraw now"}
           </Button>
 
-          {bridgeFeedback && bridgeFeedback.message !== "" && (
-            <Message title="Bridge feedback" variant={bridgeFeedback.status}>
-              {bridgeFeedback.message}
-            </Message>
-          )}
           {txInProgress && txInProgress.receivedToken.contract && (
             <Message title="New token transfered" variant="secondary">
               {`Token contract in new chain is`}{" "}

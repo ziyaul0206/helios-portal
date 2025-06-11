@@ -8,6 +8,7 @@ import { useValidatorDetail } from "@/hooks/useValidatorDetail"
 import { useParams } from "next/navigation"
 import { useAssetsInfo } from "@/hooks/useAssetsInfo"
 import clsx from "clsx"
+import Image from "next/image"
 
 export const Staking = () => {
   const params = useParams()
@@ -88,11 +89,21 @@ export const Staking = () => {
           {assets.map((asset, index) => (
             <li key={index}>
               <div className={s.token}>
-                <Symbol
-                  icon={asset.enriched.display.symbolIcon as string}
-                  color={asset.enriched.display.color}
-                  className={s.icon}
-                />
+                {asset.enriched.display.logo !== "" ? (
+                  <Image
+                    src={asset.enriched.display.logo}
+                    alt={asset.enriched.display.name}
+                    width={32}
+                    height={32}
+                  />
+                ) : (
+                  <Symbol
+                    icon={asset.enriched.display.symbolIcon as string}
+                    color={asset.enriched.display.color}
+                    className={s.icon}
+                  />
+                )}
+
                 <div className={s.name}>
                   {asset.enriched.display.name}{" "}
                   <small>{asset.enriched.display.symbol}</small>

@@ -6,6 +6,7 @@ import s from "./transactions.module.scss"
 import { TransactionLastType } from "@/types/transaction"
 import { formatNumber } from "@/lib/utils/number"
 import { Variants } from "@/types/feedback"
+import Image from "next/image"
 
 const TRANSACTION_LABELS: Record<
   TransactionLastType,
@@ -58,6 +59,7 @@ interface TransactionRowProps {
   amount?: number
   symbol?: string
   symbolIcon?: string
+  logo?: string
   color?: string
   explorer: string
   date?: string
@@ -70,6 +72,7 @@ export const Row = ({
   amount,
   symbol,
   symbolIcon,
+  logo,
   color,
   explorer
 }: TransactionRowProps) => {
@@ -88,11 +91,16 @@ export const Row = ({
       </TableCell>
       <TableCell>
         <div className={s.amount}>
-          {symbolIcon && <Symbol icon={symbolIcon} color={color} />}
+          {logo && logo !== "" && (
+            <Image src={logo} alt={symbol || ""} width={16} height={16} />
+          )}
+          {(!logo || logo === "") && symbolIcon && (
+            <Symbol icon={symbolIcon} color={color} />
+          )}
           {formatNumber(amount || 0, 6)} {symbol?.toUpperCase()}
         </div>
       </TableCell>
-      <TableCell className={s.date}>{s.date || "-"}</TableCell>
+      {/* <TableCell className={s.date}>{date || "-"}</TableCell> */}
       <TableCell align="right" className={s.explorer}>
         <Button
           icon="hugeicons:link-square-02"

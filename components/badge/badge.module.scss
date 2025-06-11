@@ -4,7 +4,7 @@
   background-color: var(--color-medium);
   display: inline-flex;
   align-items: center;
-  color: var(--white);
+  color: var(--white) !important;
   font-size: var(--size-2);
   text-transform: uppercase;
   font-weight: 800;

@@ -13,6 +13,7 @@ import { ModalUnstake } from "./unstake"
 import { useChainId, useSwitchChain } from "wagmi"
 import { HELIOS_NETWORK_ID, HELIOS_TOKEN_ADDRESS } from "@/config/app"
 import { ModalClaim } from "../claim/modal"
+import Image from "next/image"
 
 export const Row = ({
   address,
@@ -55,10 +56,19 @@ ValidatorRow) => {
           {assets.map((asset, index) => (
             <li key={index}>
               <div className={s.name}>
-                <Symbol
-                  icon={asset.display.symbolIcon}
-                  color={asset.display.color}
-                />
+                {asset.display.logo !== "" ? (
+                  <Image
+                    src={asset.display.logo}
+                    width={16}
+                    height={16}
+                    alt={asset.display.name}
+                  />
+                ) : (
+                  <Symbol
+                    icon={asset.display.symbolIcon}
+                    color={asset.display.color}
+                  />
+                )}
                 {asset.display.name}{" "}
                 {asset.functionnal.address === HELIOS_TOKEN_ADDRESS
                   ? "Boost"

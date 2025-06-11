@@ -58,8 +58,6 @@ export const useTokenRegistry = () => {
         const cgToken = cgData[symbol]
         const unitPrice = cgToken?.price || 0
 
-        console.log("cgTokenLogo", cgToken?.logo)
-
         const newToken: TokenExtended = {
           display: {
             name: data.metadata.name,
