@@ -1,6 +1,6 @@
 import { TransactionLastType } from "@/types/transaction"
 import { Icon } from "../icon"
-import { TransactionStatus } from "@/types/Transactions"
+// import { TransactionStatus } from "@/types/Transactions"
 // import Status from "./status"
 import s from "./transactions.module.scss"
 import Status from "./status"
