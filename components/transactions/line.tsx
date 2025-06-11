@@ -43,16 +43,14 @@ export const TransactionsLine = (transaction: TransactionLight) => {
                 transaction.token?.functionnal.decimals
               )}{" "}
               {transaction.token?.display.symbol.toUpperCase()}
-              { transaction.chainName && transaction.type === "BRIDGE_OUT" && (
+              {transaction.chainName && transaction.type === "BRIDGE_OUT" && (
                 <Icon icon="hugeicons:arrow-right-01" />
               )}
-              { transaction.chainName && transaction.type === "BRIDGE_IN" && (
+              {transaction.chainName && transaction.type === "BRIDGE_IN" && (
                 <Icon icon="hugeicons:arrow-left-01" />
               )}
               {transaction.chainName && (
-                <div className={s.chainName}>
-                  {transaction.chainName}
-                </div>
+                <div className={s.chainName}>{transaction.chainName}</div>
               )}
               {transaction.chainId && (
                 <div className={s.chainId}>
