@@ -324,12 +324,28 @@ export const Interface = () => {
                 Token address
               </label>
             </div>
-            {isWrappable && (
+            {isWrappable && chainConfig && (
               <div className={s.wrap}>
                 <div className={s.wrapLabel}>
-                  Need to wrap your native {chainConfig?.token} token ?
+                  Want to use your native {chainConfig.token} token ?
                 </div>
                 <div className={s.wrapAction}>
+                  {chainConfig.wrapperContract && (
+                    <Button
+                      variant="secondary"
+                      size="xsmall"
+                      onClick={() =>
+                        handleTokenSearchChange({
+                          target: {
+                            value: chainConfig.wrapperContract!
+                          }
+                        })
+                      }
+                    >
+                      Use {chainConfig.wrappedToken}
+                    </Button>
+                  )}
+
                   <Button
                     variant="success"
                     size="xsmall"
