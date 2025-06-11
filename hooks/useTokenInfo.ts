@@ -1,10 +1,9 @@
-import { env } from "@/env"
 import { useQuery } from "@tanstack/react-query"
 import { useChainId, useAccount } from "wagmi"
 import Web3 from "web3"
 import { ethers } from "ethers"
 import { erc20Abi } from "@/constant/helios-contracts"
-import { EXPLORER_URL, RPC_URL } from "@/config/app"
+import { getChainConfig } from "@/config/chain-config"
 
 export interface TokenInfo {
   name: string
@@ -15,32 +14,15 @@ export interface TokenInfo {
   readableBalance: number
 }
 
-const infuraId = env.NEXT_PUBLIC_INFURA_KEY
-
-export const rpcByChain: Record<number, string> = {
-  42000: RPC_URL,
-  1: "https://mainnet.infura.io/v3/" + infuraId,
-  11155111: "https://sepolia.infura.io/v3/" + infuraId,
-  80002: "https://rpc-amoy.polygon.technology",
-  97: "https://bsc-testnet-rpc.publicnode.com",
-  43113: "https://avalanche-fuji-c-chain-rpc.publicnode.com"
-}
-
-export const explorerByChain: Record<number, string> = {
-  42000: EXPLORER_URL,
-  1: "https://etherscan.io",
-  11155111: "https://sepolia.etherscan.io",
-  80002: "https://web3.okx.com/fr/explorer/amoy",
-  97: "https://testnet.bscscan.com",
-  43113: "https://testnet.snowtrace.io"
-}
-
 export const fetchTokenInfo = async (
   tokenAddress: string,
   chainId: number,
   userAddress?: string
 ): Promise<TokenInfo> => {
-  const rpcUrl = rpcByChain[chainId]
+  const chainConfig = getChainConfig(chainId)
+  if (!chainConfig)
+    throw new Error(`Chain configuration not found for chain ${chainId}`)
+  const rpcUrl = chainConfig.rpcUrl
   if (!rpcUrl) throw new Error(`Missing RPC URL for chain ${chainId}`)
 
   try {
