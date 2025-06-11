@@ -24,6 +24,7 @@ export const Transactions = () => {
       explorer: `${EXPLORER_URL}/tx/${tx.hash}`,
       symbol: tx.token?.display.symbol || "",
       symbolIcon: tx.token?.display.symbolIcon || "",
+      logo: tx.token?.display.logo || "",
       color: tx.token?.display.color || ""
     }))
 

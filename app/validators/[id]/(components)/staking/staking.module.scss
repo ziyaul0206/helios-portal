@@ -12,6 +12,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 8px;
     }
   }
 }
@@ -19,10 +20,12 @@
 .details {
   .label {
     color: var(--text-tertiary);
+    flex-shrink: 0;
   }
 
   .value {
     font-weight: bold;
+    text-align: right;
   }
 }
 

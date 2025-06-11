@@ -9,7 +9,7 @@
   font-size: var(--size-3-5);
   height: 2em;
   background: transparent;
-  color: var(--color-medium);
+  color: var(--color-medium) !important;
   position: relative;
 
   &::before {

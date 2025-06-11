@@ -6,6 +6,7 @@ import { ValidatorRow } from "@/types/faker"
 // import { TokenWithAmount } from "@/types/Tokens"
 import { Row } from "./row"
 import { useDelegationInfo } from "@/hooks/useDelegationInfo"
+import { Message } from "@/components/message"
 
 export const Active = () => {
   const { delegationsByValidator } = useDelegationInfo()
@@ -42,6 +43,11 @@ export const Active = () => {
           ))}
         </tbody>
       </Table>
+      {validators.length === 0 && (
+        <Message title="Delegations informations" variant="primary">
+          No delegation found.
+        </Message>
+      )}
     </Card>
   )
 }
