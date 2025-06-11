@@ -67,11 +67,15 @@
     $gap: calc(var(--padding) / 2) var(--padding)
   );
   align-items: flex-start;
-  white-space: nowrap;
+  // white-space: nowrap;
 
   .pie {
     width: calc(120px + 24 * (100vw - 320px) / 1080);
     margin: auto;
+
+    @include max(500px) {
+      width: 100%;
+    }
   }
 }
 

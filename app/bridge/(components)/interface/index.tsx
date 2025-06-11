@@ -635,6 +635,7 @@ export const Interface = () => {
         type="wrap"
         open={openWrapModal}
         setOpen={setOpenWrapModal}
+        setTokenChange={handleTokenSearchChange}
       />
     </>
   )

@@ -46,7 +46,7 @@ export const Top = () => {
   // ]
 
   const isActive = validator.status === 3
-  const enableDelegation = validator.delegationAuthorization && isConnected
+  const enableDelegation = validator.delegationAuthorization
   const formattedApr = parseFloat(validator.apr).toFixed(2) + "%"
   const formattedCommission =
     parseFloat(validator.commission.commission_rates.rate) * 100 + "%"
@@ -98,7 +98,7 @@ export const Top = () => {
             <Button
               icon="hugeicons:download-03"
               onClick={() => handleOpenStake()}
-              disabled={!enableDelegation}
+              disabled={!enableDelegation || !isConnected}
             >
               Stake now
             </Button>
