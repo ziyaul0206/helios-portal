@@ -16,13 +16,15 @@ interface ModalWrapperProps {
   type: "wrap"
   open: boolean
   setOpen: (open: boolean) => void
+  setTokenChange: (e: { target: { value: string } }) => void
 }
 
 export const ModalWrapper = ({
   title,
   type,
   open,
-  setOpen
+  setOpen,
+  setTokenChange
 }: ModalWrapperProps) => {
   const [amount, setAmount] = useState("0")
   const { wrap, feedback, resetFeedback, balance } = useWrapper()
@@ -40,6 +42,9 @@ export const ModalWrapper = ({
         id: toastId
       })
       setAmount("0")
+      if (chainConfig && chainConfig.wrapperContract) {
+        setTokenChange({ target: { value: chainConfig?.wrapperContract } })
+      }
     } catch (err: any) {
       toast.error(err?.message || `Error during ${type}`, {
         id: toastId

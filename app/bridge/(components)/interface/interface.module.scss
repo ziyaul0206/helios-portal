@@ -418,6 +418,12 @@ $responsiveSwap: 800px;
   width: 100%;
   padding: 8px var(--input-padding);
 
+  @include max(500px) {
+    flex-direction: column;
+    text-align: center;
+    padding: var(--input-padding);
+  }
+
   &List {
     display: flex;
     align-items: center;

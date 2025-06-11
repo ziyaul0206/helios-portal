@@ -58,5 +58,13 @@
   li {
     --gap: calc(var(--padding) * 0.5);
     width: calc(33% - (2 * var(--gap) / 3));
+
+    @include max(800px) {
+      width: calc(50% - (1 * var(--gap) / 2));
+    }
+
+    @include max(500px) {
+      width: 100%;
+    }
   }
 }
