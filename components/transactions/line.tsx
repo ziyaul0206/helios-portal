@@ -9,10 +9,16 @@ import { ethers } from "ethers"
 import Image from "next/image"
 import { getLogoByHash } from "@/utils/url"
 import { Icon } from "../icon"
+import { getChainConfig } from "@/config/chain-config"
 
 export const TransactionsLine = (transaction: TransactionLight) => {
   const isCosmosHash = !transaction.hash?.startsWith("0x")
-  const explorerLink = !isCosmosHash ? EXPLORER_URL + "/tx/" + transaction.hash : undefined
+  let explorerLink = !isCosmosHash ? EXPLORER_URL + "/tx/" + transaction.hash : undefined
+
+  if (transaction.chainId && transaction.type === "BRIDGE_OUT" && transaction.hash) {
+    const chainConfig = getChainConfig(transaction.chainId)
+    explorerLink = chainConfig ? `${chainConfig.explorerUrl}/tx/${transaction.hash}` : undefined
+  }
 
   return (
     <TableRow>

@@ -46,7 +46,7 @@ export const CHAIN_CONFIG: Record<number, ChainConfig> = {
     color: CHAIN_COLORS.polygon,
     iconName: "token:polygon",
     rpcUrl: "https://rpc-amoy.polygon.technology",
-    explorerUrl: "https://web3.okx.com/fr/explorer/amoy",
+    explorerUrl: "https://amoy.polygonscan.com",
     wrapperContract: "0xa5733b3a8e62a8faf43b0376d5faf46e89b3033e",
     decimals: 18,
     token: "POL",
