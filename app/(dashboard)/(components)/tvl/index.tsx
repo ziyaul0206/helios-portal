@@ -4,6 +4,7 @@ import { Symbol } from "@/components/symbol"
 import { formatBigNumber, formatCurrency } from "@/lib/utils/number"
 import s from "./tvl.module.scss"
 import { useAssetsInfo } from "@/hooks/useAssetsInfo"
+import Image from "next/image"
 
 export const TVL = () => {
   const { assets, totalHolders, totalTVL } = useAssetsInfo()
@@ -44,11 +45,23 @@ export const TVL = () => {
                 </div>
               </div>
             </div>
-            <Symbol
-              icon={token.enriched.display.symbolIcon}
-              color={token.enriched.display.color}
-              className={s.symbol}
-            />
+            {token.enriched.display.logo !== "" && (
+              <Image
+                src={token.enriched.display.logo}
+                alt={token.enriched.display.name}
+                width={24}
+                height={24}
+                className={s.symbol}
+              />
+            )}
+            {token.enriched.display.logo === "" && (
+              <Symbol
+                icon={token.enriched.display.symbolIcon}
+                color={token.enriched.display.color}
+                className={s.symbol}
+              />
+            )}
+
             <div className={s.name}>
               {token.enriched.display.symbol.toUpperCase()}
             </div>
