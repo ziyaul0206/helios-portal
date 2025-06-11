@@ -40,7 +40,7 @@ export const useBridge = () => {
     queryKey: ["allHyperionTxs"],
     queryFn: async () => {
       const res = await getAllHyperionTransferTxs()
-      if (res) return res.sort((a, b) => b.id - a.id).slice(0, 5)
+      if (res) return res.reverse().slice(0, 5)
       return []
     }
   })
@@ -66,7 +66,11 @@ export const useBridge = () => {
               tx.direction === "IN"
                 ? tx.receivedToken.amount
                 : tx.sentToken.amount,
-            hash: tx.txHash
+            hash: tx.txHash,
+            status: tx.status === "BRIDGED" ? "completed" : (tx.status === "FAILED" || tx.status === "CANCELLED" ? "failed" : "pending"),
+            chainId: tx.chainId,
+            chainName: chains.find((chain) => chain.chainId === tx.chainId)?.name,
+            chainLogo: chains.find((chain) => chain.chainId === tx.chainId)?.logo,
           } as TransactionLight
         })
       )
@@ -208,7 +212,7 @@ export const useBridge = () => {
           )
           .send({
             from: address,
-            gas: "150000", // sendToChain gas limit
+            gas: "500000", // sendToChain gas limit
             gasPrice: bestGasPrice.toString()
           })
 

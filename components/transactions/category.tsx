@@ -1,7 +1,9 @@
 import { TransactionLastType } from "@/types/transaction"
 import { Icon } from "../icon"
+import { TransactionStatus } from "@/types/Transactions"
 // import Status from "./status"
 import s from "./transactions.module.scss"
+import Status from "./status"
 export const CategoryConfig: {
   [key in TransactionLastType]: {
     name: string
@@ -23,17 +25,17 @@ export const CategoryConfig: {
 
 export interface CategoryProps {
   type: TransactionLastType
-  // status: TransactionStatus
+  status?: string
 }
 
-const Category = ({ type }: CategoryProps) => {
+const Category = ({ type, status }: CategoryProps) => {
   const config = type ? CategoryConfig[type] : CategoryConfig.UNKNOWN
 
   return (
     <div className={s.type}>
       <div className={s.icon}>
         <Icon icon={config?.icon} className={s.iconSvg} />
-        {/* <Status status={status} /> */}
+        {status && <Status status={status} />}
       </div>
       <strong className={s.stronger}>{config?.name}</strong>
     </div>

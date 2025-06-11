@@ -92,7 +92,7 @@ export const Row = ({
           {formatNumber(amount || 0, 6)} {symbol?.toUpperCase()}
         </div>
       </TableCell>
-      {/* <TableCell className={s.date}>{date || "-"}</TableCell> */}
+      <TableCell className={s.date}>{s.date || "-"}</TableCell>
       <TableCell align="right" className={s.explorer}>
         <Button
           icon="hugeicons:link-square-02"

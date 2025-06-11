@@ -7,6 +7,8 @@ import { Button } from "../button"
 import { Symbol } from "@/components/symbol"
 import { ethers } from "ethers"
 import Image from "next/image"
+import { getLogoByHash } from "@/utils/url"
+import { Icon } from "../icon"
 
 export const TransactionsLine = (transaction: TransactionLight) => {
   const explorerLink = EXPLORER_URL + "/tx/" + transaction.hash
@@ -14,7 +16,7 @@ export const TransactionsLine = (transaction: TransactionLight) => {
   return (
     <TableRow>
       <TableCell>
-        <Category type={transaction.type} />
+        <Category type={transaction.type} status={transaction.status} />
       </TableCell>
 
       <TableCell className={s.cellAmount}>
@@ -40,6 +42,29 @@ export const TransactionsLine = (transaction: TransactionLight) => {
                 transaction.token?.functionnal.decimals
               )}{" "}
               {transaction.token?.display.symbol.toUpperCase()}
+              { transaction.type === "BRIDGE_OUT" && (
+                <Icon icon="hugeicons:arrow-right-01" />
+              )}
+              { transaction.type === "BRIDGE_IN" && (
+                <Icon icon="hugeicons:arrow-left-01" />
+              )}
+              {transaction.chainName && (
+                <div className={s.chainName}>
+                  {transaction.chainName}
+                </div>
+              )}
+              {transaction.chainId && (
+                <div className={s.chainId}>
+                  {transaction.chainLogo && (
+                    <Image
+                      src={getLogoByHash(transaction.chainLogo)}
+                      alt=""
+                      width={16}
+                      height={16}
+                    />
+                  )}
+                </div>
+              )}
             </strong>
           </>
         )}

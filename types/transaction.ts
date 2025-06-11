@@ -72,4 +72,8 @@ export type TransactionLight = {
   token: TokenExtended | null
   amount: string
   hash: string
+  status?: string
+  chainId?: number
+  chainLogo?: string
+  chainName?: string
 }

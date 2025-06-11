@@ -63,6 +63,7 @@ export const useBlockInfo = () => {
   return {
     lastBlockNumber: qBlockNumber.data ? fromHex(qBlockNumber.data) : 0,
     blockTime,
+    lastBlockTimestamp: qBlockData.data?.timestamp,
     gasPrice: gasPriceInETH,
     gasPriceUSD: formatCurrency(gasPriceInUSD),
     isLoading:
