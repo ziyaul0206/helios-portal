@@ -17,7 +17,7 @@ import {
 } from "@/helpers/rpc-calls"
 import { toHex } from "viem"
 import { secondsToMilliseconds } from "date-fns"
-import { explorerByChain } from "./useTokenInfo"
+import { getChainConfig } from "@/config/chain-config"
 import { getBestGasPrice } from "@/lib/utils/gas"
 import { useTokenRegistry } from "./useTokenRegistry"
 import { TransactionLight } from "@/types/transaction"
@@ -69,8 +69,10 @@ export const useBridge = () => {
             hash: tx.txHash,
             status: tx.status === "BRIDGED" ? "completed" : "pending",
             chainId: tx.chainId,
-            chainName: chains.find((chain) => chain.chainId === tx.chainId)?.name,
-            chainLogo: chains.find((chain) => chain.chainId === tx.chainId)?.logo,
+            chainName: chains.find((chain) => chain.chainId === tx.chainId)
+              ?.name,
+            chainLogo: chains.find((chain) => chain.chainId === tx.chainId)
+              ?.logo
           } as TransactionLight
         })
       )
@@ -170,8 +172,10 @@ export const useBridge = () => {
               gasPrice: bestGasPrice.toString()
             })
 
-          const explorerLink =
-            explorerByChain[chainId] + "/tx/" + approveTx.transactionHash
+          const chainConfig = getChainConfig(chainId)
+          const explorerLink = chainConfig
+            ? `${chainConfig.explorerUrl}/tx/${approveTx.transactionHash}`
+            : approveTx.transactionHash
 
           setFeedback({
             status: "primary",
@@ -314,8 +318,10 @@ export const useBridge = () => {
               gasPrice: bestGasPrice.toString()
             })
 
-          const explorerLink =
-            explorerByChain[fromChainId] + "/tx/" + approveTx.transactionHash
+          const chainConfig = getChainConfig(fromChainId)
+          const explorerLink = chainConfig
+            ? `${chainConfig.explorerUrl}/tx/${approveTx.transactionHash}`
+            : approveTx.transactionHash
 
           setFeedback({
             status: "primary",

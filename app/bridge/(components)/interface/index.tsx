@@ -24,6 +24,9 @@ import { getTokensByChainIdAndPageAndSize } from "@/helpers/rpc-calls"
 import { useTokenRegistry } from "@/hooks/useTokenRegistry"
 import { Message } from "@/components/message"
 import { useChains } from "@/hooks/useChains"
+import { ModalWrapper } from "../wrapper/modal"
+import { useWrapper } from "@/hooks/useWrapper"
+import { getChainConfig } from "@/config/chain-config"
 
 type BridgeForm = {
   asset: string | null
@@ -36,6 +39,7 @@ type BridgeForm = {
 
 export const Interface = () => {
   const chainId = useChainId()
+  const { isWrappable } = useWrapper()
   const { chains, heliosChainIndex } = useChains()
   const {
     txInProgress,
@@ -48,6 +52,7 @@ export const Interface = () => {
   const { address } = useAccount()
   const [openChain, setOpenChain] = useState(false)
   const [chainType, setChainType] = useState<"from" | "to">("from")
+  const [openWrapModal, setOpenWrapModal] = useState(false)
   const [form, setForm] = useState<BridgeForm>({
     asset: null,
     from: null,
@@ -58,6 +63,7 @@ export const Interface = () => {
   })
   const tokenInfo = useTokenInfo(form.asset)
   const { getTokenByAddress } = useTokenRegistry()
+  const chainConfig = chainId ? getChainConfig(chainId) : undefined
 
   const qTokensByChain = useQuery({
     queryKey: ["tokensByChain", form.to?.chainId],
@@ -318,6 +324,22 @@ export const Interface = () => {
                 Token address
               </label>
             </div>
+            {isWrappable && (
+              <div className={s.wrap}>
+                <div className={s.wrapLabel}>
+                  Need to wrap your native {chainConfig?.token} token ?
+                </div>
+                <div className={s.wrapAction}>
+                  <Button
+                    variant="success"
+                    size="xsmall"
+                    onClick={() => setOpenWrapModal(true)}
+                  >
+                    Wrap
+                  </Button>
+                </div>
+              </div>
+            )}
             {tokensByChain.length > 0 && (
               <div className={s.bestTokens}>
                 <div className={s.bestTokensLabel}>Available tokens :</div>
@@ -415,6 +437,7 @@ export const Interface = () => {
                 </div>
               </div>
             )}
+
             {!heliosInOrOut && (
               <Message title="Bridge warning" variant={"warning"}>
                 Helios Network needs to be selected as a bridge chain.
@@ -591,6 +614,12 @@ export const Interface = () => {
           })}
         </ul>
       </Modal>
+      <ModalWrapper
+        title="Wrap Token"
+        type="wrap"
+        open={openWrapModal}
+        setOpen={setOpenWrapModal}
+      />
     </>
   )
 }

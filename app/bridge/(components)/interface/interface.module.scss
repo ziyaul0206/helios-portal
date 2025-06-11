@@ -76,6 +76,14 @@ $responsiveSwap: 800px;
     cursor: pointer;
     width: 100%;
 
+    @include max(500px) {
+      flex-direction: column;
+
+      input {
+        width: 100% !important;
+      }
+    }
+
     &Found,
     &NotFound {
       display: flex;
@@ -386,6 +394,29 @@ $responsiveSwap: 800px;
   gap: 16px;
   width: 100%;
   padding: 0 var(--input-padding);
+
+  &List {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  &Label {
+    font-size: var(--size-4);
+    color: var(--text-secondary);
+  }
+}
+
+.wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 16px;
+  background-color: var(--color-emerald-100);
+  gap: 16px;
+  width: 100%;
+  padding: 8px var(--input-padding);
 
   &List {
     display: flex;
