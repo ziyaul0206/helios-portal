@@ -66,7 +66,7 @@ export const useBridge = () => {
               tx.direction === "IN"
                 ? tx.receivedToken.amount
                 : tx.sentToken.amount,
-            hash: tx.txHash,
+            hash: tx?.proof?.hashs,
             status: tx.status === "BRIDGED" ? "completed" : "pending",
             chainId: tx.chainId,
             chainName: chains.find((chain) => chain.chainId === tx.chainId)

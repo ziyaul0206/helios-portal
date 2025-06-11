@@ -11,7 +11,8 @@ import { getLogoByHash } from "@/utils/url"
 import { Icon } from "../icon"
 
 export const TransactionsLine = (transaction: TransactionLight) => {
-  const explorerLink = EXPLORER_URL + "/tx/" + transaction.hash
+  const isCosmosHash = !transaction.hash?.startsWith("0x")
+  const explorerLink = !isCosmosHash ? EXPLORER_URL + "/tx/" + transaction.hash : undefined
 
   return (
     <TableRow>
@@ -70,12 +71,12 @@ export const TransactionsLine = (transaction: TransactionLight) => {
         )}
       </TableCell>
       <TableCell align="right" className={s.cellRight}>
-        <Button
+        {explorerLink && <Button
           icon="hugeicons:link-square-02"
           variant="secondary"
           border
           href={explorerLink}
-        />
+        />}
       </TableCell>
     </TableRow>
   )
