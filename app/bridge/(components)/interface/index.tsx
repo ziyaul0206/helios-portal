@@ -324,8 +324,13 @@ export const Interface = () => {
                 <div className={s.bestTokensList}>
                   {tokensByChain.map((token) => (
                     <Button
-                      iconLeft={token.display.symbolIcon}
+                      iconLeft={
+                        token.display.logo === ""
+                          ? token.display.symbolIcon
+                          : undefined
+                      }
                       key={token.functionnal.address}
+                      variant="secondary"
                       size="xsmall"
                       onClick={() =>
                         handleTokenSearchChange({
@@ -335,6 +340,14 @@ export const Interface = () => {
                         })
                       }
                     >
+                      {token.display.logo !== "" && (
+                        <Image
+                          src={token.display.logo}
+                          alt=""
+                          width={16}
+                          height={16}
+                        />
+                      )}
                       {token.display.symbol.toUpperCase()}
                     </Button>
                   ))}
