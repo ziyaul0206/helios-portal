@@ -36,6 +36,28 @@ export const useBridge = () => {
   const [lastReceiverAddress, setLastReceiverAddress] = useState("")
   const [txHashInProgress, setTxHashInProgress] = useState("")
 
+  const enrichHyperionTransaction = async (
+    tx: any
+  ): Promise<TransactionLight> => {
+    const contractAddress =
+      tx.direction === "IN" ? tx.receivedToken.contract : tx.sentToken.contract
+    const token = contractAddress
+      ? await getTokenByAddress(contractAddress, HELIOS_NETWORK_ID)
+      : null
+
+    return {
+      type: tx.direction === "IN" ? "BRIDGE_IN" : "BRIDGE_OUT",
+      token,
+      amount:
+        tx.direction === "IN" ? tx.receivedToken.amount : tx.sentToken.amount,
+      hash: tx?.proof?.hashs,
+      status: tx.status === "BRIDGED" ? "completed" : "pending",
+      chainId: tx.chainId,
+      chainName: chains.find((chain) => chain.chainId === tx.chainId)?.name,
+      chainLogo: chains.find((chain) => chain.chainId === tx.chainId)?.logo
+    }
+  }
+
   const qAllHyperionTxs = useQuery({
     queryKey: ["allHyperionTxs"],
     queryFn: async () => {
@@ -45,41 +67,14 @@ export const useBridge = () => {
     }
   })
 
-  const enrichedHyperionTxs = useQuery({
+  const enrichedAllHyperionTxs = useQuery({
     queryKey: ["enrichedHyperionTxs", qAllHyperionTxs.data],
     enabled: !!qAllHyperionTxs.data,
-    queryFn: async () => {
-      return Promise.all(
-        qAllHyperionTxs.data!.map(async (tx) => {
-          const contractAddress =
-            tx.direction === "IN"
-              ? tx.receivedToken.contract
-              : tx.sentToken.contract
-          const token = contractAddress
-            ? await getTokenByAddress(contractAddress, HELIOS_NETWORK_ID)
-            : null
-
-          return {
-            type: tx.direction === "IN" ? "BRIDGE_IN" : "BRIDGE_OUT",
-            token,
-            amount:
-              tx.direction === "IN"
-                ? tx.receivedToken.amount
-                : tx.sentToken.amount,
-            hash: tx?.proof?.hashs,
-            status: tx.status === "BRIDGED" ? "completed" : "pending",
-            chainId: tx.chainId,
-            chainName: chains.find((chain) => chain.chainId === tx.chainId)
-              ?.name,
-            chainLogo: chains.find((chain) => chain.chainId === tx.chainId)
-              ?.logo
-          } as TransactionLight
-        })
-      )
-    }
+    queryFn: async () =>
+      Promise.all(qAllHyperionTxs.data!.map(enrichHyperionTransaction))
   })
 
-  const qHyperionBridgeTxs = useQuery({
+  const qAccountHyperionTxs = useQuery({
     queryKey: ["hyperionBridgeTxs"],
     queryFn: () =>
       getHyperionAccountTransferTxsByPageAndSize(
@@ -89,6 +84,13 @@ export const useBridge = () => {
       ),
     enabled: lastReceiverAddress !== "",
     refetchInterval: secondsToMilliseconds(10)
+  })
+
+  const enrichedAccountHyperionTxs = useQuery({
+    queryKey: ["enrichedHyperionTxs", qAccountHyperionTxs.data],
+    enabled: !!qAccountHyperionTxs.data,
+    queryFn: async () =>
+      Promise.all(qAccountHyperionTxs.data!.map(enrichHyperionTransaction))
   })
 
   const [feedback, setFeedback] = useState<Feedback>({
@@ -394,12 +396,13 @@ export const useBridge = () => {
     }
   })
 
-  const txInProgress = qHyperionBridgeTxs.data?.find(
+  const txInProgress = qAccountHyperionTxs.data?.find(
     (tx) => tx.txHash === txHashInProgress
   )
 
   return {
-    lastBridgeTxs: enrichedHyperionTxs.data || [],
+    lastBridgeTxs: enrichedAllHyperionTxs.data || [],
+    lastAccountBridgeTxs: enrichedAccountHyperionTxs.data || [],
     txInProgress,
     sendToChain,
     loadTokensByChain,

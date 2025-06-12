@@ -7,16 +7,16 @@ import { Transactions } from "@/components/transactions"
 import { useBridge } from "@/hooks/useBridge"
 // import { useUserStore } from "@/stores/user"
 
-export const Recents = () => {
-  const { lastBridgeTxs } = useBridge()
+export const AccountRecents = () => {
+  const { lastAccountBridgeTxs } = useBridge()
 
   return (
     <Card className={s.recents}>
       <Heading
         icon="hugeicons:blockchain-05"
-        title="Global recent bridge transactions"
+        title="Your recent bridge transactions"
       ></Heading>
-      <Transactions transactions={lastBridgeTxs} />
+      <Transactions transactions={lastAccountBridgeTxs} />
     </Card>
   )
 }
