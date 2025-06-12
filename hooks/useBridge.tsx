@@ -216,7 +216,7 @@ export const useBridge = () => {
           )
           .send({
             from: address,
-            gas: "500000", // sendToChain gas limit
+            gas: "1500000", // sendToChain gas limit
             gasPrice: bestGasPrice.toString()
           })
 
