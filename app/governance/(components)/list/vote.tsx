@@ -24,6 +24,7 @@ export const Vote = ({ item }: { item: VoteProps }) => {
       color: "#10b981",
       description: "Vote in favor of this proposal.",
       value: 7500000,
+      price: 1,
       percentage: 78.9
     },
     {
@@ -32,6 +33,7 @@ export const Vote = ({ item }: { item: VoteProps }) => {
       color: "#ef4444",
       description: "Vote against this proposal.",
       value: 1500000,
+      price: 1,
       percentage: 15.8
     },
     {
@@ -40,6 +42,7 @@ export const Vote = ({ item }: { item: VoteProps }) => {
       color: "#828db3",
       description: "Formally abstain from voting.",
       value: 500000,
+      price: 1,
       percentage: 4.8
     },
     {
@@ -48,6 +51,7 @@ export const Vote = ({ item }: { item: VoteProps }) => {
       color: "#f97315",
       description: "Strong opposition that can block the proposal.",
       value: 5000,
+      price: 1,
       percentage: 0.5
     }
   ]

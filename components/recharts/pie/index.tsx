@@ -8,7 +8,8 @@ import s from "./pie.module.scss"
 interface RechartsPieProps {
   data: {
     name: string
-    value: number
+    value?: number
+    price: number
     color: string
     percentage: number
   }[]
@@ -22,7 +23,8 @@ export const RechartsPie = ({ data, className }: RechartsPieProps) => {
       return (
         <RechartsTooltip>
           <strong>{data.name}</strong>
-          <span>${data.value.toLocaleString()}</span>
+          {data.value && <span>Amount: {data.value}</span>}
+          <span>${data.price.toLocaleString()}</span>
           <span>{data.percentage.toFixed(2)}%</span>
         </RechartsTooltip>
       )
@@ -41,7 +43,7 @@ export const RechartsPie = ({ data, className }: RechartsPieProps) => {
             innerRadius="80%"
             outerRadius="100%"
             paddingAngle={0}
-            dataKey="value"
+            dataKey="price"
           >
             {data.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.color} />
@@ -57,7 +59,8 @@ export const RechartsPie = ({ data, className }: RechartsPieProps) => {
 interface RechartsPieLegendProps {
   data: {
     name: string
-    value: number
+    value?: number
+    price: number
     color: string
     percentage: number
   }[]
@@ -74,8 +77,10 @@ export const RechartsPieLegend = ({
         <div key={index} className={s.item}>
           <div className={s.dot} style={{ backgroundColor: item.color }} />
           <span className={s.name}>{item.name}</span>
-          <span className={s.value}>${item.value.toLocaleString()}</span>
-          <span className={s.percentage}>{item.percentage.toFixed(2)}%</span>
+          <span className={s.value}>{item.price}</span>
+          <span className={s.percentage}>
+            ${item.price.toLocaleString()} ({item.percentage.toFixed(2)}%)
+          </span>
         </div>
       ))}
     </div>

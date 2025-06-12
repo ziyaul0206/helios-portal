@@ -17,7 +17,7 @@ export const Distribution = () => {
 
   const data = delegationsByValidator.map((validator, i) => ({
     name: validator.moniker,
-    value: validator.totalUSD,
+    price: validator.totalUSD,
     percentage: (validator.totalUSD / totalDelegatedUSD) * 100,
     color: getValidatorColorByIndex(i)
   }))
