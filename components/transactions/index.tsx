@@ -21,7 +21,7 @@ export const Transactions = ({ transactions }: TransactionsProps) => {
       <tbody>
         {transactions.map((transaction) => (
           <TransactionsLine
-            key={"transactions-" + transaction.hash}
+            key={"transactions-" + Math.random().toString(36).substring(2, 15)}
             {...transaction}
           />
         ))}

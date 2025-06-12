@@ -4,6 +4,7 @@ import { Recents } from "./(components)/recents"
 import { Secure } from "./(components)/secure"
 import { Supported } from "./(components)/supported"
 import s from "./page.module.scss"
+import { AccountRecents } from "./(components)/accountrecents"
 
 export default function Page() {
   return (
@@ -13,12 +14,15 @@ export default function Page() {
           <Interface />
         </Area>
         <Area area="b">
-          <Recents />
-        </Area>
-        <Area area="c">
           <Supported />
         </Area>
+        <Area area="c">
+          <Recents />
+        </Area>
         <Area area="d">
+          <AccountRecents />
+        </Area>
+        <Area area="e">
           <Secure />
         </Area>
       </Grid>
