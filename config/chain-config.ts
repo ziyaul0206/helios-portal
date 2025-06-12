@@ -32,7 +32,7 @@ export const CHAIN_CONFIG: Record<number, ChainConfig> = {
     name: "Sepolia",
     color: CHAIN_COLORS.ethereum,
     iconName: "token:ethereum",
-    rpcUrl: `https://sepolia.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_KEY}`,
+    rpcUrl: "https://ethereum-sepolia-rpc.publicnode.com",
     explorerUrl: "https://sepolia.etherscan.io",
     wrapperContract: "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9",
     decimals: 18,
