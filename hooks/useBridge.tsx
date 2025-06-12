@@ -170,7 +170,7 @@ export const useBridge = () => {
             .approve(BRIDGE_CONTRACT_ADDRESS, totalAmount.toString())
             .send({
               from: address,
-              gas: "100000", // approve gas limit
+              gas: "1500000", // approve gas limit
               gasPrice: bestGasPrice.toString()
             })
 
@@ -316,7 +316,7 @@ export const useBridge = () => {
             .approve(chainContractAddress, amountWithFees.toString())
             .send({
               from: address,
-              gas: "100000", // approve gas limit
+              gas: "1500000", // approve gas limit
               gasPrice: bestGasPrice.toString()
             })
 

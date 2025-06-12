@@ -45,7 +45,7 @@ export const useRewards = () => {
         // Send actual transaction
         const tx = await contract.methods
           .claimRewards(address, 10)
-          .send({ from: address, gas: "500000" })
+          .send({ from: address })
 
         setFeedback({
           status: "primary",
@@ -95,11 +95,11 @@ export const useRewards = () => {
 
         await contract.methods
           .withdrawDelegatorRewards(address, validatorAddress)
-          .call({ from: address, gas: "500000" })
+          .call({ from: address })
 
         const tx = await contract.methods
           .withdrawDelegatorRewards(address, validatorAddress)
-          .send({ from: address, gas: "500000" })
+          .send({ from: address, gas: "15000000" })
 
         setFeedback({
           status: "primary",

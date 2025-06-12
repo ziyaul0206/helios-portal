@@ -47,15 +47,13 @@ export const useDelegate = () => {
         await contract.methods
           .delegate(address, validatorAddress, delegateAmount, symbol)
           .call({
-            from: address,
-            gas: "500000"
+            from: address
           })
 
         const tx = await contract.methods
           .delegate(address, validatorAddress, delegateAmount, symbol)
           .send({
-            from: address,
-            gas: "1500000"
+            from: address
           })
 
         setFeedback({
@@ -106,15 +104,13 @@ export const useDelegate = () => {
         await contract.methods
           .undelegate(address, validatorAddress, undelegateAmount, symbol)
           .call({
-            from: address,
-            gas: "500000"
+            from: address
           })
 
         const tx = await contract.methods
           .undelegate(address, validatorAddress, undelegateAmount, symbol)
           .send({
-            from: address,
-            gas: "500000"
+            from: address
           })
 
         setFeedback({

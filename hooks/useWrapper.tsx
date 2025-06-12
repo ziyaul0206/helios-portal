@@ -49,13 +49,13 @@ export const useWrapper = () => {
       await contract.methods.deposit().call({
         from: address,
         value: wrapAmount.toString(),
-        gas: "500000"
+        gas: "1500000"
       })
 
       const tx = await contract.methods.deposit().send({
         from: address,
         value: wrapAmount.toString(),
-        gas: "500000"
+        gas: "1500000"
       })
 
       setFeedback({

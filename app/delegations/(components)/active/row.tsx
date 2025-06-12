@@ -39,6 +39,20 @@ ValidatorRow) => {
 
     setOpenStake(true)
   }
+  const handleOpenUnstake = () => {
+    if (chainId !== HELIOS_NETWORK_ID) {
+      switchChain({ chainId: HELIOS_NETWORK_ID })
+    }
+
+    setOpenUnstake(true)
+  }
+  const handleOpenRewards = () => {
+    if (chainId !== HELIOS_NETWORK_ID) {
+      switchChain({ chainId: HELIOS_NETWORK_ID })
+    }
+
+    setOpenRewards(true)
+  }
 
   return (
     <TableRow className={s.row}>
@@ -101,7 +115,7 @@ ValidatorRow) => {
             variant="success"
             size="xsmall"
             border
-            onClick={() => setOpenRewards(true)}
+            onClick={handleOpenRewards}
           />
           <ModalClaim
             title={`Claim ${name} Rewards`}
@@ -117,7 +131,7 @@ ValidatorRow) => {
             variant="primary"
             size="xsmall"
             border
-            onClick={() => handleOpenStake()}
+            onClick={handleOpenStake}
           />
           <ModalStake
             title={`Stake on ${name}`}
@@ -132,7 +146,7 @@ ValidatorRow) => {
             variant="warning"
             size="xsmall"
             border
-            onClick={() => setOpenUnstake(true)}
+            onClick={handleOpenUnstake}
           />
           <ModalUnstake
             title={`Unstake from ${name}`}
