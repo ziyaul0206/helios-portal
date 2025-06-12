@@ -55,7 +55,7 @@ export const useDelegate = () => {
           .delegate(address, validatorAddress, delegateAmount, symbol)
           .send({
             from: address,
-            gas: "500000"
+            gas: "1500000"
           })
 
         setFeedback({
