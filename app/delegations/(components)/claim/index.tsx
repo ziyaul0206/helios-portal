@@ -8,12 +8,24 @@ import s from "./claim.module.scss"
 import { ModalClaim } from "./modal"
 import { useDelegationInfo } from "@/hooks/useDelegationInfo"
 import { formatNumber } from "@/lib/utils/number"
+import { useChainId, useSwitchChain } from "wagmi"
+import { HELIOS_NETWORK_ID } from "@/config/app"
 
 export const Claim = () => {
+  const chainId = useChainId()
+  const { switchChain } = useSwitchChain()
   const { totalRewards } = useDelegationInfo()
   const [open, setOpen] = useState(false)
   const [rewards, setRewards] = useState(71.5)
   const classes = clsx(s.claim, rewards > 0 && s.claimAvailable)
+
+  const handleOpenClaim = () => {
+    if (chainId !== HELIOS_NETWORK_ID) {
+      switchChain({ chainId: HELIOS_NETWORK_ID })
+    }
+
+    setOpen(true)
+  }
 
   return (
     <>
@@ -27,7 +39,7 @@ export const Claim = () => {
         )}
         <Button
           icon="helios"
-          onClick={() => setOpen(true)}
+          onClick={handleOpenClaim}
           variant={rewards > 0 ? "success" : "primary"}
         >
           Claim All Rewards

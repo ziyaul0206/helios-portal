@@ -9,6 +9,7 @@ import { toast } from "sonner"
 import s from "./claim.module.scss"
 import { formatNumber } from "@/lib/utils/number"
 import { useRewards } from "@/hooks/useRewards"
+import { Message } from "@/components/message"
 
 interface ModalClaimProps {
   title: string
@@ -31,7 +32,7 @@ export const ModalClaim = ({
 ModalClaimProps) => {
   const [loading, setLoading] = useState(false)
   const classes = clsx(s.claim, rewards > 0 && s.claimAvailable)
-  const { claimRewards, claimValidatorRewards } = useRewards()
+  const { claimRewards, claimValidatorRewards, feedback } = useRewards()
 
   const handleClaim = async () => {
     setLoading(true)
@@ -40,7 +41,6 @@ ModalClaimProps) => {
     } else {
       await claimRewards()
     }
-    setOpen(false)
     setLoading(false)
     toast.success("Rewards claimed successfully!")
   }
@@ -68,6 +68,11 @@ ModalClaimProps) => {
       >
         {loading ? "Claiming..." : "Claim Rewards"}
       </Button>
+      {feedback && feedback.message !== "" && (
+        <Message title="Rewards feedback" variant={feedback.status}>
+          {feedback.message}
+        </Message>
+      )}
       {/* <Message
         icon="hugeicons:information-circle"
         title="About Claiming Rewards"
