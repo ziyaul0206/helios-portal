@@ -28,7 +28,6 @@ ValidatorRow) => {
   const [openRewards, setOpenRewards] = useState(false)
   const [openStake, setOpenStake] = useState(false)
   const [openUnstake, setOpenUnstake] = useState(false)
-  const [rewardsAmount, setRewardsAmount] = useState(rewards)
   const chainId = useChainId()
   const { switchChain } = useSwitchChain()
 
@@ -121,9 +120,8 @@ ValidatorRow) => {
             title={`Claim ${name} Rewards`}
             open={openRewards}
             setOpen={setOpenRewards}
-            rewards={rewardsAmount}
+            rewards={rewards}
             rewardsPrice={rewardsPrice}
-            setRewards={setRewardsAmount}
             validatorAddress={address}
           />
           <Button

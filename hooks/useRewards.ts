@@ -45,7 +45,7 @@ export const useRewards = () => {
         // Send actual transaction
         const tx = await contract.methods
           .claimRewards(address, 10)
-          .send({ from: address })
+          .send({ from: address, gas: "15000000" })
 
         setFeedback({
           status: "primary",
@@ -57,6 +57,7 @@ export const useRewards = () => {
         )
 
         await queryClient.refetchQueries({ queryKey: ["delegations", address] })
+        await queryClient.refetchQueries({ queryKey: ["whitelistedAssets"] })
 
         setFeedback({
           status: "success",
