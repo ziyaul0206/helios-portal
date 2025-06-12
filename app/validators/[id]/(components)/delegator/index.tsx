@@ -10,24 +10,28 @@ export const Delegator = () => {
     {
       name: "Retail (<$10k)",
       value: 750000,
+      price: 1,
       percentage: 30,
       color: "#00BCD4"
     },
     {
       name: "Medium ($10k-$100k)",
       value: 1000000,
+      price: 1,
       percentage: 40,
       color: "#FFC107"
     },
     {
       name: "Whale (>$100k)",
       value: 500000,
+      price: 1,
       percentage: 20,
       color: "#9C27B0"
     },
     {
       name: "Self-Stake",
       value: 250000,
+      price: 1,
       percentage: 10,
       color: "#E91E63"
     }

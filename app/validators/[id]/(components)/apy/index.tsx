@@ -45,7 +45,8 @@ export const Apy = () => {
 
   const data = tokens.map((token) => ({
     name: token.display.symbol.toUpperCase(),
-    value: token.balance.totalPrice,
+    value: token.balance.amount,
+    price: token.balance.totalPrice,
     percentage: (token.balance.totalPrice / totalDelegated) * 100,
     color: token.display.color
   }))
@@ -62,7 +63,9 @@ export const Apy = () => {
   //   { name: "BNB", value: 250000, percentage: 10, color: TOKEN_COLORS.bnb }
   // ]
 
-  const formattedBoost = ethers.formatEther(validator.totalBoost.split(".")[0])
+  const formattedBoost = parseFloat(
+    ethers.formatEther(validator.totalBoost.split(".")[0])
+  ).toFixed(6)
 
   return (
     <Card auto>

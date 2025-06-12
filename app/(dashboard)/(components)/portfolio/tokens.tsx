@@ -7,22 +7,28 @@ import { APP_COLOR_SECONDARY } from "@/config/app"
 import { formatCurrency } from "@/lib/utils/number"
 import s from "./portfolio.module.scss"
 import { usePortfolioInfo } from "@/hooks/usePortfolioInfo"
+import Image from "next/image"
 
 interface LineProps {
   name?: string
+  logo?: string
   symbol?: string
   symbolIcon: React.ReactNode
   price: number
   amount?: string
 }
 
-const Line = ({ name, symbol, symbolIcon, price, amount }: LineProps) => {
+const Line = ({ name, logo, symbol, symbolIcon, price, amount }: LineProps) => {
   // const percent = (price / totalPriceUsd) * 100
   const amountFixed = amount ? parseFloat(amount).toFixed(4) : 0
 
   return (
     <li>
-      {symbolIcon}
+      {logo && logo !== "" ? (
+        <Image src={logo} width={32} height={32} alt="logo" />
+      ) : (
+        symbolIcon
+      )}
       <div className={s.info}>
         <div className={s.top}>{symbol}</div>
         <div className={s.bottom}>{name}</div>
@@ -57,6 +63,7 @@ export const PortfolioTokens = () => {
       {tokens.slice(0, 3).map((token) => (
         <Line
           key={"portfoliotokens-" + token.display.symbol}
+          logo={token.display.logo}
           symbolIcon={
             <Symbol
               icon={token.display.symbolIcon}

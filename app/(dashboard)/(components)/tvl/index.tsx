@@ -1,7 +1,11 @@
 import { Card } from "@/components/card"
 import { Heading } from "@/components/heading"
 import { Symbol } from "@/components/symbol"
-import { formatBigNumber, formatCurrency } from "@/lib/utils/number"
+import {
+  formatBigNumber,
+  formatCurrency,
+  formatNumber
+} from "@/lib/utils/number"
 import s from "./tvl.module.scss"
 import { useAssetsInfo } from "@/hooks/useAssetsInfo"
 import Image from "next/image"
@@ -65,7 +69,9 @@ export const TVL = () => {
             <div className={s.name}>
               {token.enriched.display.symbol.toUpperCase()}
             </div>
-            <div className={s.price}>{token.tokenAmount}</div>
+            <div className={s.price}>
+              {formatNumber(parseFloat(token.tokenAmount))}
+            </div>
           </div>
         ))}
       </div>

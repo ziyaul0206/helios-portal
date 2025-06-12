@@ -6,13 +6,24 @@ import {
   toAppKitNetwork,
   wagmiAdapter
 } from "@/config/wagmi"
-import { mainnet, polygonAmoy, sepolia, bscTestnet, avalancheFuji } from "@reown/appkit/networks"
+import {
+  mainnet,
+  polygonAmoy,
+  sepolia,
+  bscTestnet,
+  avalancheFuji
+} from "@reown/appkit/networks"
 import { createAppKit, SIWXMessage, SIWXSession } from "@reown/appkit/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { useEffect, type ReactNode } from "react"
 import { cookieToInitialState, WagmiProvider, type Config } from "wagmi"
 
 const queryClient = new QueryClient()
+queryClient.setDefaultOptions({
+  queries: {
+    placeholderData: (prev: any) => prev
+  }
+})
 
 if (!projectId) {
   throw new Error("Project ID is not defined")
