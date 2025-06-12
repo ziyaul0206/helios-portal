@@ -11,6 +11,7 @@ import { Stat } from "./(components)/stat"
 import { TVL } from "./(components)/tvl"
 import { Validators } from "./(components)/validators"
 import s from "./page.module.scss"
+import { Weights } from "./(components)/weights"
 
 export default function Page() {
   const { lastBlockNumber, blockTime, gasPriceUSD } = useBlockInfo()
@@ -53,14 +54,14 @@ export default function Page() {
         <Area area="f">
           <Discover />
         </Area>
-        <Area area="g">
+        <Area area="g" className={s.special}>
           <Linker
             icon="hugeicons:chart-rose"
             href={routes.delegations}
             text="My Delegations"
           />
         </Area>
-        <Area area="h">
+        <Area area="h" className={s.special}>
           <Linker
             icon="hugeicons:exchange-02"
             href={routes.bridge}
@@ -72,6 +73,9 @@ export default function Page() {
         </Area>
         <Area area="j">
           <TVL />
+        </Area>
+        <Area area="k">
+          <Weights />
         </Area>
       </Grid>
     </>
