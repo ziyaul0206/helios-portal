@@ -4,7 +4,7 @@ import { Button } from "@/components/button"
 import { Icon } from "@/components/icon"
 import { Modal } from "@/components/modal"
 import clsx from "clsx"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import s from "./claim.module.scss"
 import { formatNumber } from "@/lib/utils/number"
@@ -17,7 +17,6 @@ interface ModalClaimProps {
   setOpen: (open: boolean) => void
   rewards: number
   rewardsPrice: number
-  setRewards: (rewards: number) => void
   validatorAddress?: string
 }
 
@@ -44,6 +43,12 @@ ModalClaimProps) => {
     setLoading(false)
     toast.success("Rewards claimed successfully!")
   }
+
+  useEffect(() => {
+    if (!open) {
+      setLoading(false)
+    }
+  }, [open])
 
   return (
     <Modal

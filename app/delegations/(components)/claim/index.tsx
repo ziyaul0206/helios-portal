@@ -16,8 +16,10 @@ export const Claim = () => {
   const { switchChain } = useSwitchChain()
   const { totalRewards } = useDelegationInfo()
   const [open, setOpen] = useState(false)
-  const [rewards, setRewards] = useState(71.5)
-  const classes = clsx(s.claim, rewards > 0 && s.claimAvailable)
+  const classes = clsx(
+    s.claim,
+    totalRewards && totalRewards.amount > 0 && s.claimAvailable
+  )
 
   const handleOpenClaim = () => {
     if (chainId !== HELIOS_NETWORK_ID) {
@@ -40,7 +42,9 @@ export const Claim = () => {
         <Button
           icon="helios"
           onClick={handleOpenClaim}
-          variant={rewards > 0 ? "success" : "primary"}
+          variant={
+            totalRewards && totalRewards.amount > 0 ? "success" : "primary"
+          }
         >
           Claim All Rewards
         </Button>
@@ -51,7 +55,6 @@ export const Claim = () => {
         setOpen={setOpen}
         rewards={totalRewards?.amount || 0}
         rewardsPrice={totalRewards?.price || 0}
-        setRewards={setRewards}
       />
     </>
   )

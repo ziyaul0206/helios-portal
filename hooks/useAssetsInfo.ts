@@ -14,7 +14,7 @@ export const useAssetsInfo = () => {
   })
 
   const qFilteredAssets = useQuery({
-    queryKey: ["filteredAssets", qAssets.data],
+    queryKey: ["filteredAssets", qAssets.data, qAssets.dataUpdatedAt],
     enabled: !!qAssets.data,
     queryFn: async () => {
       const data = qAssets.data || []

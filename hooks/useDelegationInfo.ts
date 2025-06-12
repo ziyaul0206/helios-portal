@@ -5,6 +5,7 @@ import { useTokenRegistry } from "./useTokenRegistry"
 import { TokenExtended } from "@/types/token"
 import { ethers } from "ethers"
 import { HELIOS_NETWORK_ID, HELIOS_TOKEN_ADDRESS } from "@/config/app"
+import { secondsToMilliseconds } from "@/utils/number"
 
 export const useDelegationInfo = () => {
   const { address } = useAccount()
@@ -13,7 +14,8 @@ export const useDelegationInfo = () => {
   const qDelegations = useQuery({
     queryKey: ["delegations", address],
     queryFn: () => getDelegations(address!),
-    enabled: !!address
+    enabled: !!address,
+    refetchInterval: secondsToMilliseconds(30)
   })
 
   const validatorAddresses =
