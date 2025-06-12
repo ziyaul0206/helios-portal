@@ -78,11 +78,11 @@ export const useBridge = () => {
     queryKey: ["hyperionBridgeTxs"],
     queryFn: () =>
       getHyperionAccountTransferTxsByPageAndSize(
-        lastReceiverAddress,
+        address || "",
         toHex(1),
         toHex(10)
       ),
-    enabled: lastReceiverAddress !== "",
+    enabled: !!address,
     refetchInterval: secondsToMilliseconds(10)
   })
 
