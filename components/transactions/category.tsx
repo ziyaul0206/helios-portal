@@ -12,7 +12,7 @@ export const CategoryConfig: {
 } = {
   BRIDGE_IN: { name: "Bridge in", icon: "hugeicons:arrow-down-left-01" },
   BRIDGE_OUT: { name: "Bridge out", icon: "hugeicons:arrow-up-right-01" },
-  GOVERNANCE_VOTE: {
+  GOV_VOTE: {
     name: "Governance vote",
     icon: "hugeicons:bitcoin-withdraw"
   },
