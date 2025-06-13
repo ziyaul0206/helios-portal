@@ -77,7 +77,7 @@ export const RechartsPieLegend = ({
         <div key={index} className={s.item}>
           <div className={s.dot} style={{ backgroundColor: item.color }} />
           <span className={s.name}>{item.name}</span>
-          <span className={s.value}>{item.price}</span>
+          <span className={s.value}>{item.value}</span>
           <span className={s.percentage}>
             ${item.price.toLocaleString()} ({item.percentage.toFixed(2)}%)
           </span>
