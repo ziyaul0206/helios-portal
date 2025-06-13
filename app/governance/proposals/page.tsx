@@ -1,6 +1,7 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react"
 import { useAccount } from "wagmi"
+import Link from "next/link"
 import styles from "./page.module.scss"
 import { fetchProposals } from "../../utils/api"
 
@@ -166,28 +167,30 @@ const AllProposals: React.FC = () => {
               key={proposal.id}
               className={`${styles["proposal-item"]} ${proposal.resultClass}`}
             >
-              <div className={styles["proposal-details"]}>
-                <p className={styles.meta}>{proposal.meta}</p>
-                <p className={styles.status}>{proposal.status}</p>
-                <p className={styles.votes}>{proposal.votes}</p>
+              <Link href={`/governance/proposals/${proposal.id}`}>
+                <div className={styles["proposal-details"]}>
+                  <p className={styles.meta}>{proposal.meta}</p>
+                  <p className={styles.status}>{proposal.status}</p>
+                  <p className={styles.votes}>{proposal.votes}</p>
 
-                <h3 className={styles.title}>{proposal.title}</h3>
-                <p className={styles.result}>
-                  <span className={proposal.resultClass}>
-                    {proposal.result}
-                  </span>
-                </p>
-                <div className={styles["vote-bar"]}>
-                  <div
-                    className={styles["vote-for"]}
-                    style={{ width: proposal.voteFor }}
-                  ></div>
-                  <div
-                    className={styles["vote-against"]}
-                    style={{ width: proposal.voteAgainst }}
-                  ></div>
+                  <h3 className={styles.title}>{proposal.title}</h3>
+                  <p className={styles.result}>
+                    <span className={proposal.resultClass}>
+                      {proposal.result}
+                    </span>
+                  </p>
+                  <div className={styles["vote-bar"]}>
+                    <div
+                      className={styles["vote-for"]}
+                      style={{ width: proposal.voteFor }}
+                    ></div>
+                    <div
+                      className={styles["vote-against"]}
+                      style={{ width: proposal.voteAgainst }}
+                    ></div>
+                  </div>
                 </div>
-              </div>
+              </Link>
             </div>
           ))}
           <div ref={loaderRef} className={styles.loader}>

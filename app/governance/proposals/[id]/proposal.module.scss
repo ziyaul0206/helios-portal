@@ -1,0 +1,151 @@
+.container {
+  min-height: 75vh;
+  padding: 2rem 1rem;
+  display: flex;
+  justify-content: center;
+  font-family: "Inter", sans-serif;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 900px;
+  width: 100%;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+  flex: 1;
+  min-width: 250px;
+}
+
+.status {
+  font-size: 0.875rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.passed {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.rejected {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.active {
+  background-color: #dbeafe;
+  color: #1e3a8a;
+}
+
+.meta {
+  font-size: 0.95rem;
+  color: #4b5563;
+  margin-bottom: 2rem;
+
+  p {
+    margin: 0.25rem 0;
+    word-break: break-word;
+  }
+}
+
+.voteSection {
+  margin-bottom: 2rem;
+
+  strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #111827;
+  }
+
+  .progressBar {
+    height: 14px;
+    border-radius: 10px;
+    background: #e5e7eb;
+    display: flex;
+    overflow: hidden;
+  }
+
+  .yesBar {
+    background: linear-gradient(to right, #10b981, #059669);
+    transition: width 0.4s ease;
+  }
+
+  .noBar {
+    background-color: #ef4444;
+    transition: width 0.4s ease;
+  }
+
+  .percentages {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    color: #374151;
+    flex-wrap: wrap;
+  }
+}
+
+.summary {
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #111827;
+  }
+
+  p {
+    color: #4b5563;
+    font-size: 1rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+}
+
+/* 🔁 Responsive adjustments */
+@media screen and (max-width: 640px) {
+  .card {
+    padding: 1.25rem;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .meta {
+    font-size: 0.875rem;
+  }
+
+  .percentages {
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: flex-start;
+  }
+
+  .summary h2 {
+    font-size: 1.125rem;
+  }
+
+  .summary p {
+    font-size: 0.95rem;
+  }
+}
