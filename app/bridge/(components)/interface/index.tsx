@@ -79,7 +79,11 @@ export const Interface = () => {
   })
 
   const qEnrichedTokensByChain = useQuery({
-    queryKey: ["enrichedTokensByChain", form.from?.chainId],
+    queryKey: [
+      "enrichedTokensByChain",
+      qTokensByChain.data,
+      form.from?.chainId
+    ],
     queryFn: async () => {
       const results = await Promise.all(
         qTokensByChain.data!.map((token) =>
