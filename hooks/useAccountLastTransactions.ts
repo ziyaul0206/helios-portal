@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query"
 import { useAccount } from "wagmi"
 import { getAccountLastTransactions } from "@/helpers/rpc-calls"
 import { useTokenRegistry } from "@/hooks/useTokenRegistry"
-import { HELIOS_NETWORK_ID } from "@/config/app"
-import { formatUnits } from "ethers"
+import { HELIOS_NETWORK_ID, HELIOS_TOKEN_ADDRESS } from "@/config/app"
+import { ethers, formatUnits } from "ethers"
 import { secondsToMilliseconds } from "@/utils/number"
 
 export const useAccountLastTransactions = () => {
@@ -27,7 +27,7 @@ export const useAccountLastTransactions = () => {
           const parsed = tx.ParsedInfo
 
           let token = null
-          let amount = null
+          let amount = parseFloat(ethers.formatEther(raw.value))
           let usdValue = null
 
           if (parsed.contractAddress && parsed.amount) {
@@ -41,6 +41,11 @@ export const useAccountLastTransactions = () => {
               )
               usdValue = amount * token.price.usd
             }
+          } else {
+            token = await getTokenByAddress(
+              HELIOS_TOKEN_ADDRESS,
+              HELIOS_NETWORK_ID
+            )
           }
 
           return {
