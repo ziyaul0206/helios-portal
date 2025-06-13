@@ -38,7 +38,6 @@ export const Apy = () => {
   //   }
   // ]
   const tokens = delegation.assets
-  console.log(tokens)
   const totalDelegated = tokens.reduce(
     (acc, token) => acc + token.balance.totalPrice,
     0
