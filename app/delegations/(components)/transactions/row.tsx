@@ -24,7 +24,7 @@ const TRANSACTION_LABELS: Record<
   },
   STAKE_IN: {
     label: "Stake",
-    variant: "primary",
+    variant: "success",
     icon: "hugeicons:plus-sign-circle"
   },
   STAKE_OUT: {
@@ -32,14 +32,14 @@ const TRANSACTION_LABELS: Record<
     variant: "warning",
     icon: "hugeicons:minus-sign-circle"
   },
-  GOVERNANCE_VOTE: {
+  GOV_VOTE: {
     label: "Vote",
     variant: "primary",
     icon: "hugeicons:vote"
   },
   DEPOSIT: {
     label: "Deposit",
-    variant: "primary",
+    variant: "success",
     icon: "hugeicons:download-02"
   },
   WITHDRAW: {
@@ -48,9 +48,9 @@ const TRANSACTION_LABELS: Record<
     icon: "hugeicons:upload-02"
   },
   UNKNOWN: {
-    label: "Unknown",
-    variant: "secondary",
-    icon: "hugeicons:help-hexagon"
+    label: "Transaction",
+    variant: "primary",
+    icon: "hugeicons:gas-pipe"
   }
 }
 

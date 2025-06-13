@@ -60,7 +60,7 @@ export interface TransactionLast {
 export type TransactionLastType =
   | "BRIDGE_OUT"
   | "BRIDGE_IN"
-  | "GOVERNANCE_VOTE"
+  | "GOV_VOTE"
   | "STAKE_IN"
   | "STAKE_OUT"
   | "DEPOSIT"
