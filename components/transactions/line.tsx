@@ -18,6 +18,8 @@ export const TransactionsLine = (transaction: TransactionLight) => {
   if (transaction.chainId && transaction.type === "BRIDGE_OUT" && transaction.hash) {
     const chainConfig = getChainConfig(transaction.chainId)
     explorerLink = chainConfig ? `${chainConfig.explorerUrl}/tx/${transaction.hash}` : undefined
+  } else if (transaction.type === "BRIDGE_IN" && transaction.hash) {
+    explorerLink = `${EXPLORER_URL}/tx/${transaction.hash.split(",")[0]}`
   }
 
   return (

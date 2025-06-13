@@ -126,8 +126,8 @@ export const ModalUnstake = ({
         title="Unbonding Period"
         className={s.message}
       >
-        Your assets will be locked for 14 days during the unbonding period. You
-        will not earn any rewards during this period.
+        Your assets will be locked for 30 seconds during the unbonding period.
+        You will not earn any rewards during this period.
       </Message>
 
       <div className={s.group}>
