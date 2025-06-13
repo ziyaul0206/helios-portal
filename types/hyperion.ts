@@ -5,6 +5,7 @@ export interface HyperionChain {
   chainType: string
   logo: string
   hyperionId: number
+  paused: boolean
 }
 
 export interface HyperionBridgeTx {

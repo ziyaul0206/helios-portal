@@ -269,6 +269,7 @@ export const Interface = () => {
   const heliosInOrOut =
     form.from?.chainId === HELIOS_NETWORK_ID ||
     form.to?.chainId === HELIOS_NETWORK_ID
+  const chainIsPaused = form.to?.paused || false
   const isDisabled =
     form.inProgress ||
     !tokenInfo.data ||
@@ -276,7 +277,8 @@ export const Interface = () => {
     (tokenInfo.data && amountNb > tokenInfo.data.readableBalance) ||
     !form.address ||
     form.from?.chainId === form.to?.chainId ||
-    !heliosInOrOut
+    !heliosInOrOut ||
+    chainIsPaused
 
   return (
     <>
@@ -468,6 +470,12 @@ export const Interface = () => {
               <Message title="Bridge warning" variant={"warning"}>
                 Helios Network needs to be selected as a bridge chain.
                 Cross-chain bridge is not yet available.
+              </Message>
+            )}
+            {chainIsPaused && (
+              <Message title="Chain paused" variant={"warning"}>
+                The destination chain is currently paused. Please try again
+                later.
               </Message>
             )}
             <div
