@@ -33,7 +33,6 @@ export const useBridge = () => {
   const queryClient = useQueryClient()
   const { getTokenByAddress } = useTokenRegistry()
 
-  const [lastReceiverAddress, setLastReceiverAddress] = useState("")
   const [txHashInProgress, setTxHashInProgress] = useState("")
 
   const enrichHyperionTransaction = async (
@@ -77,12 +76,8 @@ export const useBridge = () => {
   const qAccountHyperionTxs = useQuery({
     queryKey: ["hyperionBridgeTxs"],
     queryFn: () =>
-      getHyperionAccountTransferTxsByPageAndSize(
-        lastReceiverAddress,
-        toHex(1),
-        toHex(10)
-      ),
-    enabled: lastReceiverAddress !== "",
+      getHyperionAccountTransferTxsByPageAndSize(address!, toHex(1), toHex(10)),
+    enabled: !!address,
     refetchInterval: secondsToMilliseconds(10)
   })
 
@@ -228,7 +223,6 @@ export const useBridge = () => {
         })
 
         setTxHashInProgress(tx.transactionHash)
-        setLastReceiverAddress(receiverAddress)
 
         const receipt = await web3Provider.eth.getTransactionReceipt(
           tx.transactionHash
@@ -368,7 +362,6 @@ export const useBridge = () => {
           })
 
         setTxHashInProgress(tx.transactionHash)
-        setLastReceiverAddress(receiverAddress)
 
         const receipt = await web3Provider.eth.getTransactionReceipt(
           tx.transactionHash

@@ -9,6 +9,7 @@ import { useBridge } from "@/hooks/useBridge"
 
 export const AccountRecents = () => {
   const { lastAccountBridgeTxs } = useBridge()
+  console.log(lastAccountBridgeTxs)
 
   return (
     <Card className={s.recents}>
