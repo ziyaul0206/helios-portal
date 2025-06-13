@@ -26,10 +26,11 @@ export const useValidatorDetail = (address: string) => {
   })
 
   const enrichedAssetsQuery = useQuery({
-    queryKey: ["enrichedValidatorAssets", address],
+    queryKey: ["enrichedValidatorAssets", address, qValidatorDetail.data],
     enabled: !!qValidatorDetail.data?.delegation?.assets.length,
     queryFn: async (): Promise<TokenExtended[]> => {
       const assets = qValidatorDetail.data!.delegation.assets
+      console.log("assets", assets)
 
       const results = await Promise.all(
         assets.map(async (asset) => {
