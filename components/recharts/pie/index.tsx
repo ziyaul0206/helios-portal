@@ -4,6 +4,7 @@ import clsx from "clsx"
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts"
 import { RechartsTooltip } from "../tooltip"
 import s from "./pie.module.scss"
+import { formatNumber } from "@/lib/utils/number"
 
 interface RechartsPieProps {
   data: {
@@ -24,7 +25,7 @@ export const RechartsPie = ({ data, className }: RechartsPieProps) => {
         <RechartsTooltip>
           <strong>{data.name}</strong>
           {data.value && <span>Amount: {data.value}</span>}
-          <span>${data.price.toLocaleString()}</span>
+          <span>${formatNumber(data.price)}</span>
           <span>{data.percentage.toFixed(2)}%</span>
         </RechartsTooltip>
       )
@@ -79,7 +80,7 @@ export const RechartsPieLegend = ({
           <span className={s.name}>{item.name}</span>
           <span className={s.value}>{item.value}</span>
           <span className={s.percentage}>
-            ${item.price.toLocaleString()} ({item.percentage.toFixed(2)}%)
+            ${formatNumber(item.price)} ({item.percentage.toFixed(2)}%)
           </span>
         </div>
       ))}
