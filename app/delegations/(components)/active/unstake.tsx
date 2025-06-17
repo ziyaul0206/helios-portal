@@ -81,7 +81,7 @@ export const ModalUnstake = ({
     isLoading ||
     !selectedAsset ||
     amountNb <= 0 ||
-    (enrichedAsset && amountNb >= enrichedAsset.balance.amount)
+    (enrichedAsset && amountNb > enrichedAsset.balance.amount)
 
   return (
     <Modal
