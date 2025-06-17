@@ -16,6 +16,7 @@ export const useAssetsInfo = () => {
   const qFilteredAssets = useQuery({
     queryKey: ["filteredAssets", qAssets.data, qAssets.dataUpdatedAt],
     enabled: !!qAssets.data,
+    throwOnError: true,
     queryFn: async () => {
       const data = qAssets.data || []
 
@@ -28,7 +29,10 @@ export const useAssetsInfo = () => {
           if (!enriched) return null
 
           const tokenAmount = parseFloat(asset.totalShares) / asset.baseWeight
-          const tokenAmountFormatted = fromWeiToEther(tokenAmount.toString())
+          const tokenAmountString = tokenAmount.toLocaleString("fullwide", {
+            useGrouping: false
+          })
+          const tokenAmountFormatted = fromWeiToEther(tokenAmountString)
           const tvlUSD = parseFloat(tokenAmountFormatted) * enriched.price.usd
 
           return {
