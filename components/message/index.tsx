@@ -7,6 +7,7 @@ interface MessageProps extends React.HTMLAttributes<HTMLDivElement> {
   icon?: string
   title: string
   children: React.ReactNode
+  nobreak?: boolean
   variant?: Variants
 }
 
@@ -14,6 +15,7 @@ export const Message = ({
   variant = "primary",
   icon,
   title,
+  nobreak,
   children,
   ...props
 }: MessageProps) => {
@@ -27,7 +29,9 @@ export const Message = ({
         {icon && <Icon icon={icon} />}
         {title}
       </div>
-      <div className={s.content}>{children}</div>
+      <div className={s.content} data-nobreak={nobreak}>
+        {children}
+      </div>
     </div>
   )
 }

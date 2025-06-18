@@ -9,10 +9,15 @@ import {
 import s from "./tvl.module.scss"
 import { useAssetsInfo } from "@/hooks/useAssetsInfo"
 import Image from "next/image"
+import { HELIOS_TOKEN_ADDRESS } from "@/config/app"
 
 export const TVL = () => {
   const { assets, totalHolders, totalTVL } = useAssetsInfo()
-  const filteredAssets = assets.filter((asset) => asset.totalShares !== "0")
+  const filteredAssets = assets.filter(
+    (asset) =>
+      asset.totalShares !== "0" &&
+      asset.contractAddress !== HELIOS_TOKEN_ADDRESS
+  )
 
   return (
     <Card className={s.tvl}>

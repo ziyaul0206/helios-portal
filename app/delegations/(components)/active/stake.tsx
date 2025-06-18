@@ -122,8 +122,15 @@ export const ModalStake = ({
       />
 
       {assetIsHLS && (
-        <Message title="About HLS for boosting purpose" variant="warning">
+        <Message
+          title="About HLS for boosting purpose"
+          variant="warning"
+          nobreak
+        >
           {`You will need to unstake all other assets to withdraw them, it's a way to secure the network and validators as they also take the risk of accepting your assets.`}
+          <br />
+          <br />
+          <b>{`Delegating HLS will only boost the rewards of other tokens, it will not gain rewards by itself.`}</b>
         </Message>
       )}
 
