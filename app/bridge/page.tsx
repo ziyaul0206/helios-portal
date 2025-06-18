@@ -5,7 +5,7 @@ import { Secure } from "./(components)/secure"
 import { Supported } from "./(components)/supported"
 import s from "./page.module.scss"
 import { AccountRecents } from "./(components)/accountrecents"
-import { Message } from "@/components/message"
+// import { Message } from "@/components/message"
 
 export default function Page() {
   // return (
