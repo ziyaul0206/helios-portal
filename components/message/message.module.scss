@@ -38,4 +38,8 @@
   line-height: 1.35;
   font-weight: 400;
   word-break: break-all;
+
+  &[data-nobreak="true"] {
+    word-break: normal;
+  }
 }
