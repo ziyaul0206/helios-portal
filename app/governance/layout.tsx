@@ -2,6 +2,7 @@
 
 import TabSelector from "@/components/tab"
 import { ReactNode } from "react"
+import styles from "./layout.module.scss"
 
 export default function GovernanceLayout({
   children
@@ -9,9 +10,9 @@ export default function GovernanceLayout({
   children: ReactNode
 }) {
   return (
-    <div className="p-6">
+    <div className={styles.layoutWrapper}>
       <TabSelector />
-      <div className="mt-6">{children}</div>
+      <div className={styles.pageContent}>{children}</div>
     </div>
   )
 }

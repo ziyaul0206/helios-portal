@@ -1,0 +1,15 @@
+.layoutWrapper {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f9fafb; // Light background for content
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.pageContent {
+  flex: 1;
+  padding: 2rem;
+  background-color: #f9fafb;
+  overflow-y: auto;
+}

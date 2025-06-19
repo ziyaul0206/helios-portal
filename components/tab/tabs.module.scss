@@ -1,38 +1,46 @@
-.tabSelector {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.25rem;
-  background-color: white;
-  border: 1px solid #e5e7eb; // Tailwind's gray-200
-  border-radius: 9999px; // Full-rounded
-}
-
-.tabWrapper {
+.sidebar {
   display: flex;
-  justify-content: center;
-  margin-top: 1rem;
+  flex-direction: column;
+  background-color: #083fa3; // Primary blue background
+  padding: 1rem;
+  width: 220px;
+  height: 100vh;
+  border-right: 1px solid #0c2e7e;
+
+  border-top-right-radius: 1rem; // Rounded top-right corner
 }
 
 .tabButton {
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  font-size: 0.875rem; // text-sm
-  font-weight: 600;
-  transition: all 0.3s ease;
-  color: #6b7280; // Tailwind's gray-500
-  background-color: transparent;
-  margin-right: 0.5rem; // 👈 spacing between tabs
-
-  &:last-child {
-    margin-right: 0; // prevent margin on last tab
-  }
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: none;
+  color: #e0e7ff; // Soft off-white
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition: background 0.2s ease, color 0.2s ease;
 
   &:hover {
-    color: #002dcb;
+    background-color: #0c2e7e; // Darker blue on hover
+    color: #ffffff;
   }
 
   &.active {
-    background-color: #002dcb;
+    background-color: #2563eb; // Bright blue for active
     color: #ffffff;
   }
+}
+
+.icon {
+  margin-right: 0.75rem;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+}
+
+.label {
+  white-space: nowrap;
 }
