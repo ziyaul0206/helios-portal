@@ -18,12 +18,12 @@
   flex-wrap: wrap;
 }
 
-.sectionTitle {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0;
-  line-height: 1.5;
-}
+// .sectionTitle {
+//   font-size: 1.5rem;
+//   font-weight: 700;
+//   margin: 0;
+//   line-height: 1.5;
+// }
 
 .create-proposal {
   background-color: #002dcb;
@@ -418,4 +418,133 @@
   height: 1px;
   background-color: #ccc;
   width: 100%;
+}
+.myProposalsSection,
+.allProposalsSection {
+  width: 100%;
+  // padding: 1rem;
+  background: #f9f9f9;
+}
+
+.sectionTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.card {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  border-left: 4px solid #0070f3;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+
+  .proposalTitle {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .proposalAuthor {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 4px;
+  }
+
+  .badge {
+    background-color: #ffe69a;
+    color: #a97100;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 6px;
+    height: fit-content;
+  }
+}
+
+.cardMeta {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 20px;
+
+  .metaItem {
+    display: flex;
+    flex-direction: column;
+
+    .metaLabel {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .metaValue {
+      font-size: 16px;
+      font-weight: 500;
+    }
+  }
+}
+
+.progressSection {
+  margin-bottom: 20px;
+
+  .progressLabel {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 6px;
+  }
+
+  .progressBar {
+    height: 4px;
+    background-color: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+
+    .filled {
+      width: 50%;
+      height: 100%;
+      background-color: #3b82f6;
+      transition: width 0.3s ease;
+    }
+  }
+
+  .progressSteps {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-top: 4px;
+
+    .currentStep {
+      font-weight: 500;
+      color: #1f2937;
+    }
+
+    .upcomingStep {
+      color: #9ca3af;
+    }
+  }
+}
+
+.cardFooter {
+  margin-top: 12px;
+
+  .buttonOutline {
+    background-color: #f1f5f9;
+    color: #1f2937;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #e2e8f0;
+    }
+  }
 }

@@ -12,6 +12,7 @@ interface Proposal {
   status: string
   type: string
   waitingFor: string
+  nextStep: string
 }
 
 interface ProposalData {
@@ -27,28 +28,48 @@ interface ProposalData {
 }
 
 const MyProposals: React.FC<{ proposal: Proposal }> = ({ proposal }) => (
-  <div>
-    <h1 className={styles.dashboardTitle}>My proposals</h1>
-    <div className={styles["proposal-card"]}>
-      <p className={styles["proposal-author"]}>By {proposal.author}</p>
-      <h2 className={styles["proposal-title"]}>{proposal.title}</h2>
-      <div className={styles["proposal-meta"]}>
-        <p>
-          Status <span>{proposal.status}</span>
-        </p>
-        <p>
-          Type <span>{proposal.type}</span>
-        </p>
-        <p>
-          Waiting for <span>{proposal.waitingFor}</span>
-        </p>
+  <div className={styles.myProposalsSection}>
+    <h1 className={styles.sectionTitle}>My Proposals</h1>
+
+    <div className={styles.card}>
+      <div className={styles.cardHeader}>
+        <div>
+          <h2 className={styles.proposalTitle}>
+            {proposal.title || "Untitled proposal"}
+          </h2>
+          <p className={styles.proposalAuthor}>By {proposal.author}</p>
+        </div>
+        <span className={styles.badge}>Draft</span>
       </div>
-      <div className={styles["proposal-steps"]}>
-        <span>Create draft</span>
-        <span>Submit draft</span>
-        <span>Pending</span>
-        <span>Queue</span>
-        <span>Execute</span>
+
+      <div className={styles.cardMeta}>
+        <div className={styles.metaItem}>
+          <div className={styles.metaLabel}>Type</div>
+          <div className={styles.metaValue}>{proposal.type || "General"}</div>
+        </div>
+        <div className={styles.metaItem}>
+          <div className={styles.metaLabel}>Status</div>
+          <div className={styles.metaValue}>
+            {proposal.waitingFor || "Awaiting submission"}
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.progressSection}>
+        <div className={styles.progressLabel}>Next start step</div>
+        <div className={styles.progressBar}>
+          <div className={styles.filled} />
+        </div>
+        <div className={styles.progressSteps}>
+          <span className={styles.currentStep}>
+            {proposal.nextStep || "Submit Draft"}
+          </span>
+          <span className={styles.upcomingStep}>Vote</span>
+        </div>
+      </div>
+
+      <div className={styles.cardFooter}>
+        <button className={styles.buttonOutline}>Edit Draft</button>
       </div>
     </div>
   </div>
@@ -309,11 +330,12 @@ const AllProposals: React.FC = () => {
 const ProposalDashboard: React.FC = () => {
   const myProposal: Proposal = {
     id: "1",
-    title: "[Title pending]",
+    title: "WBTC Treasury Proposal",
     author: "0x80C72ec57e33DDF9fdEf9103F284394626a280D",
     status: "Draft",
     type: "[Type pending]",
-    waitingFor: "Submitting draft"
+    waitingFor: "Submitting draft",
+    nextStep: "Submit Draft"
   }
 
   return (
