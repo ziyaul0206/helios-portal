@@ -1,43 +1,42 @@
 .sidebar {
   display: flex;
-  flex-direction: column;
-  background-color: #083fa3; // Primary blue background
-  padding: 1rem;
-  padding-top: 1.5rem;
-  width: 220px;
-  height: 100vh;
-  border-right: 1px solid #0c2e7e;
-
-  border-top-right-radius: 0.5rem; // Rounded top-right corner
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem 2rem;
 }
 
 .tabButton {
   display: flex;
   align-items: center;
-  padding: 0.75rem 1rem;
-  border: none;
-  background: none;
-  color: #e0e7ff; // Soft off-white
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
   font-size: 1rem;
   font-weight: 500;
+  color: #0f172a;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 9999px;
   cursor: pointer;
-  border-radius: 0.5rem;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 
   &:hover {
-    background-color: #0c2e7e; // Darker blue on hover
-    color: #ffffff;
+    background: linear-gradient(120deg, #dbeafe, #bfdbfe);
+    color: #1e3a8a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
   &.active {
-    background-color: #2563eb; // Bright blue for active
+    background-color: #002dcb;
     color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 0 10px rgba(0, 45, 203, 0.3);
   }
 }
 
 .icon {
-  margin-right: 0.75rem;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   display: flex;
   align-items: center;
 }
