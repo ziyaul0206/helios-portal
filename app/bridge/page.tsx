@@ -15,25 +15,25 @@ export default function Page() {
     </Message>
   )
 
-  // return (
-  //   <>
-  //     <Grid className={s.bridge}>
-  //       <Area area="a">
-  //         <Interface />
-  //       </Area>
-  //       <Area area="b">
-  //         <Supported />
-  //       </Area>
-  //       <Area area="c">
-  //         <Recents />
-  //       </Area>
-  //       <Area area="d">
-  //         <AccountRecents />
-  //       </Area>
-  //       <Area area="e">
-  //         <Secure />
-  //       </Area>
-  //     </Grid>
-  //   </>
-  // )
+ return (
+   <>
+     <Grid className={s.bridge}>
+       <Area area="a">
+         <Interface />
+       </Area>
+       <Area area="b">
+         <Supported />
+       </Area>
+       <Area area="c">
+         <Recents />
+       </Area>
+       <Area area="d">
+         <AccountRecents />
+       </Area>
+       <Area area="e">
+         <Secure />
+       </Area>
+     </Grid>
+   </>
+ )
 }
