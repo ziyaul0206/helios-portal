@@ -4,7 +4,6 @@
   border: 1px solid #ccc;
   display: flex;
   flex-direction: column;
-  cursor: pointer;
 }
 
 .line {
@@ -80,4 +79,8 @@
 
 .roundfull {
   border-radius: 100%;
+}
+
+.clickable {
+  cursor: pointer;
 }

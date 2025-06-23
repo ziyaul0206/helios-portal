@@ -49,6 +49,7 @@ export const DelegateCard = forwardRef<HTMLDivElement, CardProps>(
           <div className={styles.iconscontainer}>
             {hasX && (
               <Image
+                className={styles.clickable}
                 src="/img/twitter.svg"
                 alt="twitter"
                 width={20}
@@ -57,6 +58,7 @@ export const DelegateCard = forwardRef<HTMLDivElement, CardProps>(
             )}
             {hasDiscord && (
               <Image
+                className={styles.clickable}
                 src="/img/discord.svg"
                 alt="Discord"
                 width={25}
