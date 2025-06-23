@@ -3,6 +3,12 @@
   justify-content: center;
   gap: 1rem;
   padding: 1rem 2rem;
+  flex-wrap: wrap;
+
+  @media (max-width: 640px) {
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+  }
 }
 
 .tabButton {
@@ -33,14 +39,27 @@
     font-weight: 600;
     box-shadow: 0 0 10px rgba(0, 45, 203, 0.3);
   }
+
+  @media (max-width: 640px) {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.875rem;
+  }
 }
 
 .icon {
   font-size: 1.1rem;
   display: flex;
   align-items: center;
+
+  @media (max-width: 640px) {
+    font-size: 1rem;
+  }
 }
 
 .label {
   white-space: nowrap;
+
+  @media (max-width: 480px) {
+    display: none;
+  }
 }
