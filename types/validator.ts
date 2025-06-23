@@ -65,3 +65,17 @@ export interface ValidatorWithDelegationCommission {
     amount: string
   }
 }
+
+export interface ValidatorWithAssetsCommission {
+  validator: Validator
+  assets: {
+    baseAmount: string
+    denom: string
+    weightedAmount: string
+    contractAddress: string
+  }[]
+  commission: {
+    denom: string
+    amount: string
+  }
+}

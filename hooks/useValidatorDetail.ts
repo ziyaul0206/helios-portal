@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import {
   getDelegation,
+  getValidatorWithHisAssetsAndCommission,
   getValidatorWithHisDelegationAndCommission
 } from "@/helpers/rpc-calls"
 import { useTokenRegistry } from "@/hooks/useTokenRegistry"
@@ -19,6 +20,12 @@ export const useValidatorDetail = (address: string) => {
     enabled: !!address
   })
 
+  const qValidatorAssets = useQuery({
+    queryKey: ["validatorAssets", address],
+    queryFn: () => getValidatorWithHisAssetsAndCommission(address),
+    enabled: !!address
+  })
+
   const qDelegationDetail = useQuery({
     queryKey: ["delegationDetail", userAddress, address],
     queryFn: () => getDelegation(userAddress!, address),
@@ -26,10 +33,10 @@ export const useValidatorDetail = (address: string) => {
   })
 
   const enrichedAssetsQuery = useQuery({
-    queryKey: ["enrichedValidatorAssets", address, qValidatorDetail.data],
-    enabled: !!qValidatorDetail.data?.delegation?.assets.length,
+    queryKey: ["enrichedValidatorAssets", address, qValidatorAssets.data],
+    enabled: !!qValidatorAssets.data?.assets?.length,
     queryFn: async (): Promise<TokenExtended[]> => {
-      const assets = qValidatorDetail.data!.delegation.assets
+      const assets = qValidatorAssets.data!.assets
 
       const results = await Promise.all(
         assets.map(async (asset) => {
@@ -40,7 +47,7 @@ export const useValidatorDetail = (address: string) => {
           if (!enriched) return null
 
           const amount = parseFloat(
-            ethers.formatUnits(asset.amount, enriched.functionnal.decimals)
+            ethers.formatUnits(asset.baseAmount, enriched.functionnal.decimals)
           )
 
           return {

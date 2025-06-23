@@ -4,7 +4,7 @@ import { Block } from "@/types/block"
 import { Delegation } from "@/types/delegation"
 import { Proposal } from "@/types/proposal"
 import { Transaction, TransactionLast } from "@/types/transaction"
-import { Validator, ValidatorWithDelegationCommission } from "@/types/validator"
+import { Validator, ValidatorWithAssetsCommission, ValidatorWithDelegationCommission } from "@/types/validator"
 import { WhitelistedAsset } from "@/types/whitelistedAsset"
 import { HyperionBridgeTx, HyperionChain } from "@/types/hyperion"
 import { TokenDenom } from "@/types/denom"
@@ -124,6 +124,12 @@ export const getValidator = (address: string) =>
 export const getValidatorWithHisDelegationAndCommission = (address: string) =>
   request<ValidatorWithDelegationCommission>(
     "eth_getValidatorWithHisDelegationAndCommission",
+    [address]
+  )
+
+export const getValidatorWithHisAssetsAndCommission = (address: string) =>
+  request<ValidatorWithAssetsCommission>(
+    "eth_getValidatorWithHisAssetsAndCommission",
     [address]
   )
 
