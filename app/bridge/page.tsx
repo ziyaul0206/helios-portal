@@ -8,12 +8,12 @@ import { AccountRecents } from "./(components)/accountrecents"
 import { Message } from "@/components/message"
 
 export default function Page() {
-  return (
-    <Message title="Bridge temporarily unavailable" variant="danger">
-      The cross-chain bridge is temporarily disabled for maintenance. It will be
-      back soon.
-    </Message>
-  )
+  // return (
+  //   <Message title="Bridge temporarily unavailable" variant="danger">
+  //     The cross-chain bridge is temporarily disabled for maintenance. It will be
+  //     back soon.
+  //   </Message>
+  // )
 
  return (
    <>
