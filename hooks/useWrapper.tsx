@@ -7,6 +7,7 @@ import { Feedback } from "@/types/feedback"
 import { wrapperAbi } from "@/constant/helios-contracts"
 import { CHAIN_CONFIG, isWrappableChain } from "@/config/chain-config"
 import { useQuery } from "@tanstack/react-query"
+import { secondsToMilliseconds } from "@/utils/number"
 
 export const useWrapper = () => {
   const { address } = useAccount()
@@ -28,7 +29,7 @@ export const useWrapper = () => {
       const balance = await web3Provider.eth.getBalance(address)
       return ethers.formatUnits(balance, decimals)
     },
-    refetchInterval: 10000 // Rafraîchir toutes les 10 secondes
+    refetchInterval: secondsToMilliseconds(60)
   })
 
   const resetFeedback = () => {
