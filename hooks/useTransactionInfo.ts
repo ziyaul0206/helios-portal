@@ -11,7 +11,7 @@ export const useTransactionInfo = (size = 3) => {
   const qTransactions = useQuery({
     queryKey: ["transactions", size],
     queryFn: () => getLastTransactions(toHex(size)),
-    refetchInterval: secondsToMilliseconds(10)
+    refetchInterval: secondsToMilliseconds(60)
   })
 
   const enrichedTransactions = useQuery({

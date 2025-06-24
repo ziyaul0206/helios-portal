@@ -15,7 +15,7 @@ export const useDelegationInfo = () => {
     queryKey: ["delegations", address],
     queryFn: () => getDelegations(address!),
     enabled: !!address,
-    refetchInterval: secondsToMilliseconds(30)
+    refetchInterval: secondsToMilliseconds(60)
   })
 
   const validatorAddresses =
