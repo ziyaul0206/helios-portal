@@ -78,7 +78,7 @@ export const useBridge = () => {
     queryFn: () =>
       getHyperionAccountTransferTxsByPageAndSize(address!, toHex(1), toHex(10)),
     enabled: !!address,
-    refetchInterval: secondsToMilliseconds(10)
+    refetchInterval: secondsToMilliseconds(60)
   })
 
   const enrichedAccountHyperionTxs = useQuery({
