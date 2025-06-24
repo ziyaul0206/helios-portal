@@ -74,7 +74,7 @@ export const Interface = () => {
   const qTokensByChain = useQuery({
     queryKey: ["tokensByChain", form.to?.chainId],
     queryFn: () =>
-      getTokensByChainIdAndPageAndSize(form.to!.chainId, toHex(1), toHex(10)),
+      getTokensByChainIdAndPageAndSize(form.to!.chainId, toHex(1), toHex(5)),
     enabled: !!form.to
   })
 
@@ -120,8 +120,8 @@ export const Interface = () => {
     setOpenChain(true)
   }
 
-  const handleChangeChain = (chain: HyperionChain) => {
-    if (chainType === "from" && chain.chainId !== form.from?.chainId) {
+  const handleChangeChain = (chain: HyperionChain, forceChainType?: "from" | "to") => {
+    if ((chainType === 'from' || forceChainType === "from") && chain.chainId !== form.from?.chainId) {
       switchChain({ chainId: chain.chainId })
       setOpenChain(false)
 
@@ -138,7 +138,9 @@ export const Interface = () => {
   }
 
   const handleSwap = () => {
-    setForm({ ...form, from: form.to, to: form.from })
+    if (form.to) {
+      handleChangeChain(form.to, 'from')
+    }
   }
 
   const handleFocusInput = (e: React.MouseEvent<HTMLDivElement>) => {
