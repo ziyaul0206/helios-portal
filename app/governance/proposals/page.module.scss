@@ -49,6 +49,10 @@
   animation: spin 1s linear infinite;
   margin-right: 10px;
 }
+// Hide when loading is false
+.hidden {
+  display: none;
+}
 
 @keyframes spin {
   0% {
@@ -604,5 +608,27 @@
       width: 100%;
       text-align: center;
     }
+  }
+}
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: var(--card-background, #f8f9fa);
+  border-radius: 8px;
+  border: 1px solid var(--border-color, #e9ecef);
+  margin: 2rem 0;
+
+  h3 {
+    color: var(--text-primary, #333);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+
+  p {
+    color: var(--text-secondary, #666);
+    font-size: 1rem;
+    margin: 0;
+    line-height: 1.5;
   }
 }

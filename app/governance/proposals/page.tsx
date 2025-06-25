@@ -110,6 +110,7 @@ const AllProposals: React.FC = () => {
   const { isConnected } = useAccount()
   const [isLoading, setIsLoading] = useState(false)
   const [showModal, setShowModal] = useState(false)
+  const [hasLoadedInitial, setHasLoadedInitial] = useState(false) // Track if we've made the first load attempt
 
   const handleCreateProposal = () => {
     setIsLoading(true)
@@ -121,12 +122,17 @@ const AllProposals: React.FC = () => {
 
   const loadMoreProposals = async () => {
     if (loading) return
+    setLoading(true) // Set loading to true at the start
+
     const rawData = await fetchProposals(pageRef.current, 10)
-    setLoading(false)
+    setHasLoadedInitial(true) // Mark that we've attempted the first load
+
     if (!rawData || rawData.length === 0) {
       console.log("No more proposals to load")
+      setLoading(false)
       return
     }
+
     try {
       const newProposals: ProposalData[] = rawData.map((item: any) => {
         const yes = BigInt(item.finalTallyResult?.yes_count || "0")
@@ -157,7 +163,8 @@ const AllProposals: React.FC = () => {
     } catch (error) {
       console.error("Failed to fetch proposals", error)
     }
-    setLoading(true)
+
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -175,6 +182,37 @@ const AllProposals: React.FC = () => {
       if (current) observer.unobserve(current)
     }
   }, [])
+
+  // Show loading state on initial load
+  if (!hasLoadedInitial && loading) {
+    return (
+      <div className={styles["all-proposals"]}>
+        <div className={styles.proposalContainer}>
+          <h2 className={styles.sectionTitle}>All Proposals</h2>
+          {isConnected && (
+            <button
+              className={styles["create-proposal"]}
+              onClick={handleCreateProposal}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <span className={styles.myloader}></span>Loading…
+                </>
+              ) : (
+                "Create Proposal"
+              )}
+            </button>
+          )}
+        </div>
+        <div className={styles["proposal-list"]}>
+          <div className={styles.loader}>
+            <p>Loading proposals...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -198,38 +236,52 @@ const AllProposals: React.FC = () => {
           )}
         </div>
         <div className={styles["proposal-list"]}>
-          {proposals.map((proposal) => (
-            <div
-              key={proposal.id}
-              className={`${styles["proposal-item"]} ${proposal.resultClass}`}
-            >
-              <Link href={`/governance/proposals/${proposal.id}`}>
-                <div className={styles["proposal-details"]}>
-                  <p className={styles.meta}>{proposal.meta}</p>
-                  <p className={styles.status}>{proposal.status}</p>
-                  <p className={styles.votes}>{proposal.votes}</p>
-
-                  <h3 className={styles.title}>{proposal.title}</h3>
-                  <p className={styles.result}>
-                    <span className={proposal.resultClass}>
-                      {proposal.result}
-                    </span>
-                  </p>
-                  <div className={styles["vote-bar"]}>
-                    <div
-                      className={styles["vote-for"]}
-                      style={{ width: proposal.voteFor }}
-                    ></div>
-                    <div
-                      className={styles["vote-against"]}
-                      style={{ width: proposal.voteAgainst }}
-                    ></div>
-                  </div>
-                </div>
-              </Link>
+          {proposals.length === 0 && hasLoadedInitial && !loading ? (
+            // Empty state when no proposals exist
+            <div className={styles["empty-state"]}>
+              <h3>No proposals found</h3>
+              <p>
+                There are currently no proposals to display.{" "}
+                {isConnected && "Create the first proposal to get started!"}
+              </p>
             </div>
-          ))}
-          <div ref={loaderRef} className={styles.loader}>
+          ) : (
+            // Show proposals when they exist
+            proposals.map((proposal) => (
+              <>
+                <div
+                  key={proposal.id}
+                  className={`${styles["proposal-item"]} ${proposal.resultClass}`}
+                >
+                  <Link href={`/governance/proposals/${proposal.id}`}>
+                    <div className={styles["proposal-details"]}>
+                      <p className={styles.meta}>{proposal.meta}</p>
+                      <p className={styles.status}>{proposal.status}</p>
+                      <p className={styles.votes}>{proposal.votes}</p>
+
+                      <h3 className={styles.title}>{proposal.title}</h3>
+                      <p className={styles.result}>
+                        <span className={proposal.resultClass}>
+                          {proposal.result}
+                        </span>
+                      </p>
+                      <div className={styles["vote-bar"]}>
+                        <div
+                          className={styles["vote-for"]}
+                          style={{ width: proposal.voteFor }}
+                        ></div>
+                        <div
+                          className={styles["vote-against"]}
+                          style={{ width: proposal.voteAgainst }}
+                        ></div>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              </>
+            ))
+          )}
+          <div ref={loaderRef} className={`${loading ? styles.loader : ""}`}>
             {loading && <p>Loading...</p>}
           </div>
         </div>
