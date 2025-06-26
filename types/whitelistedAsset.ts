@@ -1,10 +1,10 @@
 export interface WhitelistedAsset {
-  denom: string;
-  baseWeight: number;
-  chainId: string;
-  decimals: number;
-  metadata: string;
-  oldestBlock: string;
-  totalShares: string;
-  networkPercentageSecurisation: string;
+  denom: string
+  baseWeight: number
+  chainId: string
+  decimals: number
+  metadata: string
+  contractAddress: string
+  totalShares: string
+  networkPercentageSecurisation: string
 }

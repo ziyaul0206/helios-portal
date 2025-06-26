@@ -1,0 +1,35 @@
+@use "styles/mixins" as *;
+
+.statistics {
+  --card-padding: var(--size-6);
+}
+
+.chart {
+  @include block;
+  font-size: var(--size-3);
+
+  .title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: var(--size-5);
+    font-weight: bold;
+    min-width: 100%;
+
+    h3 {
+      min-width: 0;
+    }
+  }
+
+  .lines {
+    margin-top: calc(var(--padding) * 0.5);
+    margin-bottom: calc(var(--padding) * -0.25);
+  }
+}
+
+.bars {
+  width: 102%;
+  margin-left: calc(var(--padding) * -1);
+  margin-top: calc(var(--padding) * 0.25);
+  margin-bottom: calc(var(--padding) * -0.75);
+}

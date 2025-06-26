@@ -16,21 +16,7 @@
 }
 
 .progress {
-  background-color: var(--background-higher);
-  width: 100%;
-  border-radius: var(--radius-rounded);
-  overflow: hidden;
   margin: calc(var(--card-padding) / 2) 0 var(--size-3);
-
-  &Bar {
-    height: var(--size-1);
-    background: linear-gradient(
-      to right,
-      var(--background-higher),
-      var(--success-low)
-    );
-    border-radius: inherit;
-  }
 }
 
 .latest {
@@ -79,5 +65,26 @@
     text-transform: uppercase;
     border-radius: var(--radius-m);
     padding: 0.35em 0.75em;
+
+    &[data-status-code="4"] {
+      background-color: var(--danger-low);
+    }
+  }
+}
+
+.title,
+.subtitle {
+  font-size: 0.6em;
+  color: var(--text-tertiary);
+  line-height: 1.2;
+
+  & + & {
+    margin-top: 4px;
+  }
+
+  strong {
+    font-size: 16px;
+    color: var(--text-primary);
+    margin-right: 4px;
   }
 }

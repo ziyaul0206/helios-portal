@@ -1,80 +1,68 @@
 import { useQuery } from "@tanstack/react-query"
 import { useAccount } from "wagmi"
 import { getTokensBalance } from "@/helpers/rpc-calls"
-import { fromWeiToEther } from "@/utils/number"
-import { fetchCGTokenData } from "@/utils/price"
-import { CGToken } from "@/types/token"
-import { TOKEN_COLORS } from "@/config/constants"
-import { APP_COLOR_SECONDARY } from "@/config/app"
+import { toHex } from "@/utils/number"
+import { useTokenRegistry } from "./useTokenRegistry"
+import { TokenExtended } from "@/types/token"
+import { ethers } from "ethers"
+import { HELIOS_NETWORK_ID } from "@/config/app"
 
 export const usePortfolioInfo = () => {
   const { address } = useAccount()
+  const { getTokenByAddress } = useTokenRegistry()
 
   const qTokenBalances = useQuery({
     queryKey: ["tokensBalance", address],
-    queryFn: () => getTokensBalance(address!),
+    queryFn: () => getTokensBalance(address!, toHex(1), toHex(10)),
     enabled: !!address
   })
 
-  const qTokenData = useQuery({
-    queryKey: [
-      "tokenData",
-      qTokenBalances.data?.map((t) => t.symbol.toLowerCase())
-    ],
-    queryFn: () =>
-      fetchCGTokenData(
-        qTokenBalances.data?.map((t) => t.symbol.toLowerCase()) || []
-      ),
-    enabled: !!qTokenBalances.data
+  const enrichedTokensQuery = useQuery({
+    queryKey: ["enrichedPortfolio", address, qTokenBalances.data],
+    enabled: !!qTokenBalances.data,
+    queryFn: async (): Promise<TokenExtended[]> => {
+      const results = await Promise.all(
+        qTokenBalances.data!.Balances.map(async (token) => {
+          const enriched = await getTokenByAddress(
+            token.address,
+            HELIOS_NETWORK_ID
+          )
+          if (!enriched) return null
+
+          const amount = parseFloat(
+            ethers.formatUnits(token.balance, enriched.functionnal.decimals)
+          )
+
+          return {
+            ...enriched,
+            display: {
+              ...enriched.display,
+              symbolIcon:
+                enriched.display.symbolIcon ||
+                `token:${enriched.display.symbol.toLowerCase()}`
+            },
+            balance: {
+              amount,
+              totalPrice: amount * enriched.price.usd
+            }
+          }
+        })
+      )
+
+      return results.filter((token): token is TokenExtended => token !== null)
+    }
   })
 
-  let totalUSD = 0
-  let portfolio: CGToken[] = []
-
-  if (qTokenBalances.data && qTokenData.data) {
-    portfolio = qTokenBalances.data.map((token) => {
-      const symbol = token.denom.toLowerCase() as keyof typeof TOKEN_COLORS
-      const amount = fromWeiToEther(token.balance)
-      const priceUSD = qTokenData.data[symbol]?.price || 0
-      const valueUSD = parseFloat(amount) * priceUSD
-
-      if (symbol === "ahelios") {
-        return {
-          name: "Helios",
-          symbol: "HELIOS",
-          symbolIcon: "helios",
-          amount,
-          valueUSD,
-          priceUSD,
-          percentage: 0,
-          color: TOKEN_COLORS[symbol] || APP_COLOR_SECONDARY
-        }
-      }
-
-      return {
-        name: token.denom,
-        symbol: symbol.toUpperCase(),
-        symbolIcon: "token:" + token.denom,
-        amount,
-        valueUSD,
-        priceUSD,
-        percentage: 0,
-        color: TOKEN_COLORS[symbol] || APP_COLOR_SECONDARY
-      }
-    })
-
-    totalUSD = portfolio.reduce((sum, asset) => sum + asset.valueUSD, 0)
-
-    portfolio = portfolio.map((asset) => ({
-      ...asset,
-      percentage: totalUSD ? (asset.valueUSD / totalUSD) * 100 : 0
-    }))
-  }
+  const totalUSD =
+    enrichedTokensQuery.data?.reduce(
+      (sum, token) => sum + token.balance.totalPrice,
+      0
+    ) || 0
 
   return {
     totalUSD,
-    portfolio,
-    isLoading: qTokenBalances.isLoading || qTokenData.isLoading,
-    error: qTokenBalances.error || qTokenData.error
+    portfolio: enrichedTokensQuery.data || [],
+    isLoading: qTokenBalances.isLoading || enrichedTokensQuery.isLoading,
+    error: qTokenBalances.error || enrichedTokensQuery.error
   }
 }

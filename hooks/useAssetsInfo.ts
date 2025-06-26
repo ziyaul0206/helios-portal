@@ -1,61 +1,64 @@
-import { APP_COLOR_SECONDARY } from "@/config/app"
-import { TOKEN_COLORS } from "@/config/constants"
 import { getAllWhitelistedAssets } from "@/helpers/rpc-calls"
 import { fromWeiToEther, secondsToMilliseconds } from "@/utils/number"
-import { fetchCGTokenData } from "@/utils/price"
 import { useQuery } from "@tanstack/react-query"
+import { useTokenRegistry } from "./useTokenRegistry"
+import { HELIOS_NETWORK_ID } from "@/config/app"
 
 export const useAssetsInfo = () => {
+  const { getTokenByAddress } = useTokenRegistry()
+
   const qAssets = useQuery({
     queryKey: ["whitelistedAssets"],
     queryFn: getAllWhitelistedAssets,
-    refetchInterval: secondsToMilliseconds(10)
+    refetchInterval: secondsToMilliseconds(60)
   })
 
-  const qTokenData = useQuery({
-    queryKey: ["tokenData", qAssets.data?.map((a) => a.denom.toLowerCase())],
-    queryFn: () =>
-      fetchCGTokenData(qAssets.data?.map((a) => a.denom.toLowerCase()) || []),
-    enabled: !!qAssets.data
+  const qFilteredAssets = useQuery({
+    queryKey: ["filteredAssets", qAssets.data, qAssets.dataUpdatedAt],
+    enabled: !!qAssets.data,
+    queryFn: async () => {
+      const data = qAssets.data || []
+
+      const enrichedAssets = await Promise.all(
+        data.map(async (asset) => {
+          const enriched = await getTokenByAddress(
+            asset.contractAddress,
+            HELIOS_NETWORK_ID
+          )
+          if (!enriched) return null
+
+          const tokenAmount = parseFloat(asset.totalShares) / asset.baseWeight
+          const tokenAmountString = tokenAmount.toLocaleString("fullwide", {
+            useGrouping: false
+          })
+          const tokenAmountFormatted = fromWeiToEther(tokenAmountString)
+          const tvlUSD = parseFloat(tokenAmountFormatted) * enriched.price.usd
+
+          return {
+            ...asset,
+            tokenAmount: tokenAmountFormatted,
+            tvlUSD,
+            enriched,
+            holders: enriched.stats.holdersCount
+          }
+        })
+      )
+
+      return enrichedAssets.filter((v) => v !== null)
+    }
   })
 
-  let totalTVL = 0
-  let assetsWithTVL: any[] = []
-
-  if (qAssets.data) {
-    assetsWithTVL = qAssets.data.map((asset) => {
-      const symbol = asset.denom.toLowerCase() as keyof typeof TOKEN_COLORS
-
-      const tokenAmount = parseFloat(asset.totalShares) / asset.baseWeight
-      const tokenAmountFormatted = fromWeiToEther(tokenAmount.toString())
-      const tokenData = (qTokenData.data && qTokenData.data[symbol]) || {
-        price: 0,
-        symbolIcon: ""
-      }
-      const tvlUSD = parseFloat(tokenAmountFormatted) * tokenData.price
-
-      const isHelios = asset.denom === "ahelios"
-
-      return {
-        ...asset,
-        color: TOKEN_COLORS[symbol] || APP_COLOR_SECONDARY,
-        tokenAmount: tokenAmountFormatted,
-        tvlUSD,
-        name: isHelios ? "HELIOS" : asset.denom.toUpperCase(),
-        symbol: isHelios ? "HELIOS" : symbol.toUpperCase(),
-        symbolIcon: isHelios ? "helios" : "token:" + asset.denom
-      }
-    })
-
-    totalTVL = assetsWithTVL.reduce((sum, asset) => sum + asset.tvlUSD, 0)
-  }
+  const totalTVL =
+    qFilteredAssets.data?.reduce((sum, asset) => sum + asset.tvlUSD, 0) || 0
+  const totalHolders =
+    qFilteredAssets.data?.reduce((sum, asset) => sum + asset.holders, 0) || 0
 
   return {
     forceRefresh: qAssets.refetch,
-    assets: assetsWithTVL,
+    assets: qFilteredAssets.data || [],
     totalTVL,
-    holders: 0, // @TODO
-    isLoading: qAssets.isLoading || qTokenData.isLoading,
-    error: qAssets.error || qTokenData.error
+    totalHolders,
+    isLoading: qAssets.isLoading || qFilteredAssets.isLoading,
+    error: qAssets.error || qFilteredAssets.error
   }
 }

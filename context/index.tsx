@@ -1,13 +1,34 @@
 "use client"
 
-import { heliosChain, projectId, wagmiAdapter } from "@/config/wagmi"
-import { mainnet } from "@reown/appkit/networks"
+import {
+  heliosChain,
+  projectId,
+  toAppKitNetwork,
+  wagmiAdapter
+} from "@/config/wagmi"
+import {
+  mainnet,
+  polygonAmoy,
+  sepolia,
+  bscTestnet,
+  avalancheFuji
+} from "@reown/appkit/networks"
 import { createAppKit, SIWXMessage, SIWXSession } from "@reown/appkit/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { useEffect, type ReactNode } from "react"
 import { cookieToInitialState, WagmiProvider, type Config } from "wagmi"
 
 const queryClient = new QueryClient()
+queryClient.setDefaultOptions({
+  queries: {
+    placeholderData: (prev: any) => prev,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: 1,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000
+  }
+})
 
 if (!projectId) {
   throw new Error("Project ID is not defined")
@@ -42,8 +63,15 @@ const clearSession = (): void => {
 const modal = createAppKit({
   adapters: [wagmiAdapter],
   projectId,
-  networks: [heliosChain, mainnet],
-  defaultNetwork: heliosChain,
+  networks: [
+    toAppKitNetwork(heliosChain),
+    toAppKitNetwork(mainnet),
+    toAppKitNetwork(sepolia),
+    toAppKitNetwork(polygonAmoy),
+    toAppKitNetwork(bscTestnet),
+    toAppKitNetwork(avalancheFuji)
+  ],
+  defaultNetwork: toAppKitNetwork(heliosChain),
   metadata: metadata,
   features: {
     analytics: false // Optional - defaults to your Cloud configuration

@@ -1,0 +1,41 @@
+@use "styles/mixins" as *;
+
+.history {
+  --card-padding: var(--size-7);
+}
+
+.filters {
+  --btn-height: var(--size-6);
+  display: flex;
+  gap: var(--size-2);
+
+  .active {
+    --btn-bg: var(--primary-medium);
+    --btn-color: var(--white);
+    border-color: var(--primary-medium);
+  }
+}
+
+.chart {
+  @include block;
+  font-size: var(--size-3);
+  flex: 1;
+
+  .title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: var(--size-5);
+    font-weight: bold;
+    min-width: 100%;
+
+    h3 {
+      min-width: 0;
+    }
+  }
+
+  .lines {
+    margin-top: calc(var(--padding) * 0.5);
+    margin-bottom: calc(var(--padding) * -0.25);
+  }
+}

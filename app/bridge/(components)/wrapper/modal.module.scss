@@ -1,0 +1,6 @@
+@use "styles/mixins" as *;
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}

@@ -1,0 +1,62 @@
+@use "styles/mixins" as *;
+
+.claim {
+  --color: var(--color-medium, var(--primary-medium));
+  @include block(var(--size-8));
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  color: var(--color);
+
+  &Available {
+    --color: var(--color-medium, var(--success-medium));
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: var(--color);
+    z-index: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0.15;
+  }
+
+  @include min(750px) {
+    padding: var(--padding);
+  }
+
+  .available {
+    font-size: var(--size-12);
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      transform: scale(0.9);
+      margin-left: 0.2em;
+    }
+  }
+}
+
+.modal {
+  --modal-width: calc(400px + 50 * (100vw - 320px) / 1080);
+  text-align: center;
+}
+
+.message {
+  text-align: left;
+}
+
+.link {
+  display: block;
+  font-size: 0.85em;
+  margin-top: 0.5em;
+}
+
+.price {
+  margin-top: -0.25em;
+}

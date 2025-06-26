@@ -1,0 +1,41 @@
+@use "styles/mixins" as *;
+
+.row {
+  font-size: var(--size-4);
+}
+
+.type {
+  text-transform: none;
+  font-size: var(--size-3-5);
+  height: 2em;
+  background: transparent;
+  color: var(--color-medium) !important;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--color-medium);
+    opacity: 0.15;
+    border-radius: inherit;
+  }
+}
+
+.amount {
+  display: flex;
+  align-items: center;
+  color: var(--primary-medium);
+  font-weight: bold;
+  gap: 4px;
+
+  svg {
+    position: relative;
+    width: 20px;
+    // top: 0.1em;
+  }
+}
+
+.date {
+  color: var(--text-tertiary);
+}

@@ -1,0 +1,45 @@
+@use "styles/mixins" as *;
+
+.message {
+  --message-padding: var(--size-5);
+  font-size: var(--size-3-5);
+  padding: var(--message-padding);
+  color: var(--color-medium, var(--primary-medium));
+  border-radius: var(--radius-s);
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-s);
+    background-color: var(--color-medium, var(--primary-medium));
+    opacity: 0.1;
+    z-index: 0;
+    pointer-events: none;
+  }
+}
+
+.title {
+  font-size: var(--size-4);
+  font-weight: bold;
+  margin-bottom: 0.5em;
+
+  svg {
+    display: inline-block;
+    position: relative;
+    top: -0.05em;
+    margin-right: 0.5em;
+    transform: scale(1.15);
+  }
+}
+
+.content {
+  line-height: 1.35;
+  font-weight: 400;
+  word-break: break-all;
+
+  &[data-nobreak="true"] {
+    word-break: normal;
+  }
+}

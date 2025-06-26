@@ -1,0 +1,109 @@
+@use "styles/mixins" as *;
+
+.status {
+  --padding: var(--size-7);
+  border-radius: var(--radius-m);
+  background-color: var(--background-lower);
+  padding: var(--padding);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--padding) * 0.75);
+
+  h3 {
+    font-size: var(--size-5);
+    font-weight: bold;
+  }
+
+  ul {
+    font-size: var(--size-3-5);
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--padding) * 0.5);
+
+    li {
+      display: flex;
+      gap: var(--size-4);
+
+      span {
+        color: var(--text-secondary);
+      }
+    }
+  }
+
+  .progress {
+    flex: 1;
+    height: var(--size-1);
+  }
+}
+
+.message {
+  font-size: var(--size-3-5);
+  background-color: var(--background-medium);
+  padding: 1.5em;
+  color: var(--primary-medium);
+  border-radius: var(--radius-s);
+
+  h4 {
+    font-size: var(--size-4);
+    font-weight: bold;
+    margin-bottom: 0.5em;
+
+    svg {
+      display: inline-block;
+      position: relative;
+      top: -0.1em;
+    }
+  }
+
+  p {
+    line-height: 1.35;
+    font-weight: 400;
+  }
+}
+
+.chart {
+  @include block(
+    $direction: row,
+    $gap: calc(var(--padding) / 2) var(--padding)
+  );
+  align-items: flex-start;
+  // white-space: nowrap;
+
+  .pie {
+    width: calc(120px + 24 * (100vw - 320px) / 1080);
+    margin: auto;
+
+    @include max(500px) {
+      width: 100%;
+    }
+  }
+}
+
+.block {
+  @include block;
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--padding) * 0.5);
+
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+}
+
+.details {
+  .label {
+    color: var(--text-tertiary);
+  }
+
+  .value {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+  }
+}

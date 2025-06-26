@@ -1,0 +1,121 @@
+@use "styles/mixins" as *;
+
+.top {
+  --grid-template-columns: 3fr 2fr;
+  grid-template-areas: "a b";
+
+  @include max(1200px) {
+    --grid-template-columns: 1fr;
+    grid-template-areas: "a" "b";
+  }
+
+  .bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+
+    a {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+  }
+
+  .stats {
+    --n: 2;
+    --card-padding: var(--size-6);
+    --gap: calc(var(--card-padding) / 2);
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--gap);
+
+    & > * {
+      width: calc((100% - (var(--n) - 1) * var(--gap)) / var(--n));
+    }
+  }
+
+  .stat {
+    --padding: var(--size-5);
+    font-size: var(--size-5);
+  }
+}
+
+.infos {
+  --card-padding: var(--size-10);
+}
+
+.description {
+  font-size: var(--size-5);
+  line-height: 1.5;
+  color: var(--text-secondary);
+  font-weight: 400;
+  padding-right: calc(150 * (100vw - 600px) / 1080);
+  @include clamp;
+}
+
+.plus {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  font-size: var(--size-3-5);
+  color: var(--text-tertiary);
+}
+
+.socials {
+  display: flex;
+  align-items: center;
+  gap: var(--size-1-5);
+}
+
+.message {
+  font-size: var(--size-3-5);
+  position: relative;
+  padding: 0.8em 1em;
+  margin-bottom: calc(var(--item-gap) * -0.33);
+  display: flex;
+  align-items: center;
+  @include ellipsis;
+
+  svg {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    z-index: 1;
+    margin-right: 0.5em;
+    transform: scale(1.25);
+  }
+
+  &::before {
+    pointer-events: none;
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: var(--color-medium);
+    border-radius: var(--radius-s);
+    opacity: 0.15;
+  }
+}
+
+.total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.8em 1em;
+  background-color: var(--background-medium);
+  border-radius: var(--radius-s);
+
+  span {
+    font-size: var(--size-3);
+    color: var(--text-tertiary);
+  }
+}
+
+@include max(500px) {
+  .message,
+  .total {
+    min-width: 100%;
+  }
+}

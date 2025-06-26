@@ -1,0 +1,122 @@
+@use "styles/mixins" as *;
+
+.first {
+  width: 0;
+  padding-right: 0;
+
+  & + td {
+    padding-left: 1em;
+  }
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.illu {
+  --size-illu: 3em;
+  width: var(--size-illu);
+  height: var(--size-illu);
+  border-radius: var(--radius-rounded);
+  background-color: var(--background-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & > * {
+    max-width: 90%;
+    max-height: 90%;
+  }
+}
+
+.row {
+  small {
+    display: block;
+    margin-top: 0.35em;
+    color: var(--text-tertiary);
+    font-size: 0.85em;
+  }
+
+  & > * {
+    vertical-align: middle;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--size-1);
+}
+
+.assets {
+  font-size: 0.95em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+  width: 90%;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--background-lowest);
+    padding: 0.3em 0.5em;
+    border-radius: var(--radius-rounded);
+    gap: 1.5em;
+    box-shadow: var(--shadow-m);
+    align-items: center;
+  }
+
+  .name {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+    font-weight: 700;
+  }
+
+  .amount {
+    color: var(--text-secondary);
+  }
+}
+
+.rewards {
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+  color: var(--primary-medium);
+}
+
+.last {
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+  color: var(--text-secondary);
+
+  svg {
+    color: var(--text-tertiary);
+  }
+}
+
+.modal {
+  --modal-width: calc(400px + 50 * (100vw - 320px) / 1080);
+  text-align: center;
+}
+
+.group {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--modal-padding) * 0.25);
+
+  & > * {
+    flex: 1;
+  }
+
+  .confirm {
+    flex: 1.5;
+  }
+}
+
+.message {
+  text-align: left;
+}

@@ -1,0 +1,107 @@
+@use "styles/mixins" as *;
+
+.weights {
+  --card-padding: var(--size-8);
+  gap: 0;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title,
+.subtitle {
+  font-size: 0.6em;
+  color: var(--text-tertiary);
+  line-height: 1.2;
+
+  & + & {
+    margin-top: 4px;
+  }
+
+  strong {
+    font-size: 16px;
+    color: var(--text-primary);
+    margin-right: 4px;
+  }
+}
+
+.bars {
+  display: flex;
+  height: var(--size-2);
+  width: 100%;
+  margin-top: var(--size-4);
+}
+
+.bar {
+  flex: 1;
+  flex-basis: var(--width);
+  height: 100%;
+  background-color: var(--color);
+  position: relative;
+  cursor: pointer;
+
+  &::before {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    inset: calc(var(--item-gap) * -1) 0 -5px;
+  }
+
+  & + & {
+    border-left: 2px solid var(--background-medium);
+  }
+
+  &:first-child {
+    border-radius: var(--radius-m) 0 0 var(--radius-m);
+  }
+
+  &:last-child {
+    border-radius: 0 var(--radius-m) var(--radius-m) 0;
+  }
+
+  @include is-hover {
+    .popover {
+      opacity: 1;
+    }
+  }
+}
+
+.popover {
+  --transition: 0.2s ease-in-out;
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  background-color: var(--background-lowest);
+  font-size: var(--size-2-5);
+  padding: 0.4em 0.75em;
+  border-radius: var(--radius-m);
+  white-space: nowrap;
+  gap: 1em;
+  display: flex;
+  align-items: center;
+  box-shadow: var(--shadow-m);
+  @include user-select;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition);
+
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 0.8em;
+    height: 0.8em;
+    background-color: var(--color);
+    border-radius: 50%;
+    margin-right: -0.5em;
+    position: relative;
+    top: 0.05em;
+  }
+
+  span {
+    color: var(--text-secondary);
+  }
+}

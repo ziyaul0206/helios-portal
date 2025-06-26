@@ -79,6 +79,8 @@ $responsive: 700px;
 }
 
 .cell {
+  font-variant-numeric: tabular-nums;
+
   &From,
   &To {
     @include max($responsive) {
@@ -86,6 +88,21 @@ $responsive: 700px;
     }
   }
   &Amount {
+    align-items: center;
+    width: 110px;
+    text-align: right;
+
+    strong {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      svg {
+        width: 20px;
+        height: auto;
+      }
+    }
+
     @include min($responsive) {
       .small {
         display: none;
@@ -108,4 +125,20 @@ $responsive: 700px;
       display: none;
     }
   }
+}
+
+.empty {
+  --card-padding: var(--size-10);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--card-padding) / 2);
+  flex: 1;
+}
+
+.sad {
+  font-size: 2em;
+  color: var(--primary-medium);
 }

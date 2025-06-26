@@ -14,18 +14,19 @@ export const CHAIN_COLORS = {
 export const TOKEN_COLORS = {
   ahelios: "#002dcb",
   hls: "#002dcb",
-  eth: "#627EEA",
-  usdt: "#26A17B",
-  usdc: "#2775CA",
-  bnb: "#F0B90B",
-  matic: "#8248E5",
-  avax: "#E84142",
-  sol: "#14F195",
-  arb: "#28A0F0",
-  link: "#2A5ADA",
-  dai: "#F5AC37",
-  aave: "#B6509E",
-  uni: "#FF007A"
+  weth: "#627EEA",
+  wusdt: "#26A17B",
+  wusdc: "#2775CA",
+  wbnb: "#F0B90B",
+  wmatic: "#8248E5",
+  wavax: "#E84142",
+  wsol: "#14F195",
+  warb: "#28A0F0",
+  wlink: "#2A5ADA",
+  wdai: "#F5AC37",
+  waave: "#B6509E",
+  wuni: "#FF007A",
+  wpol: "#7D3EE2"
 } as const
 
 export type ChainId = keyof typeof CHAIN_COLORS

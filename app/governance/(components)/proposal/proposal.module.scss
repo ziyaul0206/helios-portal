@@ -1,0 +1,29 @@
+@use "styles/mixins" as *;
+
+.description {
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin-top: calc(var(--card-padding) * -0.25);
+}
+
+.modal {
+  text-align: center;
+}
+
+.group {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--modal-padding) * 0.25);
+
+  & > * {
+    flex: 1;
+  }
+
+  .confirm {
+    flex: 1.5;
+  }
+}
+
+.message {
+  text-align: left;
+}

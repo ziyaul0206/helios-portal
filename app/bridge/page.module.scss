@@ -1,0 +1,31 @@
+@use "styles/mixins" as *;
+
+.bridge {
+  --grid-columns: 2;
+  align-items: flex-start;
+  grid-template-areas:
+    "a c"
+    "a b"
+    "d e";
+
+  @include max(1300px) {
+    grid-template-areas:
+      "a a"
+      "c d"
+      "b e";
+  }
+
+  @include max(1150px) {
+    grid-template-areas:
+      "a a"
+      "c c"
+      "d d"
+      "b b"
+      "e e";
+  }
+}
+
+.card {
+  background-color: red;
+  height: 100%;
+}

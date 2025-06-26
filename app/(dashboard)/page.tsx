@@ -2,7 +2,7 @@
 
 import { Area, Grid } from "@/components/grid"
 import routes from "@/config/routes"
-import { formatNumber } from "@/lib/utils/number"
+import { useBlockInfo } from "@/hooks/useBlockInfo"
 import { Discover } from "./(components)/discover"
 import { Linker } from "./(components)/linker"
 import { Portfolio } from "./(components)/portfolio"
@@ -11,7 +11,8 @@ import { Stat } from "./(components)/stat"
 import { TVL } from "./(components)/tvl"
 import { Validators } from "./(components)/validators"
 import s from "./page.module.scss"
-import { useBlockInfo } from "@/hooks/useBlockInfo"
+import { Weights } from "./(components)/weights"
+import { formatNumber } from "@/lib/utils/number"
 
 export default function Page() {
   const { lastBlockNumber, blockTime, gasPriceUSD } = useBlockInfo()
@@ -52,18 +53,18 @@ export default function Page() {
         <Area area="f">
           <Discover />
         </Area>
-        <Area area="g">
+        <Area area="g" className={s.special}>
           <Linker
             icon="hugeicons:chart-rose"
             href={routes.delegations}
             text="My Delegations"
           />
         </Area>
-        <Area area="h">
+        <Area area="h" className={s.special}>
           <Linker
-            icon="hugeicons:bitcoin-withdraw"
-            href={routes.governance}
-            text="Governance Vote"
+            icon="hugeicons:exchange-02"
+            href={routes.bridge}
+            text="Bridge assets"
           />
         </Area>
         <Area area="i">
@@ -71,6 +72,9 @@ export default function Page() {
         </Area>
         <Area area="j">
           <TVL />
+        </Area>
+        <Area area="k">
+          <Weights />
         </Area>
       </Grid>
     </>

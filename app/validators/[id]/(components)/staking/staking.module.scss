@@ -1,0 +1,70 @@
+@use "styles/mixins" as *;
+
+.block {
+  @include block;
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--padding) * 0.5);
+
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+  }
+}
+
+.details {
+  .label {
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+  }
+
+  .value {
+    font-weight: bold;
+    text-align: right;
+  }
+}
+
+.assets {
+  line-height: 1.25;
+  .token {
+    --symbol-size: 2em;
+    display: flex;
+    align-items: center;
+    gap: calc(var(--padding) * 0.5);
+    font-weight: bold;
+  }
+
+  .amount {
+    text-align: right;
+  }
+
+  small {
+    display: block;
+    font-size: 0.75em;
+    color: var(--text-tertiary);
+    font-weight: 500;
+  }
+}
+
+.temp {
+  flex-direction: row !important;
+  flex-wrap: wrap;
+
+  li {
+    --gap: calc(var(--padding) * 0.5);
+    width: calc(33% - (2 * var(--gap) / 3));
+
+    @include max(800px) {
+      width: calc(50% - (1 * var(--gap) / 2));
+    }
+
+    @include max(500px) {
+      width: 100%;
+    }
+  }
+}

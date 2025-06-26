@@ -24,7 +24,7 @@ export const PortfolioPie = ({
     const topTokens = tokens.slice(0, 3)
     const otherTokens = tokens.slice(3)
     const totalOtherTokens = otherTokens.reduce(
-      (total, token) => total + (token.priceUSD || 0),
+      (total, token) => total + (token.balance.totalPrice || 0),
       0
     )
 
@@ -32,11 +32,11 @@ export const PortfolioPie = ({
     const segments = []
 
     for (const token of topTokens) {
-      const percent = (token.priceUSD || 0) / totalUSD
+      const percent = (token.balance.totalPrice || 0) / totalUSD
       const degrees = percent * maxDegrees
 
       segments.push({
-        color: token.color || APP_COLOR_SECONDARY,
+        color: token.display.color,
         startDeg: currentDegree,
         endDeg: currentDegree + degrees
       })
@@ -57,9 +57,7 @@ export const PortfolioPie = ({
     }
 
     const lastColor =
-      segments.length > 0
-        ? segments[segments.length - 1].color
-        : APP_COLOR_SECONDARY
+      segments.length > 0 ? segments[segments.length - 1].color : "#bbb"
 
     let gradientString = `conic-gradient(from ${startDegrees}deg, `
 

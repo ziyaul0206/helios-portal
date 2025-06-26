@@ -1,0 +1,88 @@
+@use "styles/mixins" as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+
+.slider {
+  background-color: var(--background-lower);
+  border-radius: var(--radius-m);
+  cursor: grab;
+  width: 100%;
+  max-width: calc(100vw - (var(--main-padding) * 2) - (var(--size-8) * 2));
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.step {
+  --padding: var(--size-7);
+  width: 100% !important;
+  max-width: 100%;
+  display: flex;
+
+  small {
+    color: var(--primary-medium);
+    background-color: var(--background-high);
+    border-radius: var(--radius-m);
+    padding: var(--size-1) var(--size-2);
+    font-size: var(--size-2-5);
+    display: inline-flex;
+    margin-left: calc(var(--size-2) * -0.5);
+    margin-bottom: calc(var(--padding) * 1.25);
+  }
+}
+
+.pagination {
+  margin-top: calc(var(--padding) * 0.75);
+  padding-inline: calc(var(--card-padding) * 2);
+  gap: calc(var(--card-padding) * 0.5);
+  display: flex;
+  align-items: center;
+}
+
+.bullet {
+  transition: background-color 0.2s ease-in-out;
+  flex: 1;
+  height: var(--size-1);
+  cursor: pointer;
+  border-radius: var(--radius-m);
+  background-color: var(--background-high);
+  position: relative;
+  &:hover {
+    background-color: var(--background-highest);
+  }
+
+  &::before {
+    content: "";
+    display: block;
+    inset: -10px 0;
+    position: absolute;
+    cursor: pointer;
+  }
+
+  &Active {
+    background-color: var(--primary-medium);
+  }
+}
+
+.content {
+  padding: var(--padding);
+  width: 100%;
+
+  h3 {
+    font-size: var(--size-4);
+    font-weight: 700;
+    margin-bottom: calc(var(--padding) / 2);
+  }
+
+  p {
+    color: var(--text-tertiary);
+    font-size: var(--size-3-5);
+    line-height: 1.5;
+  }
+}
