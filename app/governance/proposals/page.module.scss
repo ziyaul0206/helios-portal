@@ -63,23 +63,23 @@
   }
 }
 
-.proposal-card {
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
-  padding: 1rem;
-  margin-bottom: 2rem;
-  background: white;
-}
+// .proposal-card {
+//   border: 1px solid #e5e7eb;
+//   border-radius: 0.75rem;
+//   padding: 1rem;
+//   margin-bottom: 2rem;
+//   background: white;
+// }
 
 .proposal-author {
   font-size: 0.875rem;
   color: #6b7280;
 }
 
-.proposal-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-}
+// .proposal-title {
+//   font-size: 1.25rem;
+//   font-weight: 600;
+// }
 
 .proposal-meta {
   display: flex;
@@ -107,13 +107,13 @@
   margin-top: 2rem;
 }
 
-.proposal-list {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
-  overflow: hidden;
-}
+// .proposal-list {
+//   display: flex;
+//   flex-direction: column;
+//   border: 1px solid #e5e7eb;
+//   border-radius: 0.75rem;
+//   overflow: hidden;
+// }
 
 .proposal-item {
   background: white;
@@ -133,7 +133,7 @@
 
 .proposal-details {
   display: grid;
-  grid-template-columns: 1fr 1fr 0.8fr;
+  grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: auto auto;
   gap: 0.5rem 1.5rem;
   align-items: start;
@@ -182,28 +182,33 @@
   font-weight: 500;
 }
 
-.vote-bar {
-  grid-column: 3;
-  grid-row: 2;
-  margin-top: 0.25rem;
-  width: 150px;
-  height: 6px;
-  justify-self: end;
-  display: flex;
-  border-radius: 4px;
-  overflow: hidden;
-  background: #d1d5db;
-}
+// .vote-bar {
+//   grid-column: 3;
+//   grid-row: 2;
+//   margin-top: 0.25rem;
+//   width: 200px;
+//   height: 6px;
+//   justify-self: end;
+//   display: flex;
+//   border-radius: 4px;
+//   overflow: hidden;
+//   background: #d1d5db;
+// }
 
-.vote-for {
-  background-color: #10b981;
-  height: 100%;
-}
+// .vote-for {
+//   background-color: #10b981;
+//   height: 100%;
+// }
 
-.vote-against {
-  background-color: #6b7280;
-  height: 100%;
-}
+// .vote-abstain {
+//   background-color: #6b7280;
+//   height: 100%;
+// }
+
+// .vote-against {
+//   background-color: #ef4444;
+//   height: 100%;
+// }
 
 .defeated {
   color: #ef4444;
@@ -213,15 +218,15 @@
   color: #10b981;
 }
 
-.loader {
-  text-align: center;
-  padding: 1.25rem 1.5rem;
-  font-size: 0.875rem;
-  color: #6b7280;
-  background: white;
-  border-top: 1px solid #e5e7eb;
-  border-radius: 0 0 0.75rem 0.75rem;
-}
+// .loader {
+//   text-align: center;
+//   padding: 1.25rem 1.5rem;
+//   font-size: 0.875rem;
+//   color: #6b7280;
+//   background: white;
+//   border-top: 1px solid #e5e7eb;
+//   border-radius: 0 0 0.75rem 0.75rem;
+// }
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -255,17 +260,17 @@
     grid-template-rows: auto;
   }
 
-  .status,
-  .result,
-  .votes,
-  .vote-bar {
-    justify-self: start;
-    text-align: left;
-  }
+  // .status,
+  // .result,
+  // .votes,
+  // .vote-bar {
+  //   justify-self: start;
+  //   text-align: left;
+  // }
 
-  .vote-bar {
-    width: 100%;
-  }
+  // .vote-bar {
+  //   width: 100%;
+  // }
 
   .primaryButton {
     width: 100%;
@@ -610,25 +615,280 @@
     }
   }
 }
+// .empty-state {
+//   text-align: center;
+//   padding: 4rem 2rem;
+//   background: var(--card-background, #f8f9fa);
+//   border-radius: 8px;
+//   border: 1px solid var(--border-color, #e9ecef);
+//   margin: 2rem 0;
+
+//   h3 {
+//     color: var(--text-primary, #333);
+//     font-size: 1.5rem;
+//     margin-bottom: 0.5rem;
+//     font-weight: 600;
+//   }
+
+//   p {
+//     color: var(--text-secondary, #666);
+//     font-size: 1rem;
+//     margin: 0;
+//     line-height: 1.5;
+//   }
+// }
+
+// Proposal List SCSS
+.proposal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.proposal-card {
+  background-color: #fafbfe;
+  border: 1px solid #e1e5e9;
+  border-radius: 0.75rem;
+  color: rgba(0, 0, 0, 0.9);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+
+  &:hover {
+    background-color: #f1f5f9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+}
+
+.card-content {
+  padding: 1rem;
+
+  @media (min-width: 640px) {
+    padding: 1.5rem;
+  }
+}
+
+.proposal-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+}
+
+.proposal-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.proposer-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.proposer-label {
+  font-size: 0.875rem;
+  color: #9ca3af;
+}
+
+.proposer-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.625rem;
+  background-color: #131926;
+  border: 1px solid #374151;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+  color: #d1d5db;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #1f2937;
+  }
+}
+
+.proposal-title {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0;
+
+  @media (min-width: 640px) {
+    font-size: 1.125rem;
+  }
+}
+
+.proposal-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: right;
+
+  @media (min-width: 640px) {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+  }
+}
+
+.end-date {
+  font-size: 0.75rem;
+  color: #9ca3af;
+
+  @media (min-width: 640px) {
+    font-size: 0.875rem;
+  }
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+
+  &.executed {
+    background-color: rgba(34, 197, 94, 0.1);
+    color: #4ade80;
+
+    &:hover {
+      background-color: rgba(34, 197, 94, 0.2);
+    }
+  }
+
+  &.defeated {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #f87171;
+
+    &:hover {
+      background-color: rgba(239, 68, 68, 0.2);
+    }
+  }
+}
+
+.vote-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.vote-bar {
+  height: 0.5rem;
+  width: 100%;
+  background-color: #2d3545;
+  border-radius: 9999px;
+  overflow: hidden;
+  display: flex;
+  position: relative;
+}
+
+.vote-for {
+  background-color: #22c55e;
+  transition: width 0.5s ease-in-out;
+  height: 100%;
+}
+
+.vote-abstain {
+  background-color: #6b7280;
+  transition: width 0.5s ease-in-out;
+  height: 100%;
+}
+
+.vote-against {
+  background-color: #ef4444;
+  transition: width 0.5s ease-in-out;
+  height: 100%;
+}
+
+.vote-no-veto {
+  background-color: #dc2626;
+  transition: width 0.5s ease-in-out;
+  height: 100%;
+}
+
+.vote-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.vote-stats {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  flex-wrap: wrap;
+
+  @media (min-width: 640px) {
+    font-size: 0.875rem;
+  }
+}
+
+.vote-for-text {
+  color: #4ade80;
+}
+
+.vote-abstain-text {
+  color: #9ca3af;
+}
+
+.vote-against-text {
+  color: #f87171;
+}
+
+.vote-no-veto-text {
+  color: #dc2626;
+}
+
 .empty-state {
   text-align: center;
-  padding: 4rem 2rem;
-  background: var(--card-background, #f8f9fa);
-  border-radius: 8px;
-  border: 1px solid var(--border-color, #e9ecef);
-  margin: 2rem 0;
+  padding: 3rem 1rem;
+  color: #9ca3af;
 
   h3 {
-    color: var(--text-primary, #333);
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
     font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: white;
   }
 
   p {
-    color: var(--text-secondary, #666);
-    font-size: 1rem;
-    margin: 0;
+    font-size: 0.875rem;
     line-height: 1.5;
+  }
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  color: #9ca3af;
+}
+
+// Responsive adjustments
+@media (max-width: 639px) {
+  .vote-stats {
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: flex-start;
+  }
+
+  .proposal-header {
+    gap: 0.75rem;
   }
 }

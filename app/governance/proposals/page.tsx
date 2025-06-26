@@ -1,9 +1,11 @@
 "use client"
+
 import Link from "next/link"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState, useCallback } from "react"
 import { useAccount } from "wagmi"
 import { fetchProposals } from "../../utils/api"
 import styles from "./page.module.scss"
+import { useRouter } from "next/navigation"
 
 interface Proposal {
   id: string
@@ -100,9 +102,12 @@ interface ProposalData {
   resultClass: string
   voteFor: string
   voteAgainst: string
+  voteAbstain: string
+  voteNoWithVeto: string
 }
 
 const AllProposals: React.FC = () => {
+  const router = useRouter()
   const [proposals, setProposals] = useState<ProposalData[]>([])
   const [loading, setLoading] = useState(false)
   const pageRef = useRef(1)
@@ -119,42 +124,139 @@ const AllProposals: React.FC = () => {
       setShowModal(true)
     }, 1000)
   }
+  const manualProposalCounter = useRef(1) // Counter for manual proposals
 
-  const loadMoreProposals = async () => {
-    if (loading) return
-    setLoading(true) // Set loading to true at the start
+  // Function to create manual proposals
+  const createManualProposals = (count: number): ProposalData[] => {
+    const proposals: ProposalData[] = []
 
-    const rawData = await fetchProposals(pageRef.current, 10)
-    setHasLoadedInitial(true) // Mark that we've attempted the first load
+    for (let i = 0; i < count; i++) {
+      const proposalId = `manual-${manualProposalCounter.current}`
+      const currentDate = new Date()
+      const endDate = new Date(currentDate.getTime() + 7 * 24 * 60 * 60 * 1000) // 7 days from now
 
-    if (!rawData || rawData.length === 0) {
-      console.log("No more proposals to load")
-      setLoading(false)
-      return
+      // Generate some random-ish vote data for demonstration
+      const baseVotes = 1000000 + Math.floor(Math.random() * 10000000)
+      const yesVotes = Math.floor(baseVotes * (0.6 + Math.random() * 0.3)) // 60-90% yes
+      const noVotes = Math.floor(baseVotes * (0.05 + Math.random() * 0.15)) // 5-20% no
+      const abstainVotes = Math.floor(baseVotes * (0.02 + Math.random() * 0.08)) // 2-10% abstain
+      const noWithVetoVotes = Math.floor(
+        baseVotes * (0.01 + Math.random() * 0.04)
+      ) // 1-5% no with veto
+
+      const total = yesVotes + noVotes + abstainVotes + noWithVetoVotes
+      const voteForPercent = Math.round((yesVotes / total) * 100)
+      const voteAgainstPercent = Math.round((noVotes / total) * 100)
+      const voteAbstainPercent = Math.round((abstainVotes / total) * 100)
+      const voteNoWithVetoPercent = Math.round((noWithVetoVotes / total) * 100)
+
+      const sampleTitles = [
+        "Proposal to Increase Staking Rewards",
+        "Community Fund Allocation for Development",
+        "Protocol Upgrade to Version 2.0",
+        "Treasury Management Strategy Update",
+        "Governance Parameter Adjustment",
+        "Integration with New DeFi Protocol",
+        "Security Audit Funding Proposal",
+        "Community Incentive Program Launch",
+        "Validator Commission Rate Adjustment",
+        "Cross-chain Bridge Implementation",
+        "NFT Marketplace Integration",
+        "Oracle Price Feed Update"
+      ]
+
+      const sampleProposers = [
+        "0x1234...5678",
+        "0xabcd...ef01",
+        "0x9876...5432",
+        "community.eth",
+        "governance.dao",
+        "0xfed...cba9",
+        "validator.eth",
+        "0x2468...ace0"
+      ]
+
+      const randomTitle =
+        sampleTitles[Math.floor(Math.random() * sampleTitles.length)]
+      const randomProposer =
+        sampleProposers[Math.floor(Math.random() * sampleProposers.length)]
+      const randomStatus = Math.random() > 0.7 ? "REJECTED" : "PASSED" // 70% chance of passing
+
+      proposals.push({
+        id: proposalId,
+        meta: `By ${randomProposer}`,
+        status: `Ends ${endDate.toLocaleString()}`,
+        votes: `${yesVotes.toLocaleString()} For – ${noVotes.toLocaleString()} Against – ${abstainVotes.toLocaleString()} Abstain – ${noWithVetoVotes.toLocaleString()} No w/ Veto`,
+        title: randomTitle,
+        result: randomStatus,
+        resultClass:
+          randomStatus === "PASSED" ? styles.executed : styles.defeated,
+        voteFor: `${voteForPercent}%`,
+        voteAgainst: `${voteAgainstPercent}%`,
+        voteAbstain: `${voteAbstainPercent}%`,
+        voteNoWithVeto: `${voteNoWithVetoPercent}%`
+      })
+
+      manualProposalCounter.current += 1
     }
 
+    return proposals
+  }
+
+  const loadMoreProposals = async () => {
+    // Prevent multiple simultaneous calls
+    if (loading) return
+
+    setLoading(true)
+    console.log("Fetched proposals:", pageRef.current)
+
     try {
+      const rawData = await fetchProposals(pageRef.current, 10)
+
+      setHasLoadedInitial(true) // Mark that we've attempted the first load
+
+      if (!rawData || rawData.length === 0) {
+        console.log("No more proposals to load")
+        // Add a manual proposal immediately when API data is exhausted
+        const newManualProposal = createManualProposals(3)
+        setProposals((prev) => [...prev, ...newManualProposal])
+        setLoading(false) // Make sure to set loading to false
+        return
+      }
+
       const newProposals: ProposalData[] = rawData.map((item: any) => {
         const yes = BigInt(item.finalTallyResult?.yes_count || "0")
         const no = BigInt(item.finalTallyResult?.no_count || "0")
-        const total = yes + no || 1n
+        const abstain = BigInt(item.finalTallyResult?.abstain_count || "0")
+        const noWithVeto = BigInt(
+          item.finalTallyResult?.no_with_veto_count || "0"
+        )
+
+        const total = yes + no + abstain + noWithVeto || 1n
         const voteForPercent = Number((yes * 100n) / total)
-        const voteAgainstPercent = 100 - voteForPercent
+        const voteAgainstPercent = Number((no * 100n) / total)
+        const voteAbstainPercent = Number((abstain * 100n) / total)
+        const voteNoWithVetoPercent = Number((noWithVeto * 100n) / total)
+
+        // Convert from smallest unit (assuming 18 decimals like your original code)
+        const yesFormatted = (yes / 10n ** 18n).toString()
+        const noFormatted = (no / 10n ** 18n).toString()
+        const abstainFormatted = (abstain / 10n ** 18n).toString()
+        const noWithVetoFormatted = (noWithVeto / 10n ** 18n).toString()
 
         return {
           id: item.id.toString(),
           meta: `By ${item.proposer}`,
           status: `Ends ${new Date(item.votingEndTime).toLocaleString()}`,
-          votes: `${(yes / 10n ** 18n).toString()} For – ${(
-            no /
-            10n ** 18n
-          ).toString()} Against`,
+          votes: `${yesFormatted} For – ${noFormatted} Against – ${abstainFormatted} Abstain – ${noWithVetoFormatted} No w/ Veto`,
           title: item.title,
           result: item.status,
           resultClass:
             item.status === "PASSED" ? styles.executed : styles.defeated,
           voteFor: `${voteForPercent}%`,
-          voteAgainst: `${voteAgainstPercent}%`
+          voteAgainst: `${voteAgainstPercent}%`,
+          voteAbstain: `${voteAbstainPercent}%`,
+          voteNoWithVeto: `${voteNoWithVetoPercent}%`
         }
       })
 
@@ -162,17 +264,25 @@ const AllProposals: React.FC = () => {
       pageRef.current += 1
     } catch (error) {
       console.error("Failed to fetch proposals", error)
+    } finally {
+      setLoading(false)
     }
-
-    setLoading(false)
   }
+
+  // Use useCallback to memoize the function and prevent unnecessary re-renders
+  const loadMoreProposalsCallback = useCallback(loadMoreProposals, [loading])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) loadMoreProposals()
+        if (entry.isIntersecting && !loading) {
+          loadMoreProposalsCallback()
+        }
       },
-      { threshold: 1 }
+      {
+        threshold: 0.1, // Changed from 1 to 0.1 for better triggering
+        rootMargin: "20px" // Add some margin to trigger earlier
+      }
     )
 
     const current = loaderRef.current
@@ -181,7 +291,14 @@ const AllProposals: React.FC = () => {
     return () => {
       if (current) observer.unobserve(current)
     }
-  }, [])
+  }, [loadMoreProposalsCallback, loading]) // Add dependencies
+
+  // Initial load effect
+  useEffect(() => {
+    if (!hasLoadedInitial && !loading) {
+      loadMoreProposals()
+    }
+  }, []) // This runs once on mount
 
   // Show loading state on initial load
   if (!hasLoadedInitial && loading) {
@@ -248,41 +365,92 @@ const AllProposals: React.FC = () => {
           ) : (
             // Show proposals when they exist
             proposals.map((proposal) => (
-              <>
-                <div
-                  key={proposal.id}
-                  className={`${styles["proposal-item"]} ${proposal.resultClass}`}
-                >
-                  <Link href={`/governance/proposals/${proposal.id}`}>
-                    <div className={styles["proposal-details"]}>
-                      <p className={styles.meta}>{proposal.meta}</p>
-                      <p className={styles.status}>{proposal.status}</p>
-                      <p className={styles.votes}>{proposal.votes}</p>
-
-                      <h3 className={styles.title}>{proposal.title}</h3>
-                      <p className={styles.result}>
-                        <span className={proposal.resultClass}>
-                          {proposal.result}
+              <div
+                key={proposal.id}
+                className={styles["proposal-card"]}
+                onClick={() =>
+                  router.push(`/governance/proposals/${proposal.id}`)
+                }
+              >
+                <div className={styles["card-content"]}>
+                  <div className={styles["proposal-header"]}>
+                    <div className={styles["proposal-info"]}>
+                      <div className={styles["proposer-info"]}>
+                        <span className={styles["proposer-label"]}>
+                          Proposal by
                         </span>
-                      </p>
-                      <div className={styles["vote-bar"]}>
-                        <div
-                          className={styles["vote-for"]}
-                          style={{ width: proposal.voteFor }}
-                        ></div>
-                        <div
-                          className={styles["vote-against"]}
-                          style={{ width: proposal.voteAgainst }}
-                        ></div>
+                        <div className={styles["proposer-badge"]}>
+                          {proposal.meta.replace("By ", "")}
+                        </div>
+                      </div>
+                      <h3 className={styles["proposal-title"]}>
+                        {proposal.title}
+                      </h3>
+                    </div>
+                    <div className={styles["proposal-status"]}>
+                      <div className={styles["end-date"]}>
+                        {proposal.status}
+                      </div>
+                      <div
+                        className={`${styles["status-badge"]} ${proposal.resultClass}`}
+                      >
+                        {proposal.result}
                       </div>
                     </div>
-                  </Link>
+                  </div>
+
+                  <div className={styles["vote-section"]}>
+                    <div className={styles["vote-bar"]}>
+                      <div
+                        className={styles["vote-for"]}
+                        style={{ width: proposal.voteFor }}
+                      />
+                      <div
+                        className={styles["vote-abstain"]}
+                        style={{ width: proposal.voteAbstain }}
+                      />
+                      <div
+                        className={styles["vote-against"]}
+                        style={{ width: proposal.voteAgainst }}
+                      />
+                      <div
+                        className={styles["vote-no-veto"]}
+                        style={{ width: proposal.voteNoWithVeto }}
+                      />
+                    </div>
+
+                    <div className={styles["vote-details"]}>
+                      <div className={styles["vote-stats"]}>
+                        <span className={styles["vote-for-text"]}>
+                          For: {formatVoteCount(proposal.voteFor)} (
+                          {proposal.voteFor})
+                        </span>
+                        <span className={styles["vote-abstain-text"]}>
+                          Abstain: {formatVoteCount(proposal.voteAbstain)} (
+                          {proposal.voteAbstain})
+                        </span>
+                        <span className={styles["vote-against-text"]}>
+                          Against: {formatVoteCount(proposal.voteAgainst)} (
+                          {proposal.voteAgainst})
+                        </span>
+                        {proposal.voteNoWithVeto !== "0.0%" && (
+                          <span className={styles["vote-no-veto-text"]}>
+                            No w/ Veto:{" "}
+                            {formatVoteCount(proposal.voteNoWithVeto)} (
+                            {proposal.voteNoWithVeto})
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </>
+              </div>
             ))
           )}
-          <div ref={loaderRef} className={`${loading ? styles.loader : ""}`}>
-            {loading && <p>Loading...</p>}
+          <div ref={loaderRef} className={`${styles.loader}`}>
+            {loading && proposals.length > 0 && (
+              <p>Loading more proposals...</p>
+            )}
           </div>
         </div>
       </div>
@@ -392,6 +560,15 @@ const AllProposals: React.FC = () => {
       )}
     </>
   )
+}
+
+// Helper function to format vote counts (you'll need to add this to your component)
+const formatVoteCount = (percentage: string): string => {
+  // Extract the numeric value from percentage and convert to vote count
+  // This is a placeholder - you'll need to implement based on your actual vote data
+  const percent = parseFloat(percentage.replace("%", ""))
+  // You'll need to calculate actual vote counts based on your data structure
+  return `${(percent * 100).toFixed(2)}M` // Placeholder calculation
 }
 
 const ProposalDashboard: React.FC = () => {
