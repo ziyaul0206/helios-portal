@@ -31,7 +31,7 @@ async function fetchProposalDetail(id: string): Promise<ProposalData | null> {
         id: 1,
         jsonrpc: "2.0",
         method: "eth_getProposal",
-        params: [`0x${parseInt(id).toString(16)}`]
+        params: [`0x${parseInt(id, 10).toString(16)}`]
       }),
       cache: "no-store"
     })
@@ -39,15 +39,26 @@ async function fetchProposalDetail(id: string): Promise<ProposalData | null> {
     const json = await res.json()
     if (!json.result) return null
 
+    const {
+      id: pid,
+      proposer,
+      title,
+      summary,
+      status,
+      votingStartTime,
+      votingEndTime,
+      finalTallyResult
+    } = json.result
+
     return {
-      id: json.result.id,
-      proposer: json.result.proposer,
-      title: json.result.title,
-      summary: json.result.summary,
-      status: json.result.status,
-      votingStartTime: json.result.votingStartTime,
-      votingEndTime: json.result.votingEndTime,
-      finalTallyResult: json.result.finalTallyResult
+      id: pid,
+      proposer,
+      title,
+      summary,
+      status,
+      votingStartTime,
+      votingEndTime,
+      finalTallyResult
     }
   } catch (err) {
     console.error("Error fetching proposal:", err)
@@ -55,19 +66,24 @@ async function fetchProposalDetail(id: string): Promise<ProposalData | null> {
   }
 }
 
+// ✅ Fixed for Next.js 15 - params is now a Promise
 export default async function ProposalDetail({
   params
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
-  const proposal = await fetchProposalDetail(params.id)
+  // Await the params to get the actual values
+  const { id } = await params
+
+  const proposal = await fetchProposalDetail(id)
   if (!proposal) return notFound()
 
-  const yesVotes = BigInt(proposal.finalTallyResult.yes_count)
-  const noVotes = BigInt(proposal.finalTallyResult.no_count)
-  const totalVotes = yesVotes + noVotes || 1n
+  const yesVotes = BigInt(proposal.finalTallyResult.yes_count || "0")
+  const noVotes = BigInt(proposal.finalTallyResult.no_count || "0")
+  const totalVotes = yesVotes + noVotes
 
-  const yesPercent = Number((yesVotes * 100n) / totalVotes)
+  const yesPercent =
+    totalVotes === 0n ? 0 : Number((yesVotes * 100n) / totalVotes)
   const noPercent = 100 - yesPercent
 
   return (
@@ -77,7 +93,7 @@ export default async function ProposalDetail({
           <h1 className={styles.title}>{proposal.title}</h1>
           <span
             className={`${styles.status} ${
-              styles[proposal.status.toLowerCase()]
+              styles[proposal.status.toLowerCase()] || ""
             }`}
           >
             {proposal.status}

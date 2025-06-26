@@ -1,7 +1,7 @@
 "use client"
 import { DelegateCard } from "@/components/delegatecard"
 import styles from "./voters.module.scss"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useCallback } from "react"
 
 const links = [
   {
@@ -230,7 +230,7 @@ export default function VotersPage() {
   const [loading, setLoading] = useState(false)
   const loaderRef = useRef<HTMLDivElement | null>(null)
 
-  const loadMore = () => {
+  const loadMore = useCallback(async () => {
     if (loading) return
     if (visibleLinks.length >= links.length) return // no more items to load
     setLoading(true)
@@ -241,7 +241,7 @@ export default function VotersPage() {
       setVisibleLinks((prev) => [...prev, ...more])
       setLoading(false)
     }, 1000)
-  }
+  }, [loading, visibleLinks.length])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -259,7 +259,7 @@ export default function VotersPage() {
     return () => {
       if (current) observer.unobserve(current)
     }
-  }, [visibleLinks, loading])
+  }, [visibleLinks, loading, loadMore])
 
   return (
     <div className={styles.container}>
