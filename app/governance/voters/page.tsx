@@ -1,4 +1,5 @@
 "use client"
+import BackSection from "@/components/back"
 import { DelegateCard } from "@/components/delegatecard"
 import { Heading } from "@/components/heading"
 import { useCallback, useEffect, useRef, useState } from "react"
@@ -263,20 +264,23 @@ export default function VotersPage() {
   }, [visibleLinks, loading, loadMore])
 
   return (
-    <div className={styles.container}>
-      <Heading
-        icon="solar:users-group-rounded-bold"
-        title="Voters"
-        className={styles.cardHeard}
-      />
-      <div className={styles.cardGrid}>
-        {visibleLinks.map((link, index) => (
-          <DelegateCard key={index} link={link} />
-        ))}
+    <>
+      <BackSection />
+      <div className={styles.container}>
+        <Heading
+          icon="solar:users-group-rounded-bold"
+          title="Voters"
+          className={styles.cardHeard}
+        />
+        <div className={styles.cardGrid}>
+          {visibleLinks.map((link, index) => (
+            <DelegateCard key={index} link={link} />
+          ))}
+        </div>
+        <div ref={loaderRef} style={{ textAlign: "center", color: "#9ca3af" }}>
+          {loading && <p>Loading...</p>}
+        </div>
       </div>
-      <div ref={loaderRef} style={{ textAlign: "center", color: "#9ca3af" }}>
-        {loading && <p>Loading...</p>}
-      </div>
-    </div>
+    </>
   )
 }

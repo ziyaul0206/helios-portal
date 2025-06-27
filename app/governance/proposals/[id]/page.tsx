@@ -1,5 +1,6 @@
-import { notFound } from "next/navigation"
+import BackSection from "@/components/back"
 import { VoteResults } from "@/components/voteresults"
+import { notFound } from "next/navigation"
 import styles from "./proposal.module.scss"
 
 interface TallyResult {
@@ -107,73 +108,76 @@ export default async function ProposalDetail({
   const quorum = "4,000,000" // Replace with actual quorum data
 
   return (
-    <div className={styles.container}>
-      <div className={styles.layout}>
-        {/* Left side - VoteResults Component */}
+    <>
+      <BackSection />
+      <div className={styles.container}>
+        <div className={styles.layout}>
+          {/* Left side - VoteResults Component */}
 
-        <div className={styles.rightPanel}>
-          <div className={styles.card}>
-            <div className={styles.header}>
-              <h1 className={styles.title}>{proposal.title}</h1>
-              <span
-                className={`${styles.status} ${
-                  styles[proposal.status.toLowerCase()] || ""
-                }`}
-              >
-                {proposal.status}
-              </span>
-            </div>
-
-            <div className={styles.meta}>
-              <p>
-                <strong>Proposer:</strong> {proposal.proposer}
-              </p>
-              <p>
-                <strong>Voting Start:</strong>{" "}
-                {new Date(proposal.votingStartTime).toLocaleString()}
-              </p>
-              <p>
-                <strong>Voting End:</strong>{" "}
-                {new Date(proposal.votingEndTime).toLocaleString()}
-              </p>
-            </div>
-
-            <div className={styles.voteSection}>
-              <strong>Vote Breakdown:</strong>
-              <div className={styles.progressBar}>
-                <div
-                  className={styles.yesBar}
-                  style={{ width: `${yesPercent}%` }}
-                />
-                <div
-                  className={styles.noBar}
-                  style={{ width: `${noPercent}%` }}
-                />
+          <div className={styles.rightPanel}>
+            <div className={styles.card}>
+              <div className={styles.header}>
+                <h1 className={styles.title}>{proposal.title}</h1>
+                <span
+                  className={`${styles.status} ${
+                    styles[proposal.status.toLowerCase()] || ""
+                  }`}
+                >
+                  {proposal.status}
+                </span>
               </div>
-              <div className={styles.percentages}>
-                <span>Yes: {yesPercent}%</span>
-                <span>No: {noPercent}%</span>
-              </div>
-            </div>
 
-            <div className={styles.summary}>
-              <h2>Summary</h2>
-              <p>{proposal.summary}</p>
+              <div className={styles.meta}>
+                <p>
+                  <strong>Proposer:</strong> {proposal.proposer}
+                </p>
+                <p>
+                  <strong>Voting Start:</strong>{" "}
+                  {new Date(proposal.votingStartTime).toLocaleString()}
+                </p>
+                <p>
+                  <strong>Voting End:</strong>{" "}
+                  {new Date(proposal.votingEndTime).toLocaleString()}
+                </p>
+              </div>
+
+              <div className={styles.voteSection}>
+                <strong>Vote Breakdown:</strong>
+                <div className={styles.progressBar}>
+                  <div
+                    className={styles.yesBar}
+                    style={{ width: `${yesPercent}%` }}
+                  />
+                  <div
+                    className={styles.noBar}
+                    style={{ width: `${noPercent}%` }}
+                  />
+                </div>
+                <div className={styles.percentages}>
+                  <span>Yes: {yesPercent}%</span>
+                  <span>No: {noPercent}%</span>
+                </div>
+              </div>
+
+              <div className={styles.summary}>
+                <h2>Summary</h2>
+                <p>{proposal.summary}</p>
+              </div>
             </div>
           </div>
-        </div>
-        {/* Right side - Proposal Details */}
-        <div className={styles.leftPanel}>
-          <VoteResults
-            forVotes={forVotes}
-            againstVotes={againstVotes}
-            quorum={quorum}
-            status={proposal.status as "EXECUTED" | "DEFEATED"}
-            endDate={new Date(proposal.votingEndTime).toLocaleDateString()}
-            voters={mockVoters}
-          />
+          {/* Right side - Proposal Details */}
+          <div className={styles.leftPanel}>
+            <VoteResults
+              forVotes={forVotes}
+              againstVotes={againstVotes}
+              quorum={quorum}
+              status={proposal.status as "EXECUTED" | "DEFEATED"}
+              endDate={new Date(proposal.votingEndTime).toLocaleDateString()}
+              voters={mockVoters}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }

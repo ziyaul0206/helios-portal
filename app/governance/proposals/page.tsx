@@ -1,5 +1,6 @@
 "use client"
 
+import BackSection from "@/components/back"
 import { Heading } from "@/components/heading"
 import { useRouter } from "next/navigation"
 import React, { useCallback, useEffect, useRef, useState } from "react"
@@ -596,6 +597,7 @@ const ProposalDashboard: React.FC = () => {
 
   return (
     <div className={styles.dashboard}>
+      <BackSection />
       {isConnected && <MyProposals />}
       <AllProposals />
     </div>

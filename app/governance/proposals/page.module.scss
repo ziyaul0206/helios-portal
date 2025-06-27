@@ -104,9 +104,9 @@
 }
 
 .all-proposals {
-  margin-top: 2rem;
+  margin-top: 1rem;
   background-color: #f5f7ff;
-  border-radius: 1rem;
+  border-radius: 2rem;
   padding: 2rem;
 }
 
@@ -429,9 +429,10 @@
 }
 .myProposalsSection,
 .allProposalsSection {
+  margin-top: 1rem;
   width: 100%;
   background-color: #f5f7ff;
-  border-radius: 1rem;
+  border-radius: 2rem;
   padding: 2rem;
   // padding: 1rem;
 }
