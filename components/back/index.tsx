@@ -41,31 +41,33 @@ const BackSection = () => {
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.icon} onClick={handleBack}>
-        <Icon icon="material-symbols:arrow-back" />
-        <span>Back</span>
-      </div>
-      <div className={styles.textContainer}>
-        <h1 className={styles.headtitle}>Helios Governance</h1>
-        <div
-          className={`${styles.description} ${
-            fade ? styles.fadeOut : styles.fadeIn
-          }`}
-        >
-          {descriptions[index]}
+    <>
+      <div className={styles.container}>
+        <div className={styles.icon} onClick={handleBack}>
+          <Icon icon="material-symbols:arrow-back" />
+          <span>Back</span>
         </div>
-        <div className={styles.dots}>
-          {descriptions.map((_, i) => (
-            <span
-              key={i}
-              className={`${styles.dot} ${i === index ? styles.active : ""}`}
-              onClick={() => handleDotClick(i)}
-            />
-          ))}
+        <div className={styles.textContainer}>
+          <h1 className={styles.headtitle}>Helios Governance</h1>
+          <div
+            className={`${styles.description} ${
+              fade ? styles.fadeOut : styles.fadeIn
+            }`}
+          >
+            {descriptions[index]}
+          </div>
+          <div className={styles.dots}>
+            {descriptions.map((_, i) => (
+              <span
+                key={i}
+                className={`${styles.dot} ${i === index ? styles.active : ""}`}
+                onClick={() => handleDotClick(i)}
+              />
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 
