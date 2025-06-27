@@ -1,7 +1,8 @@
 "use client"
 import { DelegateCard } from "@/components/delegatecard"
+import { Heading } from "@/components/heading"
+import { useCallback, useEffect, useRef, useState } from "react"
 import styles from "./voters.module.scss"
-import { useEffect, useRef, useState, useCallback } from "react"
 
 const links = [
   {
@@ -263,12 +264,17 @@ export default function VotersPage() {
 
   return (
     <div className={styles.container}>
+      <Heading
+        icon="solar:users-group-rounded-bold"
+        title="Voters"
+        className={styles.cardHeard}
+      />
       <div className={styles.cardGrid}>
         {visibleLinks.map((link, index) => (
           <DelegateCard key={index} link={link} />
         ))}
       </div>
-      <div ref={loaderRef} style={{ textAlign: "center", marginTop: 20 }}>
+      <div ref={loaderRef} style={{ textAlign: "center", color: "#9ca3af" }}>
         {loading && <p>Loading...</p>}
       </div>
     </div>

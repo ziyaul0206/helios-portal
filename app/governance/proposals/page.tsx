@@ -1,11 +1,12 @@
 "use client"
 
-import Link from "next/link"
-import React, { useEffect, useRef, useState, useCallback } from "react"
+import { Heading } from "@/components/heading"
+import { useRouter } from "next/navigation"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useAccount } from "wagmi"
+import { ModalProposal } from "../(components)/proposal/modal"
 import { fetchProposals } from "../../utils/api"
 import styles from "./page.module.scss"
-import { useRouter } from "next/navigation"
 
 interface Proposal {
   id: string
@@ -86,7 +87,11 @@ const MyProposals: React.FC = () => {
 
   return (
     <div className={styles.myProposalsSection}>
-      <h1 className={styles.sectionTitle}>My Proposals</h1>
+      <Heading
+        icon="material-symbols:note-add-outline"
+        title="My Proposals"
+        className={styles.sectionTitle}
+      />
       <MyProposalCard proposal={myProposal} />
     </div>
   )
@@ -311,7 +316,11 @@ const AllProposals: React.FC = () => {
     return (
       <div className={styles["all-proposals"]}>
         <div className={styles.proposalContainer}>
-          <h2 className={styles.sectionTitle}>All Proposals</h2>
+          <Heading
+            icon="material-symbols:library-books-outline"
+            title="All Proposals"
+            className={styles.sectionTitle}
+          />
           {isConnected && (
             <button
               className={styles["create-proposal"]}
@@ -341,7 +350,11 @@ const AllProposals: React.FC = () => {
     <>
       <div className={styles["all-proposals"]}>
         <div className={styles.proposalContainer}>
-          <h2 className={styles.sectionTitle}>All Proposals</h2>
+          <Heading
+            icon="material-symbols:library-books-outline"
+            title="All Proposals"
+            className={styles.sectionTitle}
+          />
           {isConnected && (
             <button
               className={styles["create-proposal"]}
@@ -460,7 +473,7 @@ const AllProposals: React.FC = () => {
           </div>
         </div>
       </div>
-      {showModal && (
+      {/* {showModal && (
         <div
           className={styles.modalOverlay}
           onClick={() => setShowModal(false)}
@@ -563,7 +576,8 @@ const AllProposals: React.FC = () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
+      <ModalProposal open={showModal} onClose={() => setShowModal(false)} />
     </>
   )
 }
