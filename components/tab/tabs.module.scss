@@ -26,6 +26,10 @@
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  background-color: #2a4ed1c5;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 0 10px rgba(0, 45, 203, 0.3);
 
   &:hover {
     background: linear-gradient(120deg, #dbeafe, #bfdbfe);
@@ -34,7 +38,7 @@
   }
 
   &.active {
-    background-color: #002dcb;
+    background-color: #0027b3;
     color: #ffffff;
     font-weight: 600;
     box-shadow: 0 0 10px rgba(0, 45, 203, 0.3);
@@ -61,5 +65,61 @@
 
   @media (max-width: 480px) {
     display: none;
+  }
+}
+.tabContainer {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  position: relative;
+
+  &.withBackButton {
+    // When back button is shown - tabs stay centered
+    justify-content: center;
+  }
+
+  &.withoutBackButton {
+    // When back button is hidden - tabs stay centered
+    justify-content: center;
+  }
+}
+
+.backButtonContainer {
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar {
+  display: flex;
+  // Tabs are always centered regardless of back button presence
+  justify-content: center;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--secondary-bg, #f1f3f4);
+  border: 2px solid var(--border-color, #e0e0e0);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--secondary-bg-hover, #e8eaed);
+  }
+
+  .icon {
+    color: var(--primary-color, #1976d2);
+    font-size: 1rem;
+  }
+
+  .label {
+    font-weight: 500;
+    color: var(--text-primary, #333);
+    font-size: 1rem;
   }
 }

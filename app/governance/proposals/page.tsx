@@ -116,6 +116,8 @@ const AllProposals: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [hasLoadedInitial, setHasLoadedInitial] = useState(false) // Track if we've made the first load attempt
+  // Add this ref at the top of your component
+  const loadingRef = useRef(false)
 
   const handleCreateProposal = () => {
     setIsLoading(true)
@@ -206,6 +208,9 @@ const AllProposals: React.FC = () => {
   const loadMoreProposals = async () => {
     // Prevent multiple simultaneous calls
     if (loading) return
+    if (loadingRef.current) return
+
+    loadingRef.current = true
 
     setLoading(true)
     console.log("Fetched proposals:", pageRef.current)
@@ -265,6 +270,7 @@ const AllProposals: React.FC = () => {
     } catch (error) {
       console.error("Failed to fetch proposals", error)
     } finally {
+      loadingRef.current = false
       setLoading(false)
     }
   }
