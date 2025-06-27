@@ -22,8 +22,10 @@ const TabSelector = () => {
     <div className={styles.tabContainer}>
       <Heading icon="mdi:details" title="For more detail" />
       <p className={styles.description}>
-        Helios governance is a collective of companies, communities, and token
-        holders working together to steward the future of the Helios Network
+        Helios introduces a multi-chain governance model that extends beyond a
+        single blockchain, leveraging staked assets from multiple networks,
+        Hyperion modules, and the I-PoSR consensus to form a decentralized
+        decision-making system that spans across multiple chains.
       </p>
       <div className={styles.sidebar}>
         {tabs.map((tab) => (
