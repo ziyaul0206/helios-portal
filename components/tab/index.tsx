@@ -7,7 +7,7 @@ import styles from "./tabs.module.scss"
 
 const tabs = [
   { label: "Proposals", href: "/governance/proposals", icon: <FaRegListAlt /> },
-  { label: "Voters", href: "/governance/voters", icon: <FaUsers /> },
+  { label: "Voters", href: "", icon: <FaUsers /> },
   {
     label: "Power",
     href: "/governance/power",
