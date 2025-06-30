@@ -43,9 +43,9 @@ export function VoteResults({
 
       <div className={styles.content}>
         <div className={styles.voteHeader}>
-          <span className={styles.forVotes}>FOR {forVotes} UNI</span>
+          <span className={styles.forVotes}>FOR {forVotes} HLS</span>
           <span className={styles.againstVotes}>
-            AGAINST {againstVotes} UNI
+            AGAINST {againstVotes} HLS
           </span>
         </div>
 
@@ -66,7 +66,7 @@ export function VoteResults({
           </div>
         </div>
 
-        <div className={styles.quorum}>Quorum {quorum} UNI</div>
+        <div className={styles.quorum}>Quorum {quorum} HLS</div>
 
         <div
           className={`${styles.statusBadge} ${styles[status.toLowerCase()]}`}
@@ -105,7 +105,7 @@ export function VoteResults({
                     {voter.voteType}
                   </span>
                 </div>
-                <span className={styles.voteAmount}>{voter.amount} UNI</span>
+                <span className={styles.voteAmount}>{voter.amount} HLS</span>
               </div>
             ))}
           </div>
