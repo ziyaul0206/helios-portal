@@ -124,6 +124,7 @@ const AllProposals: React.FC = () => {
   const [hasLoadedInitial, setHasLoadedInitial] = useState(false) // Track if we've made the first load attempt
   // Add this ref at the top of your component
   const loadingRef = useRef(false)
+  const [savedRowDataLength, setSavedRowDataLength] = useState(10)
 
   const handleCreateProposal = () => {
     setIsLoading(true)
@@ -215,6 +216,7 @@ const AllProposals: React.FC = () => {
     // Prevent multiple simultaneous calls
     if (loading) return
     if (loadingRef.current) return
+    if (savedRowDataLength == 0) return
 
     loadingRef.current = true
 
@@ -227,13 +229,15 @@ const AllProposals: React.FC = () => {
       setHasLoadedInitial(true) // Mark that we've attempted the first load
 
       if (!rawData || rawData.length === 0) {
+        setSavedRowDataLength(0)
         console.log("No more proposals to load")
         // Add a manual proposal immediately when API data is exhausted
-        const newManualProposal = createManualProposals(3)
-        setProposals((prev) => [...prev, ...newManualProposal])
+        // const newManualProposal = createManualProposals(3)
+        // setProposals((prev) => [...prev, ...newManualProposal])
         setLoading(false) // Make sure to set loading to false
         return
       }
+      setSavedRowDataLength(rawData.length)
 
       const newProposals: ProposalData[] = rawData.map((item: any) => {
         const yes = BigInt(item.finalTallyResult?.yes_count || "0")
@@ -598,7 +602,7 @@ const ProposalDashboard: React.FC = () => {
   return (
     <div className={styles.dashboard}>
       <BackSection />
-      {isConnected && <MyProposals />}
+      {/* {isConnected && <MyProposals />} */}
       <AllProposals />
     </div>
   )
