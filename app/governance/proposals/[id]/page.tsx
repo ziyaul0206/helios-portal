@@ -106,6 +106,29 @@ export default async function ProposalDetail({
   const forVotes = (Number(yesVotes) / 1e18).toFixed(2) // Assuming 18 decimals
   const againstVotes = (Number(noVotes) / 1e18).toFixed(2)
   const quorum = "4,000,000" // Replace with actual quorum data
+  console.log("proposal", proposal)
+
+  // Function to render vote button based on status
+  const renderVoteButton = () => {
+    switch (proposal.status) {
+      case "VOTING_PERIOD":
+        return (
+          <div className={styles.actionSection}>
+            <button className={styles.voteButton}>Cast Your Vote</button>
+          </div>
+        )
+      case "DEPOSIT_PERIOD":
+        return (
+          <div className={styles.actionSection}>
+            <button className={styles.disabledButton} disabled>
+              Voting Coming Soon
+            </button>
+          </div>
+        )
+      default:
+        return null
+    }
+  }
 
   return (
     <>
@@ -140,9 +163,23 @@ export default async function ProposalDetail({
                   {new Date(proposal.votingEndTime).toLocaleString()}
                 </p>
               </div>
-
+              {/* 
               <div className={styles.voteSection}>
-                <strong>Vote Breakdown:</strong>
+                <h3 className={styles.sectionTitle}>Vote Breakdown</h3>
+                <div className={styles.voteStats}>
+                  <div className={styles.statItem}>
+                    <span className={styles.statLabel}>Yes</span>
+                    <span className={styles.statValue}>
+                      {yesPercent.toFixed(1)}%
+                    </span>
+                  </div>
+                  <div className={styles.statItem}>
+                    <span className={styles.statLabel}>No</span>
+                    <span className={styles.statValue}>
+                      {noPercent.toFixed(1)}%
+                    </span>
+                  </div>
+                </div>
                 <div className={styles.progressBar}>
                   <div
                     className={styles.yesBar}
@@ -153,11 +190,10 @@ export default async function ProposalDetail({
                     style={{ width: `${noPercent}%` }}
                   />
                 </div>
-                <div className={styles.percentages}>
-                  <span>Yes: {yesPercent}%</span>
-                  <span>No: {noPercent}%</span>
-                </div>
-              </div>
+              </div> */}
+
+              {/* Render vote button based on status */}
+              {renderVoteButton()}
 
               <div className={styles.summary}>
                 <h2>Summary</h2>
