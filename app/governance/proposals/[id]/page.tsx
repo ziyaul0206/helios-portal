@@ -152,7 +152,16 @@ export default async function ProposalDetail({
 
               <div className={styles.meta}>
                 <p>
-                  <strong>Proposer:</strong> {proposal.proposer}
+                  <strong>Proposer:</strong>{" "}
+                  <a
+                    href={`https://explorer.helioschainlabs.org/address/${proposal.proposer}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.proposerLink}
+                    title="View on Helios Explorer"
+                  >
+                    {proposal.proposer}
+                  </a>
                 </p>
                 <p>
                   <strong>Voting Start:</strong>{" "}
@@ -163,8 +172,8 @@ export default async function ProposalDetail({
                   {new Date(proposal.votingEndTime).toLocaleString()}
                 </p>
               </div>
-              {/* 
-              <div className={styles.voteSection}>
+
+              {/* <div className={styles.voteSection}>
                 <h3 className={styles.sectionTitle}>Vote Breakdown</h3>
                 <div className={styles.voteStats}>
                   <div className={styles.statItem}>
