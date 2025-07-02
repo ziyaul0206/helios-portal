@@ -265,7 +265,7 @@ export default function VotersPage() {
 
   return (
     <>
-      <BackSection />
+      <BackSection isVisible={true} />
       <div className={styles.container}>
         <Heading
           icon="solar:users-group-rounded-bold"

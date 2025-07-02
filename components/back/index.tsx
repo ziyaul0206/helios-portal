@@ -11,7 +11,11 @@ const descriptions = [
   "Slashed assets from misbehaving validators across multiple chains are collected into the Helios Treasury, which is governed by the Helios Foundation."
 ]
 
-const BackSection = () => {
+type BackSectionProps = {
+  isVisible: boolean
+}
+
+const BackSection = ({ isVisible }: BackSectionProps) => {
   const router = useRouter()
   const [index, setIndex] = useState(0)
   const [fade, setFade] = useState(false)
@@ -43,10 +47,14 @@ const BackSection = () => {
   return (
     <>
       <div className={styles.container}>
-        <div className={styles.icon} onClick={handleBack}>
-          <Icon icon="material-symbols:arrow-back" />
-          <span>Back</span>
-        </div>
+        {isVisible == true ? (
+          <div className={styles.icon} onClick={handleBack}>
+            <Icon icon="material-symbols:arrow-back" />
+            <span>Back</span>
+          </div>
+        ) : (
+          <></>
+        )}
         <div className={styles.textContainer}>
           <h1 className={styles.headtitle}>Helios Governance</h1>
           <div

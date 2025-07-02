@@ -132,7 +132,7 @@ export default async function ProposalDetail({
 
   return (
     <>
-      <BackSection />
+      <BackSection isVisible={true} />
       <div className={styles.container}>
         <div className={styles.layout}>
           {/* Left side - VoteResults Component */}

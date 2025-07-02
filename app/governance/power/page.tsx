@@ -5,7 +5,7 @@ import s from "./page.module.scss"
 export default function PowerPage() {
   return (
     <>
-      <BackSection />
+      <BackSection isVisible={true} />
       <div className={s.container}>
         <Power />
       </div>

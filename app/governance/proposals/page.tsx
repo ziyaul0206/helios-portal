@@ -559,7 +559,7 @@ const ProposalDashboard: React.FC = () => {
 
   return (
     <div className={styles.dashboard}>
-      <BackSection />
+      <BackSection isVisible={false} />
       {/* {isConnected && <MyProposals />} */}
       <AllProposals />
     </div>
