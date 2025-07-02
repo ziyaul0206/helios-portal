@@ -1,0 +1,295 @@
+// voting-section.module.scss
+
+.votingSection {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fafafa;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #1a202c;
+}
+
+.statusMessage {
+  padding: 1rem;
+  background: #fed7d7;
+  border: 1px solid #fc8181;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+
+  p {
+    margin: 0;
+    color: #742a2a;
+    font-weight: 500;
+  }
+}
+
+.transactionMessage {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+
+  p {
+    margin: 0;
+    font-weight: 500;
+  }
+
+  &.loading {
+    background: #bee3f8;
+    border: 1px solid #3182ce;
+
+    p {
+      color: #1a365d;
+    }
+  }
+
+  &.success {
+    background: #c6f6d5;
+    border: 1px solid #38a169;
+
+    p {
+      color: #22543d;
+    }
+  }
+
+  &.error {
+    background: #fed7d7;
+    border: 1px solid #e53e3e;
+
+    p {
+      color: #742a2a;
+    }
+  }
+}
+
+.walletPrompt {
+  text-align: center;
+  padding: 3rem 2rem;
+
+  .promptContent {
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .promptIcon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .promptTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #2d3748;
+  }
+
+  .promptText {
+    color: #4a5568;
+    line-height: 1.5;
+    margin: 0;
+  }
+}
+
+.connectedWallet {
+  .walletInfo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding: 0.75rem 1rem;
+    background: #e6fffa;
+    border: 1px solid #38b2ac;
+    border-radius: 8px;
+    color: #234e52;
+    font-size: 0.9rem;
+
+    .walletIndicator {
+      font-size: 1rem;
+    }
+
+    .address {
+      font-family: monospace;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+    }
+  }
+}
+
+.voteForm {
+  .voteOptions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .voteOption {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    input[type="radio"] {
+      margin-right: 0.5rem;
+      accent-color: #3182ce;
+    }
+
+    .optionLabel {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      background: white;
+      transition: all 0.2s;
+      flex: 1;
+      text-align: center;
+      font-weight: 500;
+      justify-content: center;
+
+      .optionIcon {
+        font-size: 1.1rem;
+      }
+
+      &.yes {
+        &:hover {
+          border-color: #38a169;
+          background: #f0fff4;
+        }
+      }
+
+      &.no {
+        &:hover {
+          border-color: #e53e3e;
+          background: #fffafa;
+        }
+      }
+
+      &.abstain {
+        &:hover {
+          border-color: #d69e2e;
+          background: #fffbeb;
+        }
+      }
+
+      &.veto {
+        &:hover {
+          border-color: #9f7aea;
+          background: #faf5ff;
+        }
+      }
+    }
+
+    input[type="radio"]:checked + .optionLabel {
+      &.yes {
+        border-color: #38a169;
+        background: #f0fff4;
+        color: #22543d;
+      }
+
+      &.no {
+        border-color: #e53e3e;
+        background: #fffafa;
+        color: #742a2a;
+      }
+
+      &.abstain {
+        border-color: #d69e2e;
+        background: #fffbeb;
+        color: #744210;
+      }
+
+      &.veto {
+        border-color: #9f7aea;
+        background: #faf5ff;
+        color: #553c9a;
+      }
+    }
+  }
+}
+
+.metadataSection {
+  margin-bottom: 1.5rem;
+
+  .metadataLabel {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #4a5568;
+  }
+
+  .metadataInput {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+
+    &:focus {
+      outline: none;
+      border-color: #3182ce;
+      box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+    }
+
+    &::placeholder {
+      color: #a0aec0;
+    }
+  }
+}
+
+.submitVoteButton {
+  width: 100%;
+  background: #3182ce;
+  color: white;
+  border: none;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover:not(:disabled) {
+    background: #2c5aa0;
+  }
+
+  &:disabled {
+    background: #a0aec0;
+    cursor: not-allowed;
+  }
+
+  .loadingContent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .spinner {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
