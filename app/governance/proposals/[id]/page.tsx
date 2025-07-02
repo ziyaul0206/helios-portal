@@ -1,5 +1,6 @@
 import BackSection from "@/components/back"
 import { VoteResults } from "@/components/voteresults"
+import { request } from "@/helpers/request"
 import { notFound } from "next/navigation"
 import styles from "./proposal.module.scss"
 
@@ -23,24 +24,12 @@ interface ProposalData {
 
 async function fetchProposalDetail(id: string): Promise<ProposalData | null> {
   try {
-    const res = await fetch("http://testnet1.helioschainlabs.org:8545/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      },
-      body: JSON.stringify({
-        id: 1,
-        jsonrpc: "2.0",
-        method: "eth_getProposal",
-        params: [`0x${parseInt(id, 10).toString(16)}`]
-      }),
-      cache: "no-store"
-    })
+    const result = await request<any>("eth_getProposal", [
+      `0x${parseInt(id, 10).toString(16)}`
+    ])
 
-    const json = await res.json()
-    console.log(json)
-    if (!json.result) return null
+    console.log(result)
+    if (!result) return null
 
     const {
       id: pid,
@@ -51,7 +40,7 @@ async function fetchProposalDetail(id: string): Promise<ProposalData | null> {
       votingStartTime,
       votingEndTime,
       finalTallyResult
-    } = json.result
+    } = result
 
     return {
       id: pid,

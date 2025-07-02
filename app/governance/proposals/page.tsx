@@ -6,8 +6,26 @@ import { useRouter } from "next/navigation"
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useAccount } from "wagmi"
 import { ModalProposal } from "../(components)/proposal/modal"
-import { fetchProposals } from "../../utils/api"
 import styles from "./page.module.scss"
+import { RPC_URL } from "@/config/app"
+import { request } from "@/helpers/request"
+
+// Updated fetchProposals function using the new request utility
+const fetchProposals = async (page: number, pageSize: number) => {
+  try {
+    const result = await request<any[]>("eth_getProposalsByPageAndSize", [
+      `0x${page.toString(16)}`,
+      `0x${pageSize.toString(16)}`
+    ])
+
+    return result || []
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw error
+    }
+    throw new Error("Failed to fetch proposals")
+  }
+}
 
 interface Proposal {
   id: string
@@ -466,7 +484,21 @@ const AllProposals: React.FC = () => {
                           Proposal by
                         </span>
                         <div className={styles["proposer-badge"]}>
-                          {proposal.meta.replace("By ", "")}
+                          {
+                            <a
+                              href={`https://explorer.helioschainlabs.org/address/${proposal.meta.replace(
+                                "By ",
+                                ""
+                              )}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={styles.proposerLink}
+                              title="View on Helios Explorer"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {proposal.meta.replace("By ", "")}
+                            </a>
+                          }
                         </div>
                       </div>
                       <h3 className={styles["proposal-title"]}>
