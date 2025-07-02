@@ -122,6 +122,7 @@ const AllProposals: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [hasLoadedInitial, setHasLoadedInitial] = useState(false) // Track if we've made the first load attempt
+  const [error, setError] = useState<string | null>(null)
   // Add this ref at the top of your component
   const loadingRef = useRef(false)
   const [savedRowDataLength, setSavedRowDataLength] = useState(10)
@@ -219,8 +220,8 @@ const AllProposals: React.FC = () => {
     if (savedRowDataLength == 0) return
 
     loadingRef.current = true
-
     setLoading(true)
+    setError(null) // Clear previous errors
     console.log("Fetched proposals:", pageRef.current)
 
     try {
@@ -277,8 +278,11 @@ const AllProposals: React.FC = () => {
 
       setProposals((prev) => [...prev, ...newProposals])
       pageRef.current += 1
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to fetch proposals", error)
+      const message =
+        error instanceof Error ? error.message : "Failed to load proposals"
+      setError(message)
     } finally {
       loadingRef.current = false
       setLoading(false)
@@ -351,6 +355,49 @@ const AllProposals: React.FC = () => {
     )
   }
 
+  // Show error state if there's an error and no initial data loaded
+  if (error && !hasLoadedInitial) {
+    return (
+      <div className={styles["all-proposals"]}>
+        <div className={styles.proposalContainer}>
+          <Heading
+            icon="material-symbols:library-books-outline"
+            title="All Proposals"
+            className={styles.sectionTitle}
+          />
+          {isConnected && (
+            <button
+              className={styles["create-proposal"]}
+              onClick={handleCreateProposal}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <span className={styles.myloader}></span>Loading…
+                </>
+              ) : (
+                "Create Proposal"
+              )}
+            </button>
+          )}
+        </div>
+        <div className={styles["proposal-list"]}>
+          <div className={styles["error-state"]}>
+            <h3>Failed to load proposals</h3>
+            <p>{error}</p>
+            <button
+              className={styles["retry-button"]}
+              onClick={() => loadMoreProposals()}
+              disabled={loading}
+            >
+              {loading ? "Retrying..." : "Try Again"}
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <>
       <div className={styles["all-proposals"]}>
@@ -376,6 +423,21 @@ const AllProposals: React.FC = () => {
             </button>
           )}
         </div>
+
+        {/* Show error banner if there's an error but we have existing data */}
+        {error && hasLoadedInitial && (
+          <div className={styles["error-banner"]}>
+            <p>{error}</p>
+            <button
+              className={styles["retry-button-small"]}
+              onClick={() => loadMoreProposals()}
+              disabled={loading}
+            >
+              Retry
+            </button>
+          </div>
+        )}
+
         <div className={styles["proposal-list"]}>
           {proposals.length === 0 && hasLoadedInitial && !loading ? (
             // Empty state when no proposals exist
@@ -478,110 +540,6 @@ const AllProposals: React.FC = () => {
           </div>
         </div>
       </div>
-      {/* {showModal && (
-        <div
-          className={styles.modalOverlay}
-          onClick={() => setShowModal(false)}
-        >
-          <div
-            className={styles.modalContent}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className={styles.modalLeft}>
-              <div className={styles.padding1}>
-                <p>Title *</p>
-                <div className={styles.textInput}>
-                  <input type="text" className={styles.customPadding}></input>
-                </div>
-                <p>Description *</p>
-                <div className={styles.textArea}>
-                  <textarea
-                    className={styles.customPadding}
-                    rows={13}
-                  ></textarea>
-                </div>
-              </div>
-
-              <div className={styles.line} />
-
-              <div className={styles.padding1}>
-                <p
-                  className={`${styles.proposalTransactions} ${styles.fontBlack}`}
-                >
-                  Proposed transactions
-                </p>
-                <p className={`${styles.proposalTransactions} ${styles.mt1}`}>
-                  Proposed transactions will execute after a proposal passes and
-                  then gets executed.
-                </p>
-                <div className={styles.buttonRow}>
-                  <button className={styles.primaryButton}>
-                    Transfer from the treasury
-                  </button>
-                  <button className={styles.primaryButton}>
-                    Create a custom transaction
-                  </button>
-                </div>
-              </div>
-
-              <div className={styles.line} />
-
-              <div className={styles.padding1}>
-                <div className={styles.createDraftBut}>
-                  <div className={styles.customPadding}>Create Draft</div>
-                </div>
-              </div>
-            </div>
-            <div className={styles.modalRight}>
-              <div className={styles.proposalChecklist}>
-                <p className={styles.checklistTitle}>
-                  <strong>Proposal checklist</strong>
-                </p>
-                <p>
-                  <strong>1. Create your proposal</strong>
-                </p>
-                <p>
-                  Get started by drafting your proposal directly in the
-                  governance interface.
-                </p>
-
-                <p>
-                  <strong>2. Request sponsorship (if threshold not met)</strong>
-                </p>
-                <p>
-                  If you don&apos;t meet the required voting power threshold,
-                  you can request sponsorship from existing delegates. This
-                  allows your proposal to gain visibility and the necessary
-                  backing from the community.
-                </p>
-
-                <p>
-                  <strong>3. Submit as waiting for sponsorship</strong>
-                </p>
-                <p>
-                  If you don&apos;t have the voting power to post the proposal
-                  yourself, you can request a delegate with enough voting power
-                  to sponsor it. The delegate you choose can review your
-                  proposal and choose to sponsor it if they support it, pushing
-                  it onchain for voting. One note - you should coordinate with
-                  sponsor delegates so they know you&apos;re looking for
-                  sponsorship!
-                </p>
-
-                <p>
-                  <strong>4. Submit onchain (If threshold met)</strong>
-                </p>
-                <p>
-                  If you meet the voting power threshold, you can bypass the
-                  sponsorship phase and submit it onchain directly. This
-                  fast-tracks your proposal to the voting stage, giving the
-                  community the opportunity to decide on its implementation.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )} */}
       <ModalProposal open={showModal} onClose={() => setShowModal(false)} />
     </>
   )
