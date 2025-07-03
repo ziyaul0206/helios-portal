@@ -456,19 +456,19 @@ const AllProposals: React.FC = () => {
                     <div className={styles["vote-bar"]}>
                       <div
                         className={styles["vote-for"]}
-                        style={{ width: proposal.voteFor }}
+                        style={{ width: proposal.voteForPercent }}
                       />
                       <div
                         className={styles["vote-abstain"]}
-                        style={{ width: proposal.voteAbstain }}
+                        style={{ width: proposal.voteAbstainPercent }}
                       />
                       <div
                         className={styles["vote-against"]}
-                        style={{ width: proposal.voteAgainst }}
+                        style={{ width: proposal.voteAgainstPercent }}
                       />
                       <div
                         className={styles["vote-no-veto"]}
-                        style={{ width: proposal.voteNoWithVeto }}
+                        style={{ width: proposal.voteNoWithVetoPercent }}
                       />
                     </div>
 
