@@ -7,7 +7,6 @@ import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useAccount } from "wagmi"
 import { ModalProposal } from "../(components)/proposal/modal"
 import styles from "./page.module.scss"
-import { RPC_URL } from "@/config/app"
 import { request } from "@/helpers/request"
 
 // Updated fetchProposals function using the new request utility
@@ -557,7 +556,7 @@ const AllProposals: React.FC = () => {
                         </span>
                         {proposal.voteNoWithVeto !== "0.0%" && (
                           <span className={styles["vote-no-veto-text"]}>
-                            No w/ Veto:{" "}
+                            No With Veto:{" "}
                             {formatVoteCount(proposal.voteNoWithVeto)} (
                             {proposal.voteNoWithVeto})
                           </span>
