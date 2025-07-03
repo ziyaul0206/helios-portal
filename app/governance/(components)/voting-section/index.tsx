@@ -1,12 +1,9 @@
 "use client"
 
-import { useState } from "react"
-import {
-  useAccount,
-  useWriteContract,
-  useWaitForTransactionReceipt
-} from "wagmi"
-import { parseAbi } from "viem"
+import { useState, useEffect } from "react"
+import { useAccount } from "wagmi"
+import { useVote } from "@/hooks/useVote"
+import { toast } from "sonner"
 import styles from "./voting-section.module.scss"
 
 interface VotingSectionProps {
@@ -20,14 +17,8 @@ enum VoteOption {
   NO = 0,
   YES = 1,
   ABSTAIN = 2,
-  NO_WITH_VETO = 3
+  NO_WITH_VOTE = 3
 }
-
-const voteAbi = parseAbi([
-  "function vote(address voter, uint64 proposalId, uint8 option, string metadata) returns (bool success)"
-])
-
-const GOVERNANCE_CONTRACT_ADDRESS = "0x0000000000000000000000000000000000000805"
 
 export function VotingSection({
   proposalId,
@@ -35,74 +26,57 @@ export function VotingSection({
   votingEndTime
 }: VotingSectionProps) {
   const { address, isConnected } = useAccount()
+  const { vote, feedback, resetFeedback, isLoading } = useVote()
   const [selectedVote, setSelectedVote] = useState<VoteOption | null>(null)
   const [voteMetadata, setVoteMetadata] = useState("")
-
-  const {
-    data: hash,
-    isPending: isVoting,
-    writeContract,
-    error: writeError
-  } = useWriteContract()
-
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({
-      hash
-    })
 
   const submitVote = async () => {
     if (!address || selectedVote === null) return
 
     try {
-      writeContract({
-        address: GOVERNANCE_CONTRACT_ADDRESS,
-        abi: voteAbi,
-        functionName: "vote",
-        args: [
-          address,
-          BigInt(proposalId),
-          selectedVote,
-          voteMetadata || `Vote on proposal ${proposalId}`
-        ]
-      })
+      await vote(proposalId, selectedVote, voteMetadata)
     } catch (error) {
       console.error("Error submitting vote:", error)
     }
   }
 
-  // Reset form after successful transaction
-  if (isConfirmed && selectedVote !== null) {
-    setSelectedVote(null)
-    setVoteMetadata("")
-  }
+  // Handle toast notifications based on feedback status
+  useEffect(() => {
+    if (!feedback.message) return
+
+    const handleToast = async () => {
+      if (feedback.status === "primary" && isLoading) {
+        toast.loading(feedback.message, { id: "vote-status" })
+      } else if (feedback.status === "success") {
+        toast.success(feedback.message, { id: "vote-status" })
+        // Reset form on success
+        setSelectedVote(null)
+        setVoteMetadata("")
+      } else if (feedback.status === "danger") {
+        toast.error(feedback.message, { id: "vote-status" })
+      }
+
+      // Reset feedback after handling
+      setTimeout(() => resetFeedback(), 100)
+    }
+
+    handleToast()
+  }, [feedback, isLoading, resetFeedback])
 
   const canVote =
     status === "VOTING_PERIOD" && new Date() < new Date(votingEndTime)
+  // const canVote = status === "REJECTED"
 
   const getStatusMessage = () => {
     if (status === "DEPOSIT_PERIOD") return "Voting has not started yet"
     if (status === "VOTING_PERIOD" && new Date() >= new Date(votingEndTime))
       return "Voting period has ended"
     if (status === "EXECUTED") return "Proposal has been executed"
-    if (status === "DEFEATED") return "Proposal was defeated"
+    if (status === "REJECTED") return "Proposal was rejected"
     return null
   }
 
   const statusMessage = getStatusMessage()
-
-  // Show transaction status messages
-  const getTransactionMessage = () => {
-    if (isVoting) return { type: "loading", text: "Submitting your vote..." }
-    if (isConfirming)
-      return { type: "loading", text: "Waiting for confirmation..." }
-    if (isConfirmed)
-      return { type: "success", text: "Vote submitted successfully!" }
-    if (writeError)
-      return { type: "error", text: "Failed to submit vote. Please try again." }
-    return null
-  }
-
-  const transactionMessage = getTransactionMessage()
 
   return (
     <div className={styles.votingSection}>
@@ -111,16 +85,6 @@ export function VotingSection({
       {statusMessage && (
         <div className={styles.statusMessage}>
           <p>{statusMessage}</p>
-        </div>
-      )}
-
-      {transactionMessage && (
-        <div
-          className={`${styles.transactionMessage} ${
-            styles[transactionMessage.type]
-          }`}
-        >
-          <p>{transactionMessage.text}</p>
         </div>
       )}
 
@@ -155,7 +119,7 @@ export function VotingSection({
                     value={VoteOption.YES}
                     checked={selectedVote === VoteOption.YES}
                     onChange={() => setSelectedVote(VoteOption.YES)}
-                    disabled={isVoting || isConfirming}
+                    disabled={isLoading}
                   />
                   <span className={`${styles.optionLabel} ${styles.yes}`}>
                     <span className={styles.optionIcon}>✅</span>
@@ -170,7 +134,7 @@ export function VotingSection({
                     value={VoteOption.NO}
                     checked={selectedVote === VoteOption.NO}
                     onChange={() => setSelectedVote(VoteOption.NO)}
-                    disabled={isVoting || isConfirming}
+                    disabled={isLoading}
                   />
                   <span className={`${styles.optionLabel} ${styles.no}`}>
                     <span className={styles.optionIcon}>❌</span>
@@ -185,7 +149,7 @@ export function VotingSection({
                     value={VoteOption.ABSTAIN}
                     checked={selectedVote === VoteOption.ABSTAIN}
                     onChange={() => setSelectedVote(VoteOption.ABSTAIN)}
-                    disabled={isVoting || isConfirming}
+                    disabled={isLoading}
                   />
                   <span className={`${styles.optionLabel} ${styles.abstain}`}>
                     <span className={styles.optionIcon}>⚪</span>
@@ -197,14 +161,14 @@ export function VotingSection({
                   <input
                     type="radio"
                     name="voteOption"
-                    value={VoteOption.NO_WITH_VETO}
-                    checked={selectedVote === VoteOption.NO_WITH_VETO}
-                    onChange={() => setSelectedVote(VoteOption.NO_WITH_VETO)}
-                    disabled={isVoting || isConfirming}
+                    value={VoteOption.NO_WITH_VOTE}
+                    checked={selectedVote === VoteOption.NO_WITH_VOTE}
+                    onChange={() => setSelectedVote(VoteOption.NO_WITH_VOTE)}
+                    disabled={isLoading}
                   />
-                  <span className={`${styles.optionLabel} ${styles.veto}`}>
+                  <span className={`${styles.optionLabel} ${styles.novote}`}>
                     <span className={styles.optionIcon}>🚫</span>
-                    No with Veto
+                    No with Vote
                   </span>
                 </label>
               </div>
@@ -220,19 +184,19 @@ export function VotingSection({
                   onChange={(e) => setVoteMetadata(e.target.value)}
                   placeholder="Add a comment about your vote..."
                   rows={3}
-                  disabled={isVoting || isConfirming}
+                  disabled={isLoading}
                 />
               </div>
 
               <button
                 className={styles.submitVoteButton}
                 onClick={submitVote}
-                disabled={selectedVote === null || isVoting || isConfirming}
+                disabled={selectedVote === null || isLoading}
               >
-                {isVoting || isConfirming ? (
+                {isLoading ? (
                   <span className={styles.loadingContent}>
                     <span className={styles.spinner}></span>
-                    {isVoting ? "Submitting..." : "Confirming..."}
+                    Submitting...
                   </span>
                 ) : (
                   "Submit Vote"

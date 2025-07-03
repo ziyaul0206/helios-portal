@@ -96,7 +96,7 @@
     color: #dc2626;
   }
 
-  &.active {
+  &.voting_period {
     background: rgba(59, 130, 246, 0.1);
     color: #2563eb;
   }
@@ -109,6 +109,7 @@
 
 .meta {
   margin-bottom: 24px;
+  border: 1px solid #e2e8f0;
 
   p {
     margin: 8px 0;

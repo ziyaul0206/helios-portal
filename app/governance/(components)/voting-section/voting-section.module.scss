@@ -183,7 +183,7 @@
         }
       }
 
-      &.veto {
+      &.novote {
         &:hover {
           border-color: #9f7aea;
           background: #faf5ff;
@@ -210,7 +210,7 @@
         color: #744210;
       }
 
-      &.veto {
+      &.novote {
         border-color: #9f7aea;
         background: #faf5ff;
         color: #553c9a;
@@ -230,7 +230,7 @@
   }
 
   .metadataInput {
-    width: 100%;
+    width: 95%;
     padding: 0.75rem;
     border: 1px solid #e2e8f0;
     border-radius: 6px;

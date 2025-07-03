@@ -3,6 +3,7 @@ import { VoteResults } from "@/components/voteresults"
 import { request } from "@/helpers/request"
 import { notFound } from "next/navigation"
 import styles from "./proposal.module.scss"
+import { VoteResult } from "@/components/voteresults"
 import { VotingSection } from "../../(components)/voting-section"
 
 interface TallyResult {
@@ -59,20 +60,7 @@ async function fetchProposalDetail(id: string): Promise<ProposalData | null> {
   }
 }
 
-// Mock voters data - replace with actual data from your API
-const mockVoters = [
-  {
-    voter: "0x1234...5678",
-    voteType: "voted for" as const,
-    amount: "1,234.56"
-  },
-  {
-    voter: "0x9876...4321",
-    voteType: "voted against" as const,
-    amount: "987.65"
-  },
-  { voter: "0xabcd...efgh", voteType: "voted for" as const, amount: "2,345.67" }
-]
+const Voters: VoteResult[] = []
 
 export default async function ProposalDetail({
   params
@@ -162,7 +150,7 @@ export default async function ProposalDetail({
               quorum={quorum}
               status={proposal.status as "EXECUTED" | "DEFEATED"}
               endDate={new Date(proposal.votingEndTime).toLocaleDateString()}
-              voters={mockVoters}
+              voters={Voters}
             />
           </div>
         </div>

@@ -286,7 +286,11 @@ const AllProposals: React.FC = () => {
           title: item.title,
           result: item.status,
           resultClass:
-            item.status === "PASSED" ? styles.executed : styles.defeated,
+            item.status === "PASSED"
+              ? styles.executed
+              : item.status === "REJECTED"
+              ? styles.rejected
+              : styles.voting_period,
           voteFor: `${voteForPercent}%`,
           voteAgainst: `${voteAgainstPercent}%`,
           voteAbstain: `${voteAbstainPercent}%`,

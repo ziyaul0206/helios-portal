@@ -66,7 +66,7 @@ export function VoteResults({
           </div>
         </div>
 
-        <div className={styles.quorum}>Quorum {quorum} HLS</div>
+        {/* <div className={styles.quorum}>Quorum {quorum} HLS</div> */}
 
         <div
           className={`${styles.statusBadge} ${styles[status.toLowerCase()]}`}
@@ -77,10 +77,10 @@ export function VoteResults({
         </div>
 
         <div className={styles.votersSection}>
-          <div className={styles.votersHeader}>
+          {/* <div className={styles.votersHeader}>
             <button className={styles.votersButton}>Voters</button>
             <button className={styles.votersButton}>Hasn&apos;t voted</button>
-          </div>
+          </div> */}
 
           <div className={styles.votersList}>
             {voters.map((voter) => (
@@ -110,16 +110,6 @@ export function VoteResults({
             ))}
           </div>
         </div>
-
-        {isConnected ? (
-          <button className={styles.setupButton}>Set up statement</button>
-        ) : (
-          <div className={styles.connectButtonContainer}>
-            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-            {/* @ts-ignore */}
-            <appkit-button />
-          </div>
-        )}
       </div>
     </div>
   )
