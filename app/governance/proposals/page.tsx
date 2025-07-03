@@ -127,6 +127,10 @@ interface ProposalData {
   voteAgainst: string
   voteAbstain: string
   voteNoWithVeto: string
+  voteForPercent: string
+  voteAgainstPercent: string
+  voteAbstainPercent: string
+  voteNoWithVetoPercent: string
 }
 
 const AllProposals: React.FC = () => {
@@ -152,83 +156,6 @@ const AllProposals: React.FC = () => {
     }, 1000)
   }
   const manualProposalCounter = useRef(1) // Counter for manual proposals
-
-  // Function to create manual proposals
-  const createManualProposals = (count: number): ProposalData[] => {
-    const proposals: ProposalData[] = []
-
-    for (let i = 0; i < count; i++) {
-      const proposalId = `manual-${manualProposalCounter.current}`
-      const currentDate = new Date()
-      const endDate = new Date(currentDate.getTime() + 7 * 24 * 60 * 60 * 1000) // 7 days from now
-
-      // Generate some random-ish vote data for demonstration
-      const baseVotes = 1000000 + Math.floor(Math.random() * 10000000)
-      const yesVotes = Math.floor(baseVotes * (0.6 + Math.random() * 0.3)) // 60-90% yes
-      const noVotes = Math.floor(baseVotes * (0.05 + Math.random() * 0.15)) // 5-20% no
-      const abstainVotes = Math.floor(baseVotes * (0.02 + Math.random() * 0.08)) // 2-10% abstain
-      const noWithVetoVotes = Math.floor(
-        baseVotes * (0.01 + Math.random() * 0.04)
-      ) // 1-5% no with veto
-
-      const total = yesVotes + noVotes + abstainVotes + noWithVetoVotes
-      const voteForPercent = Math.round((yesVotes / total) * 100)
-      const voteAgainstPercent = Math.round((noVotes / total) * 100)
-      const voteAbstainPercent = Math.round((abstainVotes / total) * 100)
-      const voteNoWithVetoPercent = Math.round((noWithVetoVotes / total) * 100)
-
-      const sampleTitles = [
-        "Proposal to Increase Staking Rewards",
-        "Community Fund Allocation for Development",
-        "Protocol Upgrade to Version 2.0",
-        "Treasury Management Strategy Update",
-        "Governance Parameter Adjustment",
-        "Integration with New DeFi Protocol",
-        "Security Audit Funding Proposal",
-        "Community Incentive Program Launch",
-        "Validator Commission Rate Adjustment",
-        "Cross-chain Bridge Implementation",
-        "NFT Marketplace Integration",
-        "Oracle Price Feed Update"
-      ]
-
-      const sampleProposers = [
-        "0x1234...5678",
-        "0xabcd...ef01",
-        "0x9876...5432",
-        "community.eth",
-        "governance.dao",
-        "0xfed...cba9",
-        "validator.eth",
-        "0x2468...ace0"
-      ]
-
-      const randomTitle =
-        sampleTitles[Math.floor(Math.random() * sampleTitles.length)]
-      const randomProposer =
-        sampleProposers[Math.floor(Math.random() * sampleProposers.length)]
-      const randomStatus = Math.random() > 0.7 ? "REJECTED" : "PASSED" // 70% chance of passing
-
-      proposals.push({
-        id: proposalId,
-        meta: `By ${randomProposer}`,
-        status: `Ends ${endDate.toLocaleString()}`,
-        votes: `${yesVotes.toLocaleString()} For – ${noVotes.toLocaleString()} Against – ${abstainVotes.toLocaleString()} Abstain – ${noWithVetoVotes.toLocaleString()} No w/ Veto`,
-        title: randomTitle,
-        result: randomStatus,
-        resultClass:
-          randomStatus === "PASSED" ? styles.executed : styles.defeated,
-        voteFor: `${voteForPercent}%`,
-        voteAgainst: `${voteAgainstPercent}%`,
-        voteAbstain: `${voteAbstainPercent}%`,
-        voteNoWithVeto: `${voteNoWithVetoPercent}%`
-      })
-
-      manualProposalCounter.current += 1
-    }
-
-    return proposals
-  }
 
   const loadMoreProposals = async () => {
     // Prevent multiple simultaneous calls
@@ -258,14 +185,15 @@ const AllProposals: React.FC = () => {
       setSavedRowDataLength(rawData.length)
 
       const newProposals: ProposalData[] = rawData.map((item: any) => {
-        const yes = BigInt(item.finalTallyResult?.yes_count || "0")
-        const no = BigInt(item.finalTallyResult?.no_count || "0")
-        const abstain = BigInt(item.finalTallyResult?.abstain_count || "0")
+        const yes = BigInt(item.currentTallyResult?.yes_count || "0")
+        const no = BigInt(item.currentTallyResult?.no_count || "0")
+        const abstain = BigInt(item.currentTallyResult?.abstain_count || "0")
         const noWithVeto = BigInt(
-          item.finalTallyResult?.no_with_veto_count || "0"
+          item.currentTallyResult?.no_with_veto_count || "0"
         )
 
         const total = yes + no + abstain + noWithVeto || 1n
+        console.log("yyyyyyyyyyyyyyy", yes, (yes / 10n ** 18n).toString())
         const voteForPercent = Number((yes * 100n) / total)
         const voteAgainstPercent = Number((no * 100n) / total)
         const voteAbstainPercent = Number((abstain * 100n) / total)
@@ -281,7 +209,7 @@ const AllProposals: React.FC = () => {
           id: item.id.toString(),
           meta: `By ${item.proposer}`,
           status: `Ends ${new Date(item.votingEndTime).toLocaleString()}`,
-          votes: `${yesFormatted} For – ${noFormatted} Against – ${abstainFormatted} Abstain – ${noWithVetoFormatted} No w/ Veto`,
+          votes: `${yesFormatted} For – ${noFormatted} Against – ${abstainFormatted} Abstain – ${noWithVetoFormatted} No with Vote`,
           title: item.title,
           result: item.status,
           resultClass:
@@ -290,10 +218,14 @@ const AllProposals: React.FC = () => {
               : item.status === "REJECTED"
               ? styles.rejected
               : styles.voting_period,
-          voteFor: `${voteForPercent}%`,
-          voteAgainst: `${voteAgainstPercent}%`,
-          voteAbstain: `${voteAbstainPercent}%`,
-          voteNoWithVeto: `${voteNoWithVetoPercent}%`
+          voteFor: `${yesFormatted}HLS`,
+          voteAgainst: `${noFormatted}HLS`,
+          voteAbstain: `${abstainFormatted}HLS`,
+          voteNoWithVeto: `${noWithVetoFormatted}HLS`,
+          voteForPercent: `${voteForPercent}%`,
+          voteAgainstPercent: `${voteAgainstPercent}%`,
+          voteAbstainPercent: `${voteAbstainPercent}%`,
+          voteNoWithVetoPercent: `${voteNoWithVetoPercent}%`
         }
       })
 
@@ -543,22 +475,20 @@ const AllProposals: React.FC = () => {
                     <div className={styles["vote-details"]}>
                       <div className={styles["vote-stats"]}>
                         <span className={styles["vote-for-text"]}>
-                          For: {formatVoteCount(proposal.voteFor)} (
-                          {proposal.voteFor})
+                          For: {proposal.voteFor} ({proposal.voteForPercent})
                         </span>
                         <span className={styles["vote-abstain-text"]}>
-                          Abstain: {formatVoteCount(proposal.voteAbstain)} (
-                          {proposal.voteAbstain})
+                          Abstain: {proposal.voteAbstain} (
+                          {proposal.voteAbstainPercent})
                         </span>
                         <span className={styles["vote-against-text"]}>
-                          Against: {formatVoteCount(proposal.voteAgainst)} (
-                          {proposal.voteAgainst})
+                          Against: {proposal.voteAgainst} (
+                          {proposal.voteAgainstPercent})
                         </span>
                         {proposal.voteNoWithVeto !== "0.0%" && (
                           <span className={styles["vote-no-veto-text"]}>
-                            No With Veto:{" "}
-                            {formatVoteCount(proposal.voteNoWithVeto)} (
-                            {proposal.voteNoWithVeto})
+                            No With Veto: {proposal.voteNoWithVeto} (
+                            {proposal.voteNoWithVetoPercent})
                           </span>
                         )}
                       </div>

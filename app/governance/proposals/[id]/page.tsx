@@ -22,6 +22,7 @@ interface ProposalData {
   votingStartTime: string
   votingEndTime: string
   finalTallyResult: TallyResult
+  currentTallyResult: TallyResult
 }
 
 async function fetchProposalDetail(id: string): Promise<ProposalData | null> {
@@ -30,7 +31,6 @@ async function fetchProposalDetail(id: string): Promise<ProposalData | null> {
       `0x${parseInt(id, 10).toString(16)}`
     ])
 
-    console.log(result)
     if (!result) return null
 
     const {
@@ -41,7 +41,8 @@ async function fetchProposalDetail(id: string): Promise<ProposalData | null> {
       status,
       votingStartTime,
       votingEndTime,
-      finalTallyResult
+      finalTallyResult,
+      currentTallyResult
     } = result
 
     return {
@@ -52,7 +53,8 @@ async function fetchProposalDetail(id: string): Promise<ProposalData | null> {
       status,
       votingStartTime,
       votingEndTime,
-      finalTallyResult
+      finalTallyResult,
+      currentTallyResult
     }
   } catch (err) {
     console.error("Error fetching proposal:", err)
@@ -72,8 +74,8 @@ export default async function ProposalDetail({
   const proposal = await fetchProposalDetail(id)
   if (!proposal) return notFound()
 
-  const yesVotes = BigInt(proposal.finalTallyResult.yes_count || "0")
-  const noVotes = BigInt(proposal.finalTallyResult.no_count || "0")
+  const yesVotes = BigInt(proposal.currentTallyResult.yes_count || "0")
+  const noVotes = BigInt(proposal.currentTallyResult.no_count || "0")
   const totalVotes = yesVotes + noVotes
 
   const yesPercent =
