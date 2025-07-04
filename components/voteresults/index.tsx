@@ -22,7 +22,7 @@ interface VoteResultsProps {
 export function VoteResults({
   forVotes,
   againstVotes,
-  quorum,
+  quorum, // eslint-disable-line @typescript-eslint/no-unused-vars
   status,
   endDate,
   voters
@@ -35,7 +35,7 @@ export function VoteResults({
     totalVotes === 0 ? 0 : (Number.parseFloat(againstVotes) / totalVotes) * 100
   const abstainPercentage = 100 - forPercentage - againstPercentage
 
-  const { isConnected } = useAccount()
+  const { isConnected } = useAccount() // eslint-disable-line @typescript-eslint/no-unused-vars
 
   return (
     <div className={styles.card}>

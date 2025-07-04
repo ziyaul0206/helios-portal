@@ -20,7 +20,7 @@ interface CardProps {
 export const DelegateCard = forwardRef<HTMLDivElement, CardProps>(
   ({ link, className }, ref) => {
     const {
-      url = "",
+      url = "", // eslint-disable-line @typescript-eslint/no-unused-vars
       userid = "",
       hasX = false,
       hasDiscord = false,

@@ -6,6 +6,7 @@ import { fonts } from "./fonts"
 import ContextProvider from "@/context"
 import { headers } from "next/headers"
 import { NewsBanner } from "./(components)/news-banner"
+import Script from "next/script"
 
 export const metadata = MetadataSeo({
   title: "Your Gateway to Staking, Delegation & Cross-Chain Governance",
@@ -39,10 +40,10 @@ export default async function RootLayout({
           }}
         />
         {/* Google Tag Manager */}
-        <script
+        <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-RHJMTZBRG1"
-        ></script>
+        ></Script>
         <script
           dangerouslySetInnerHTML={{
             __html: `window.dataLayer = window.dataLayer || [];

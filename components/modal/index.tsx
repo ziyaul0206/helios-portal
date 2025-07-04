@@ -50,7 +50,7 @@ export function Modal({
       document.body.classList.remove("overflow")
       document.removeEventListener("keydown", handleEscKey)
     }
-  }, [open])
+  }, [open, onClose])
 
   const handleClose = () => {
     onClose()

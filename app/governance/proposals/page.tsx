@@ -25,96 +25,6 @@ const fetchProposals = async (page: number, pageSize: number) => {
     throw new Error("Failed to fetch proposals")
   }
 }
-
-interface Proposal {
-  id: string
-  title: string
-  author: string
-  status: string
-  type: string
-  waitingFor: string
-  nextStep: string
-}
-
-interface ProposalData {
-  id: string
-  meta: string
-  status: string
-  votes: string
-  title: string
-  result: string
-  resultClass: string
-  voteFor: string
-  voteAgainst: string
-}
-
-const MyProposalCard: React.FC<{ proposal: Proposal }> = ({ proposal }) => (
-  <div className={styles.card}>
-    <div className={styles.cardHeader}>
-      <div>
-        <h2 className={styles.proposalTitle}>
-          {proposal.title || "Untitled proposal"}
-        </h2>
-        <p className={styles.proposalAuthor}>By {proposal.author}</p>
-      </div>
-      <span className={styles.badge}>Draft</span>
-    </div>
-
-    <div className={styles.cardMeta}>
-      <div className={styles.metaItem}>
-        <div className={styles.metaLabel}>Type</div>
-        <div className={styles.metaValue}>{proposal.type || "General"}</div>
-      </div>
-      <div className={styles.metaItem}>
-        <div className={styles.metaLabel}>Status</div>
-        <div className={styles.metaValue}>
-          {proposal.waitingFor || "Awaiting submission"}
-        </div>
-      </div>
-    </div>
-
-    <div className={styles.progressSection}>
-      <div className={styles.progressLabel}>Next start step</div>
-      <div className={styles.progressBar}>
-        <div className={styles.filled} />
-      </div>
-      <div className={styles.progressSteps}>
-        <span className={styles.currentStep}>
-          {proposal.nextStep || "Submit Draft"}
-        </span>
-        <span className={styles.upcomingStep}>Vote</span>
-      </div>
-    </div>
-
-    <div className={styles.cardFooter}>
-      <button className={styles.buttonOutline}>Edit Draft</button>
-    </div>
-  </div>
-)
-
-const MyProposals: React.FC = () => {
-  const myProposal: Proposal = {
-    id: "1",
-    title: "WBTC Treasury Proposal",
-    author: "0x80C72ec57e33DDF9fdEf9103F284394626a280D",
-    status: "Draft",
-    type: "[Type pending]",
-    waitingFor: "Submitting draft",
-    nextStep: "Submit Draft"
-  }
-
-  return (
-    <div className={styles.myProposalsSection}>
-      <Heading
-        icon="material-symbols:note-add-outline"
-        title="My Proposals"
-        className={styles.sectionTitle}
-      />
-      <MyProposalCard proposal={myProposal} />
-    </div>
-  )
-}
-
 interface ProposalData {
   id: string
   meta: string
@@ -155,7 +65,6 @@ const AllProposals: React.FC = () => {
       setShowModal(true)
     }, 1000)
   }
-  const manualProposalCounter = useRef(1) // Counter for manual proposals
 
   const loadMoreProposals = async () => {
     // Prevent multiple simultaneous calls
@@ -243,7 +152,10 @@ const AllProposals: React.FC = () => {
   }
 
   // Use useCallback to memoize the function and prevent unnecessary re-renders
-  const loadMoreProposalsCallback = useCallback(loadMoreProposals, [loading])
+  const loadMoreProposalsCallback = useCallback(loadMoreProposals, [
+    loading,
+    savedRowDataLength
+  ])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -264,7 +176,7 @@ const AllProposals: React.FC = () => {
     return () => {
       if (current) observer.unobserve(current)
     }
-  }, [loadMoreProposalsCallback, loading]) // Add dependencies
+  }, [loadMoreProposalsCallback, savedRowDataLength, loading]) // Add dependencies
 
   // Initial load effect
   useEffect(() => {
@@ -510,17 +422,8 @@ const AllProposals: React.FC = () => {
   )
 }
 
-// Helper function to format vote counts (you'll need to add this to your component)
-const formatVoteCount = (percentage: string): string => {
-  // Extract the numeric value from percentage and convert to vote count
-  // This is a placeholder - you'll need to implement based on your actual vote data
-  const percent = parseFloat(percentage.replace("%", ""))
-  // You'll need to calculate actual vote counts based on your data structure
-  return `${(percent * 100).toFixed(2)}M` // Placeholder calculation
-}
-
 const ProposalDashboard: React.FC = () => {
-  const { isConnected } = useAccount()
+  const { isConnected } = useAccount() // eslint-disable-line @typescript-eslint/no-unused-vars
 
   return (
     <div className={styles.dashboard}>

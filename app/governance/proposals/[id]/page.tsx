@@ -76,11 +76,6 @@ export default async function ProposalDetail({
 
   const yesVotes = BigInt(proposal.currentTallyResult.yes_count || "0")
   const noVotes = BigInt(proposal.currentTallyResult.no_count || "0")
-  const totalVotes = yesVotes + noVotes
-
-  const yesPercent =
-    totalVotes === 0n ? 0 : Number((yesVotes * 100n) / totalVotes)
-  const noPercent = 100 - yesPercent
 
   // Format votes for VoteResults component
   const forVotes = (Number(yesVotes) / 1e18).toFixed(2) // Assuming 18 decimals

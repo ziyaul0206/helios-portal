@@ -8,7 +8,7 @@ import { Modal } from "@/components/modal"
 import { formatNumber } from "@/lib/utils/number"
 import clsx from "clsx"
 import Image from "next/image"
-import { ChangeEvent, useEffect, useState } from "react"
+import { ChangeEvent, useEffect, useState, useCallback } from "react"
 import { toast } from "sonner"
 import s from "./interface.module.scss"
 import { useBridge } from "@/hooks/useBridge"
@@ -69,7 +69,7 @@ export const Interface = () => {
     if (!openWrapModal) {
       tokenInfo.refetch()
     }
-  }, [openWrapModal])
+  }, [openWrapModal, tokenInfo])
 
   const qTokensByChain = useQuery({
     queryKey: ["tokensByChain", form.to?.chainId],
@@ -107,21 +107,27 @@ export const Interface = () => {
       ? chains.filter((chain) => chain.chainId !== form.from?.chainId)
       : chains
 
-  const lightResetForm = () => {
-    setForm({
-      ...form,
+  const lightResetForm = useCallback(() => {
+    setForm((prevForm) => ({
+      ...prevForm,
       asset: null,
       amount: "0"
-    })
-  }
+    }))
+  }, [])
 
   const handleOpenChain = (type: "from" | "to") => {
     setChainType(type)
     setOpenChain(true)
   }
 
-  const handleChangeChain = (chain: HyperionChain, forceChainType?: "from" | "to") => {
-    if ((chainType === 'from' || forceChainType === "from") && chain.chainId !== form.from?.chainId) {
+  const handleChangeChain = (
+    chain: HyperionChain,
+    forceChainType?: "from" | "to"
+  ) => {
+    if (
+      (chainType === "from" || forceChainType === "from") &&
+      chain.chainId !== form.from?.chainId
+    ) {
       switchChain({ chainId: chain.chainId })
       setOpenChain(false)
 
@@ -139,7 +145,7 @@ export const Interface = () => {
 
   const handleSwap = () => {
     if (form.to) {
-      handleChangeChain(form.to, 'from')
+      handleChangeChain(form.to, "from")
     }
   }
 
@@ -265,7 +271,7 @@ export const Interface = () => {
     }))
 
     resetFeedback()
-  }, [chains, heliosChainIndex, chainId])
+  }, [chains, heliosChainIndex, chainId, lightResetForm, resetFeedback])
 
   const amountNb = parseFloat(form.amount)
   const heliosInOrOut =
